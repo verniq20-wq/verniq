@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100%;
+  }
+
+  /* Larger classroom text, toggled from Settings */
+  html.text-large {
+    font-size: 112.5%;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-ink-800 antialiased;
+    margin: 0;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display text-ink-900;
+  }
+
+  ::selection {
+    @apply bg-aqua-200 text-ink-900;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ocean-500 ring-offset-2 ring-offset-white;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .field-label {
+    @apply mb-1.5 block text-sm font-semibold text-ink-700;
+  }
+
+  .field {
+    @apply min-h-[48px] w-full rounded-xl border border-ink-200 bg-white px-4 text-base text-ink-900 shadow-soft transition-colors placeholder:text-ink-400 hover:border-ink-300 focus:border-ocean-500 focus:outline-none focus:ring-2 focus:ring-ocean-200;
+  }
+
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.12em] text-ink-500;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Print: only the worksheet paper is printed */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable,
+  #printable * {
+    visibility: visible;
+  }
+  #printable {
+    position: absolute;
+    inset: 0;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}

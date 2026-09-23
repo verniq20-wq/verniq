@@ -6,6 +6,7 @@ import { DEMO_MODE } from '../../services/config';
 import { IconButton } from '../ui/Button';
 import { OfflineIndicator } from '../ui/OfflineIndicator';
 import { LogoMark } from './Logo';
+import { InstallButton } from './InstallCard';
 import { NotificationPanel } from './NotificationPanel';
 
 export function TopBar() {
@@ -26,7 +27,7 @@ export function TopBar() {
     .slice(0, 2);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-ink-200/60 bg-canvas/85 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b pt-[env(safe-area-inset-top)] border-ink-200/60 bg-canvas/85 backdrop-blur-md">
       <div className="mx-auto flex h-[64px] max-w-7xl items-center gap-3 px-4 sm:px-6 md:h-[72px] lg:px-8">
         <Link to="/" aria-label="Verniq home" className="md:hidden">
           <LogoMark className="h-8 w-8" />
@@ -61,6 +62,7 @@ export function TopBar() {
           <IconButton label="Search" className="sm:hidden" onClick={() => setMobileSearch(true)}>
             <Search className="h-[22px] w-[22px]" />
           </IconButton>
+          <InstallButton />
           <OfflineIndicator />
           <NotificationPanel />
           <Link

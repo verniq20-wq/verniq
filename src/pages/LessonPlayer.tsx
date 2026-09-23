@@ -82,7 +82,7 @@ export default function LessonPlayer() {
   return (
     <div className="flex min-h-screen flex-col bg-canvas">
       {/* Header */}
-      <header className="sticky top-0 z-20 border-b border-ink-200/60 bg-white/90 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b pt-[env(safe-area-inset-top)] border-ink-200/60 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-4xl items-center gap-3 px-4 py-3 sm:px-6">
           <Link
             to="/lessons"

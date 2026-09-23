@@ -1,5 +1,6 @@
 import { Check, Download, Info } from 'lucide-react';
 import { useState } from 'react';
+import { InstallCard } from '../components/layout/InstallCard';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card, CardHeader } from '../components/ui/Card';
@@ -83,6 +84,8 @@ export default function Settings() {
             Change language
           </Button>
         </Card>
+
+        <InstallCard />
 
         <Card>
           <CardHeader title="Offline & sync" subtitle="Verniq keeps working without internet." />

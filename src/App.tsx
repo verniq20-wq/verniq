@@ -1,6 +1,7 @@
 import { MotionConfig } from 'framer-motion';
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { AppLifecycle } from './components/layout/AppLifecycle';
 import { AppShell } from './components/layout/AppShell';
 import { Toaster } from './components/ui/Toaster';
 import { Skeleton } from './components/ui/States';
@@ -31,6 +32,7 @@ export default function App() {
     <MotionConfig reducedMotion="user">
       <AppProvider>
         <BrowserRouter>
+          <AppLifecycle />
           <Suspense fallback={<PageFallback />}>
             <Routes>
               <Route path="/lessons/:id/play" element={<LessonPlayer />} />

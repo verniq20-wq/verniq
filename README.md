@@ -4,7 +4,13 @@
 
 Verniq helps primary-school teachers teach children in their mother tongue. It combines curriculum-aligned AI lessons, Hindi ↔ tribal-language translation, real-time voice translation, bilingual worksheets, picture flashcards, audio and offline-first teaching in one calm, tablet-friendly interface.
 
-This repository contains the web frontend.
+Verniq runs in three ways, all from the same code:
+
+| | How teachers get it | Offline |
+| --- | --- | --- |
+| **Web app** | Open the website | After the first visit |
+| **Installable app (PWA)** | Open the website → "Install Verniq" (Chrome/Edge/Android) or Share → "Add to Home Screen" (iPhone/iPad) | Yes — the whole app is cached on the device |
+| **Android app** | Install `verniq.apk` | Yes — the app is packaged inside the APK |
 
 ## Screens
 
@@ -30,6 +36,30 @@ npm run lint
 ```
 
 Requires Node 20+.
+
+## Apps
+
+### Installable web app (PWA)
+
+`npm run build` also produces a service worker and web manifest (via `vite-plugin-pwa`). After the first visit the app, fonts and icons are cached, so Verniq opens and works with no internet. When a new version is deployed, teachers see an "Update" banner. Settings → *Verniq app* shows an install button when the browser supports it.
+
+### Android app (Capacitor)
+
+The `android/` folder is a native Android project that packages the web build.
+
+```bash
+npm run android:sync   # build the web app and copy it into android/
+npm run android:open   # open in Android Studio
+npm run android:apk    # build a debug APK → android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+Building locally needs JDK 21 and the Android SDK (Android Studio includes both).
+
+You don't need to build it yourself: every push to `main` runs the **Android APK** GitHub Action (`.github/workflows/android.yml`). It uploads `verniq.apk` to the **android-latest** release on the repository's Releases page.
+
+App ID: `app.verniq.teacher` · min Android 7.0 (API 24) · target API 36. For a Play Store release, create a signing key and run `./gradlew bundleRelease` in `android/`.
+
+Icons and splash screens come from `assets/` and were generated with `@capacitor/assets`.
 
 ## Demo mode
 
@@ -70,6 +100,7 @@ src/
 │   ├── live/          Microphone button
 │   ├── worksheet/     Worksheet generator and printable preview
 │   └── flashcards/    Flashcard and flashcard studio
+├── platform/          PWA install/update + native Android integration
 ├── pages/             One file per route (lazy-loaded except Home)
 ├── hooks/             useAudio, useShell
 ├── services/          Replaceable data and AI functions (demo implementations)
@@ -96,8 +127,10 @@ src/
 
 ## Tech
 
-React 19 · TypeScript · Vite · Tailwind CSS 3 · Framer Motion · Lucide icons · React Router 7
+React 19 · TypeScript · Vite · Tailwind CSS 3 · Framer Motion · Lucide icons · React Router 7 · vite-plugin-pwa (Workbox) · Capacitor 8
 
 ## Deployment
 
-`npm run build` outputs a static site to `dist/`. Single-page-app fallbacks are included for Netlify (`public/_redirects`) and Vercel (`vercel.json`).
+**Railway:** `railway.json` builds with `npm run build` and starts `server.mjs` (`npm start`) — a small dependency-free Node server that serves `dist/` with SPA fallback, gzip, and cache headers that keep app updates working. Health check: `/healthz`.
+
+Any static host works too: `npm run build` outputs the site to `dist/`. SPA fallbacks are included for Netlify (`public/_redirects`) and Vercel (`vercel.json`).

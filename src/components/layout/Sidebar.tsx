@@ -11,7 +11,7 @@ import { LanguagePairDisplay } from '../ui/LanguageSelector';
  */
 export function Sidebar({ onChangeLanguage }: { onChangeLanguage: () => void }) {
   return (
-    <aside className="sticky top-0 hidden h-screen shrink-0 flex-col border-r border-ink-200/70 bg-white md:flex md:w-[92px] lg:w-64">
+    <aside className="sticky top-0 hidden h-screen pt-[env(safe-area-inset-top)] shrink-0 flex-col border-r border-ink-200/70 bg-white md:flex md:w-[92px] lg:w-64">
       <div className="flex h-[72px] items-center px-5 lg:px-6">
         <NavLink to="/" aria-label="Verniq home" className="rounded-xl">
           <LogoMark className="lg:hidden" />

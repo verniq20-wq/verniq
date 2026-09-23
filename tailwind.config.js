@@ -61,8 +61,8 @@ export default {
         canvas: '#F5F9FC',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'Noto Sans Devanagari', 'sans-serif'],
-        display: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'Noto Sans Devanagari', 'sans-serif'],
+        sans: ['"Inter Variable"', 'Inter', 'system-ui', '"Noto Sans Devanagari Variable"', 'sans-serif'],
+        display: ['"Plus Jakarta Sans Variable"', '"Inter Variable"', 'system-ui', '"Noto Sans Devanagari Variable"', 'sans-serif'],
       },
       borderRadius: {
         '2xl': '1.25rem',

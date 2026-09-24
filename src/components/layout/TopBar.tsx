@@ -45,7 +45,7 @@ export function TopBar() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search lessons, topics, outcomes…"
-            className="h-11 w-full rounded-xl border border-ink-200 bg-white pl-11 pr-4 text-[15px] shadow-soft placeholder:text-ink-400 focus:border-ocean-500 focus:outline-none focus:ring-2 focus:ring-ocean-200"
+            className="h-11 w-full rounded-xl border border-ink-200 bg-surface pl-11 pr-4 text-[15px] shadow-soft placeholder:text-ink-400 focus:border-ocean-500 focus:outline-none focus:ring-2 focus:ring-ocean-200"
           />
         </form>
 
@@ -58,7 +58,7 @@ export function TopBar() {
               <select
                 value={activeClass.id}
                 onChange={(e) => void setActiveClass(e.target.value)}
-                className="h-10 rounded-xl border border-ink-200 bg-white px-3 text-sm font-semibold text-ink-700 shadow-soft focus:border-ocean-500 focus:outline-none"
+                className="h-10 rounded-xl border border-ink-200 bg-surface px-3 text-sm font-semibold text-ink-700 shadow-soft focus:border-ocean-500 focus:outline-none"
               >
                 {records.classes.map((c) => (
                   <option key={c.id} value={c.id}>

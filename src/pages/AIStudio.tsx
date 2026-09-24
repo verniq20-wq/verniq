@@ -166,7 +166,7 @@ export default function AIStudio() {
                         onClick={() => setOutcomeCode(m.outcome.code)}
                         className={cn(
                           'flex w-full items-start gap-3 rounded-xl border p-3 text-left transition-colors',
-                          selected ? 'border-ocean-500 bg-ocean-50' : 'border-ink-200 bg-white hover:border-ocean-200',
+                          selected ? 'border-ocean-500 bg-ocean-50' : 'border-ink-200 bg-surface hover:border-ocean-200',
                         )}
                       >
                         <span className={cn('mt-0.5 rounded-md px-1.5 py-0.5 font-display text-xs font-bold', selected ? 'bg-ocean-600 text-white' : 'bg-ink-100 text-ink-600')}>{m.outcome.code}</span>
@@ -234,7 +234,7 @@ export default function AIStudio() {
                           aria-current={active === i ? 'step' : undefined}
                           className={cn(
                             'flex min-h-[44px] items-center gap-2 rounded-xl border px-3 text-sm font-semibold transition-all duration-200 sm:px-4',
-                            active === i ? 'border-ocean-600 bg-ocean-600 text-white shadow-soft' : 'border-ink-200 bg-white text-ink-600 hover:border-ocean-200',
+                            active === i ? 'border-ocean-600 bg-ocean-600 text-white shadow-soft' : 'border-ink-200 bg-surface text-ink-600 hover:border-ocean-200',
                           )}
                         >
                           <span className={cn('font-display tabular-nums', active === i ? 'text-aqua-200' : 'text-ink-400')}>{String(i + 1).padStart(2, '0')}</span>
@@ -315,7 +315,7 @@ export default function AIStudio() {
               </motion.div>
             ) : (
               <motion.div key="intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <div className="rounded-3xl border border-dashed border-ink-200 bg-white p-4 sm:p-10">
+                <div className="rounded-3xl border border-dashed border-ink-200 bg-surface p-4 sm:p-10">
                   <h2 className="text-base font-bold sm:text-xl">What you'll get</h2>
                   <ul className="mt-3 grid grid-cols-1 gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-3">
                     {[

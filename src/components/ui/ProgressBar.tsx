@@ -15,7 +15,7 @@ const fills = {
   ocean: 'bg-ocean-500',
   aqua: 'bg-aqua-500',
   gradient: 'bg-ocean-gradient',
-  white: 'bg-white',
+  white: 'bg-surface',
 };
 
 export function ProgressBar({ value, label, showValue, size = 'md', tone = 'gradient', className }: ProgressBarProps) {

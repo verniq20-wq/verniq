@@ -73,7 +73,7 @@ export default function Lessons() {
               onClick={() => update('subject', s === 'All' ? null : s)}
               className={cn(
                 'min-h-[44px] shrink-0 rounded-xl border px-4 text-sm font-semibold transition-colors',
-                subject === s ? 'border-ocean-600 bg-ocean-600 text-white' : 'border-ink-200 bg-white text-ink-600 hover:border-ocean-200 hover:text-ink-900',
+                subject === s ? 'border-ocean-600 bg-ocean-600 text-white' : 'border-ink-200 bg-surface text-ink-600 hover:border-ocean-200 hover:text-ink-900',
               )}
             >
               {s}
@@ -85,7 +85,7 @@ export default function Lessons() {
             onClick={() => update('todo', offlineOnly ? null : '1')}
             className={cn(
               'inline-flex min-h-[44px] shrink-0 items-center gap-2 rounded-xl border px-4 text-sm font-semibold transition-colors',
-              offlineOnly ? 'border-aqua-600 bg-aqua-50 text-aqua-700' : 'border-ink-200 bg-white text-ink-600 hover:border-aqua-200',
+              offlineOnly ? 'border-aqua-600 bg-aqua-50 text-aqua-700' : 'border-ink-200 bg-surface text-ink-600 hover:border-aqua-200',
             )}
           >
             <ListTodo className="h-4 w-4" aria-hidden /> Not taught yet

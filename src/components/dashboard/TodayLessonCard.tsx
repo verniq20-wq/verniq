@@ -39,7 +39,7 @@ export function TodayLessonCard({ lesson }: { lesson: LessonDoc }) {
   return (
     <section
       aria-labelledby="today-lesson"
-      className="relative overflow-hidden rounded-3xl bg-ocean-gradient p-5 text-white shadow-lift sm:p-8"
+      className="light-scope relative overflow-hidden rounded-3xl bg-ocean-gradient p-5 text-white shadow-lift sm:p-8"
     >
       {/* soft light shapes */}
       <div aria-hidden className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" />

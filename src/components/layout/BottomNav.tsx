@@ -19,7 +19,7 @@ export function BottomNav() {
         {moreOpen && (
           <>
             <motion.div
-              className="fixed inset-0 z-30 bg-ink-900/30 md:hidden"
+              className="fixed inset-0 z-30 bg-black/40 md:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -31,7 +31,7 @@ export function BottomNav() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 40, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-x-3 bottom-[88px] z-40 rounded-3xl border border-ink-200 bg-white p-2 shadow-lift md:hidden"
+              className="fixed inset-x-3 bottom-[88px] z-40 rounded-3xl border border-ink-200 bg-surface p-2 shadow-lift md:hidden"
             >
               {secondary.map(({ to, label, icon: Icon }) => (
                 <NavLink
@@ -52,7 +52,7 @@ export function BottomNav() {
 
       <nav
         aria-label="Main"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-200/80 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-200/80 bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
       >
         <ul className="grid grid-cols-5">
           {primary.map(({ to, label, icon: Icon }) => (

@@ -75,12 +75,12 @@ export function RubricRecorder({ classId, students, outcomeCode, lessonId, date 
       <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
         <span className="text-ink-500">Mark everyone:</span>
         {RUBRICS.map((r) => (
-          <button key={r} type="button" onClick={() => setAll(r)} className="min-h-[36px] rounded-lg border border-ink-200 bg-white px-2.5 font-semibold text-ink-700 hover:border-ocean-300">
+          <button key={r} type="button" onClick={() => setAll(r)} className="min-h-[36px] rounded-lg border border-ink-200 bg-surface px-2.5 font-semibold text-ink-700 hover:border-ocean-300">
             {RUBRIC_LABELS[r]}
           </button>
         ))}
       </div>
-      <ul className="divide-y divide-ink-100 rounded-2xl border border-ink-200 bg-white">
+      <ul className="divide-y divide-ink-100 rounded-2xl border border-ink-200 bg-surface">
         {students.map((s) => (
           <li key={s.id} className="flex flex-col gap-2 p-3 sm:flex-row sm:items-center sm:gap-4">
             <p className="min-w-0 flex-1 truncate font-semibold text-ink-900">
@@ -99,7 +99,7 @@ export function RubricRecorder({ classId, students, outcomeCode, lessonId, date 
                     onClick={() => setMarks((m) => ({ ...m, [s.id]: on ? undefined : r }))}
                     className={cn(
                       'inline-flex min-h-[40px] items-center justify-center gap-1 rounded-lg border px-1 text-xs font-semibold transition-colors sm:text-[13px]',
-                      on ? TONE[r] : 'border-ink-200 bg-white text-ink-500 hover:border-ink-300',
+                      on ? TONE[r] : 'border-ink-200 bg-surface text-ink-500 hover:border-ink-300',
                     )}
                   >
                     {on && <Check className="h-3.5 w-3.5 shrink-0" aria-hidden />}

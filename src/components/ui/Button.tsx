@@ -12,12 +12,12 @@ const base =
 const variants: Record<Variant, string> = {
   primary: 'bg-ocean-600 text-white shadow-soft hover:-translate-y-0.5 hover:bg-ocean-500 hover:shadow-lift',
   secondary: 'bg-aqua-600 text-white shadow-soft hover:-translate-y-0.5 hover:bg-aqua-500 hover:shadow-lift',
-  outline: 'border border-ink-200 bg-white text-ink-800 shadow-soft hover:-translate-y-0.5 hover:border-ocean-300 hover:text-ocean-700',
+  outline: 'border border-ink-200 bg-surface text-ink-800 shadow-soft hover:-translate-y-0.5 hover:border-ocean-300 hover:text-ocean-700',
   ghost: 'text-ink-600 hover:bg-ink-100 hover:text-ink-900',
   soft: 'bg-ocean-50 text-ocean-700 hover:bg-ocean-100',
   danger: 'bg-rose-600 text-white hover:bg-rose-500',
   // for use on the ocean gradient
-  inverse: 'bg-white text-ocean-700 shadow-soft hover:-translate-y-0.5 hover:bg-ocean-50 hover:shadow-lift',
+  inverse: 'bg-surface text-ocean-700 shadow-soft hover:-translate-y-0.5 hover:bg-ocean-50 hover:shadow-lift',
   glass: 'text-white hover:bg-white/10',
 };
 

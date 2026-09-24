@@ -11,6 +11,16 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Verniq" />
+    <script>
+      // Apply the saved theme before the app loads (no flash of the wrong theme)
+      try {
+        var t = JSON.parse(localStorage.getItem('verniq:theme') || '"system"');
+        if (t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0B121B');
+        }
+      } catch (e) {}
+    </script>
     <title>Verniq — Learning in the language they understand</title>
   </head>
   <body>

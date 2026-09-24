@@ -39,7 +39,7 @@ export function Flashcard({ card, flipped, onFlip, targetLang, playing, onPlay, 
               onFlip();
             }
           }}
-          className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center rounded-[28px] border border-ink-200 bg-white p-5 shadow-lift sm:p-6 [backface-visibility:hidden] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ocean-200"
+          className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center rounded-[28px] border border-ink-200 bg-surface p-5 shadow-lift sm:p-6 [backface-visibility:hidden] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ocean-200"
         >
           <CardVisual card={card} />
           <p className="mt-5 font-display text-2xl font-extrabold tracking-tight text-ink-900 sm:text-3xl">{card.english}</p>
@@ -66,14 +66,14 @@ export function Flashcard({ card, flipped, onFlip, targetLang, playing, onPlay, 
         <div
           aria-hidden={!flipped}
           onClick={onFlip}
-          className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center rounded-[28px] bg-ocean-gradient p-6 text-center sm:p-8 text-white shadow-lift [backface-visibility:hidden] [transform:rotateY(180deg)]"
+          className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center light-scope rounded-[28px] bg-ocean-gradient p-6 text-center sm:p-8 text-white shadow-lift [backface-visibility:hidden] [transform:rotateY(180deg)]"
         >
           <p className="text-sm font-bold uppercase tracking-[0.16em] text-aqua-100">Ask the class</p>
           <p lang="hi" className="mt-4 font-display text-3xl font-bold leading-snug">
             यह क्या है?
           </p>
           <p className="mt-2 text-xl text-ocean-100">What is this? · {lang}</p>
-          <div className="mt-8 flex h-28 w-28 items-center justify-center rounded-3xl bg-white" aria-hidden>
+          <div className="mt-8 flex h-28 w-28 items-center justify-center rounded-3xl bg-surface" aria-hidden>
             {card.visual.type === 'picture' ? (
               <Picture picture={card.visual.picture} size={72} />
             ) : (

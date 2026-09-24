@@ -131,7 +131,7 @@ function WordList() {
         <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
           {filtered.map((g) => (
             <li key={g.id}>
-              <button type="button" onClick={() => setEditing(g)} className="flex min-h-[64px] w-full items-center gap-3 rounded-2xl border border-ink-200 bg-white p-3 text-left transition-colors hover:border-ocean-300">
+              <button type="button" onClick={() => setEditing(g)} className="flex min-h-[64px] w-full items-center gap-3 rounded-2xl border border-ink-200 bg-surface p-3 text-left transition-colors hover:border-ocean-300">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-ink-50">
                   {g.picture ? <Picture picture={g.picture} size={28} /> : g.value !== undefined ? <span className="font-display text-lg font-extrabold text-ocean-600">{g.value}</span> : <BookA className="h-5 w-5 text-ink-300" aria-hidden />}
                 </span>

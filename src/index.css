@@ -1,3 +1,5 @@
+@import './theme.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,6 +17,7 @@
 
   body {
     @apply bg-canvas font-sans text-ink-800 antialiased;
+    transition: background-color 0.2s ease;
     margin: 0;
   }
 
@@ -29,7 +32,7 @@
   }
 
   :focus-visible {
-    @apply outline-none ring-2 ring-ocean-500 ring-offset-2 ring-offset-white;
+    @apply outline-none ring-2 ring-ocean-500 ring-offset-2 ring-offset-surface;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -50,7 +53,7 @@
   }
 
   .field {
-    @apply min-h-[48px] w-full rounded-xl border border-ink-200 bg-white px-3.5 text-base sm:px-4 text-ink-900 shadow-soft transition-colors placeholder:text-ink-400 hover:border-ink-300 focus:border-ocean-500 focus:outline-none focus:ring-2 focus:ring-ocean-200;
+    @apply min-h-[48px] w-full rounded-xl border border-ink-200 bg-surface px-3.5 text-base sm:px-4 text-ink-900 shadow-soft transition-colors placeholder:text-ink-400 hover:border-ink-300 focus:border-ocean-500 focus:outline-none focus:ring-2 focus:ring-ocean-200;
   }
 
   .eyebrow {
@@ -80,4 +83,15 @@
     box-shadow: none !important;
     border: none !important;
   }
+}
+
+/* Dark mode: deeper shadows read better than light ones on dark surfaces */
+html.dark {
+  --tw-shadow-color: 0 0 0;
+}
+html.dark .shadow-soft {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+html.dark .shadow-lift {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.35);
 }

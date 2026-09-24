@@ -37,8 +37,8 @@ export function AIStatus({ stages, current, doneLabel = 'Ready', className }: AI
                 className={cn(
                   'relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm transition-colors duration-300',
                   state === 'done' && 'bg-aqua-500 text-white',
-                  state === 'active' && 'bg-white text-ocean-600 shadow-soft',
-                  state === 'pending' && 'bg-white/70 text-ink-400',
+                  state === 'active' && 'bg-surface text-ocean-600 shadow-soft',
+                  state === 'pending' && 'bg-surface/70 text-ink-400',
                 )}
               >
                 {state === 'done' ? <Check className="h-4 w-4" aria-hidden /> : <span aria-hidden className="flex">{s.icon ?? i + 1}</span>}

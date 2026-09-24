@@ -67,7 +67,7 @@ export function Tabs<T extends string>({ tabs, value, onChange, label, className
             {active && (
               <motion.span
                 layoutId={`tab-${group}`}
-                className="absolute inset-0 rounded-xl bg-white shadow-soft"
+                className="absolute inset-0 rounded-xl bg-surface shadow-soft"
                 transition={{ type: 'spring', stiffness: 500, damping: 40 }}
               />
             )}

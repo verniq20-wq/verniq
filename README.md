@@ -132,6 +132,7 @@ android/    Capacitor Android project
 ## Design and accessibility
 
 - Colours: `ocean` (primary), `aqua` (secondary), `sun` (accent), `ink` (neutrals), `leaf` / `amber` / `rose` for status. Lucide interface icons, Phosphor duotone illustrations, no emoji. Plus Jakarta Sans, Inter and Noto Sans Devanagari are bundled for offline use.
+- Light and dark themes (Settings → Appearance: Light, Dark or follow the device). All colours are CSS variables in `src/theme.css`; worksheets, flashcard sheets and PDFs always render on white.
 - Phone-first layout with a bottom bar; icon rail on tablets; full sidebar on desktop.
 - Touch targets of 44 px or more, full keyboard support, focus-trapped dialogs, screen-reader announcements, status never by colour alone, larger-text option, reduced motion respected.
 

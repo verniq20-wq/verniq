@@ -135,7 +135,7 @@ export function NumberVisual({ value, size = 'lg' }: { value: number; size?: 'sm
         {dots.map((on, i) => (
           <span
             key={i}
-            className={cn('rounded-full', size === 'lg' ? 'h-4 w-4' : 'h-2.5 w-2.5', on ? 'bg-sun-400' : 'bg-white ring-1 ring-inset ring-ocean-100')}
+            className={cn('rounded-full', size === 'lg' ? 'h-4 w-4' : 'h-2.5 w-2.5', on ? 'bg-sun-400' : 'bg-surface ring-1 ring-inset ring-ocean-100')}
           />
         ))}
       </span>

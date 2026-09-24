@@ -33,7 +33,7 @@ export function SectionScript({ section, source, target, audio, size = 'md' }: P
                   onClick={() => audio.play(`kw-${section.key}-${k.hindi}`, k.target, target)}
                   className={cn(
                     'inline-flex min-h-[40px] items-center gap-2 rounded-xl border px-3 text-sm transition-colors',
-                    audio.playingKey === `kw-${section.key}-${k.hindi}` ? 'border-aqua-400 bg-aqua-50' : 'border-ink-200 bg-white hover:border-aqua-300',
+                    audio.playingKey === `kw-${section.key}-${k.hindi}` ? 'border-aqua-400 bg-aqua-50' : 'border-ink-200 bg-surface hover:border-aqua-300',
                   )}
                 >
                   <span className="font-bold text-ocean-700">{k.target}</span>

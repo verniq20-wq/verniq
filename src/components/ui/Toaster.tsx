@@ -27,7 +27,7 @@ export function Toaster() {
             exit={{ opacity: 0, y: 8, scale: 0.97 }}
             transition={{ duration: 0.2 }}
             role="status"
-            className={cn('pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border border-ink-200 bg-white p-3 shadow-lift sm:p-4')}
+            className={cn('pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border border-ink-200 bg-surface p-3 shadow-lift sm:p-4')}
           >
             {icons[t.tone]}
             <div className="min-w-0 flex-1">

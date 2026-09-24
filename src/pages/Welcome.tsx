@@ -60,7 +60,7 @@ export default function Welcome() {
           <p className="mt-3 max-w-lg text-base text-ink-500 sm:text-lg">Verniq helps primary teachers plan, teach and talk with children in their mother tongue.</p>
           <ul className="mt-6 grid gap-3 sm:grid-cols-2">
             {FEATURES.map(({ icon: Icon, text }) => (
-              <li key={text} className="flex items-start gap-3 rounded-2xl border border-ink-200/80 bg-white p-3.5 shadow-soft">
+              <li key={text} className="flex items-start gap-3 rounded-2xl border border-ink-200/80 bg-surface p-3.5 shadow-soft">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-ocean-50 text-ocean-600">
                   <Icon className="h-5 w-5" aria-hidden />
                 </span>
@@ -74,7 +74,7 @@ export default function Welcome() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          className="order-1 rounded-3xl border border-ink-200/80 bg-white p-5 shadow-lift sm:p-8 lg:order-2"
+          className="order-1 rounded-3xl border border-ink-200/80 bg-surface p-5 shadow-lift sm:p-8 lg:order-2"
           aria-labelledby="auth-title"
         >
           <Logo className="mb-5 lg:hidden" />

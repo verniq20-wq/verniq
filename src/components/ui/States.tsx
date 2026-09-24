@@ -21,7 +21,7 @@ export function EmptyState({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className={cn('flex flex-col items-center rounded-2xl border border-dashed border-ink-200 bg-white px-5 py-10 text-center sm:px-6 sm:py-12', className)}
+      className={cn('flex flex-col items-center rounded-2xl border border-dashed border-ink-200 bg-surface px-5 py-10 text-center sm:px-6 sm:py-12', className)}
     >
       <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-ocean-soft text-ocean-600 ring-1 ring-inset ring-ocean-100" aria-hidden>
         <Icon className="h-7 w-7" strokeWidth={1.75} />
@@ -48,7 +48,7 @@ export function ErrorState({
 }) {
   return (
     <div role="alert" className={cn('flex flex-col items-center rounded-2xl border border-rose-100 bg-rose-50/60 px-6 py-10 text-center', className)}>
-      <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-rose-500 shadow-soft" aria-hidden>
+      <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-surface text-rose-500 shadow-soft" aria-hidden>
         <CloudOff className="h-7 w-7" />
       </span>
       <h3 className="text-lg font-bold">{title}</h3>

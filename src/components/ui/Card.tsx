@@ -10,7 +10,7 @@ export function Card({ interactive, padded = true, className, children, ...rest 
   return (
     <div
       className={cn(
-        'rounded-2xl border border-ink-200/80 bg-white shadow-soft',
+        'rounded-2xl border border-ink-200/80 bg-surface shadow-soft',
         padded && 'p-4 sm:p-6',
         interactive && 'transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-[3px] hover:border-ocean-200 hover:shadow-lift',
         className,

@@ -7,7 +7,7 @@ interface WaveformProps {
   tone?: 'ocean' | 'aqua' | 'white';
 }
 
-const toneClass = { ocean: 'bg-ocean-500', aqua: 'bg-aqua-500', white: 'bg-white' };
+const toneClass = { ocean: 'bg-ocean-500', aqua: 'bg-aqua-500', white: 'bg-surface' };
 
 /** Decorative audio waveform. Hidden from assistive tech. */
 export function Waveform({ active, bars = 24, className, tone = 'aqua' }: WaveformProps) {

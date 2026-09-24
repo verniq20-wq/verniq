@@ -18,8 +18,9 @@ export async function initNative(navigateBack: () => void) {
   ]);
 
   try {
-    await StatusBar.setStyle({ style: Style.Light });
-    if (platform === 'android') await StatusBar.setBackgroundColor({ color: '#F5F9FC' });
+    const dark = document.documentElement.classList.contains('dark');
+    await StatusBar.setStyle({ style: dark ? Style.Dark : Style.Light });
+    if (platform === 'android') await StatusBar.setBackgroundColor({ color: dark ? '#0B121B' : '#F5F9FC' });
   } catch {
     /* status bar not available */
   }

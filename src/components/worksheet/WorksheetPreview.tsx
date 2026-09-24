@@ -181,7 +181,7 @@ export const WorksheetPreview = forwardRef<HTMLElement, Props>(function Workshee
       id="printable"
       aria-label="Worksheet preview"
       className={cn(
-        'mx-auto w-full max-w-[720px] rounded-2xl border border-ink-200 bg-white p-4 shadow-lift sm:p-10',
+        'light-scope text-ink-800 mx-auto w-full max-w-[720px] rounded-2xl border border-ink-200 bg-surface p-4 shadow-lift sm:p-10',
         editable && 'ring-2 ring-sun-300 ring-offset-4 ring-offset-canvas',
       )}
     >

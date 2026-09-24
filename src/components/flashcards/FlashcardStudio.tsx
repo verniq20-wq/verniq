@@ -207,7 +207,7 @@ export function FlashcardStudio({ openParam }: { openParam?: string | null }) {
             )}
 
             <div className="mt-5 flex items-center justify-between gap-3">
-              <IconButton label="Previous card" onClick={() => go(-1)} disabled={index === 0} className="h-12 w-12 border border-ink-200 bg-white">
+              <IconButton label="Previous card" onClick={() => go(-1)} disabled={index === 0} className="h-12 w-12 border border-ink-200 bg-surface">
                 <ChevronLeft className="h-6 w-6" />
               </IconButton>
               <div className="flex flex-wrap justify-center gap-1.5" aria-hidden>
@@ -215,7 +215,7 @@ export function FlashcardStudio({ openParam }: { openParam?: string | null }) {
                   <span key={c.id} className={cn('h-2 rounded-full transition-all duration-300', i === index ? 'w-6 bg-ocean-600' : 'w-2 bg-ink-200')} />
                 ))}
               </div>
-              <IconButton label="Next card" onClick={() => go(1)} disabled={index === cards.length - 1} className="h-12 w-12 border border-ink-200 bg-white">
+              <IconButton label="Next card" onClick={() => go(1)} disabled={index === cards.length - 1} className="h-12 w-12 border border-ink-200 bg-surface">
                 <ChevronRight className="h-6 w-6" />
               </IconButton>
             </div>

@@ -5,6 +5,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { NotificationItem, Toast } from '../types';
 import { uid } from '../utils';
+import { applyTheme, watchSystemTheme, type ThemePref } from '../platform/theme';
 
 interface AppState {
   notifications: NotificationItem[];
@@ -16,6 +17,8 @@ interface AppState {
   dismissToast: (id: string) => void;
   largeText: boolean;
   setLargeText: (v: boolean) => void;
+  theme: ThemePref;
+  setTheme: (t: ThemePref) => void;
 }
 
 const AppContext = createContext<AppState | null>(null);
@@ -41,6 +44,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [largeText, setLargeTextState] = useState<boolean>(() => readPref('largeText', false));
   const [notifications, setNotifications] = useState<NotificationItem[]>(() => readPref('notifications', []));
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [theme, setThemeState] = useState<ThemePref>(() => readPref<ThemePref>('theme', 'system'));
+
+  useEffect(() => {
+    applyTheme(theme);
+    if (theme !== 'system') return;
+    return watchSystemTheme(() => applyTheme('system'));
+  }, [theme]);
+
+  const setTheme = useCallback((t: ThemePref) => {
+    setThemeState(t);
+    writePref('theme', t);
+  }, []);
 
   useEffect(() => {
     document.documentElement.classList.toggle('text-large', largeText);
@@ -79,8 +94,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       dismissToast,
       largeText,
       setLargeText,
+      theme,
+      setTheme,
     }),
-    [notifications, notify, markAllRead, toasts, toast, dismissToast, largeText, setLargeText],
+    [notifications, notify, markAllRead, toasts, toast, dismissToast, largeText, setLargeText, theme, setTheme],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

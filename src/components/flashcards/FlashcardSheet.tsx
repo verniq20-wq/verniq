@@ -7,7 +7,7 @@ import type { FlashcardType } from './Flashcard';
 /** Printable A4 sheet of cut-out cards (2 per row). Used for PDF export. */
 export const FlashcardSheet = forwardRef<HTMLDivElement, { title: string; cards: FlashcardType[]; language: LanguageCode }>(function FlashcardSheet({ title, cards, language }, ref) {
   return (
-    <div ref={ref} className="w-[760px] bg-white p-8">
+    <div ref={ref} className="light-scope text-ink-800 w-[760px] bg-surface p-8">
       <h2 className="mb-4 font-display text-2xl font-extrabold text-ink-900">{title}</h2>
       <div className="grid grid-cols-2 gap-4">
         {cards.map((c) => (

@@ -29,7 +29,7 @@ export function QuickActions() {
           <motion.li key={a.to} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i, duration: 0.25 }}>
             <Link
               to={a.to}
-              className="group flex h-full min-h-[112px] flex-col rounded-2xl border border-ink-200/80 bg-white p-3.5 shadow-soft transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-[3px] hover:border-ocean-200 hover:shadow-lift sm:min-h-[148px] sm:p-5"
+              className="group flex h-full min-h-[112px] flex-col rounded-2xl border border-ink-200/80 bg-surface p-3.5 shadow-soft transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-[3px] hover:border-ocean-200 hover:shadow-lift sm:min-h-[148px] sm:p-5"
             >
               <div className="flex items-start justify-between">
                 <span className={cn('flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-200 group-hover:scale-105 sm:h-12 sm:w-12 sm:rounded-2xl', a.tint)}>

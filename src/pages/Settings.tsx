@@ -1,4 +1,5 @@
-import { CloudUpload, Download, LogOut, Save, ShieldCheck } from 'lucide-react';
+import { CloudUpload, Download, LogOut, Monitor, Moon, Save, ShieldCheck, Sun } from 'lucide-react';
+import { Tabs } from '../components/ui/Tabs';
 import { useState, type FormEvent } from 'react';
 import { InstallCard } from '../components/layout/InstallCard';
 import { Button } from '../components/ui/Button';
@@ -29,14 +30,14 @@ function Toggle({ checked, onChange, label, description }: { checked: boolean; o
         onClick={() => onChange(!checked)}
         className={cn('relative h-8 w-14 shrink-0 rounded-full transition-colors duration-200', checked ? 'bg-aqua-500' : 'bg-ink-200')}
       >
-        <span className={cn('absolute top-1 h-6 w-6 rounded-full bg-white shadow-soft transition-transform duration-200', checked ? 'translate-x-7' : 'translate-x-1')} />
+        <span className={cn('absolute top-1 h-6 w-6 rounded-full bg-surface shadow-soft transition-transform duration-200', checked ? 'translate-x-7' : 'translate-x-1')} />
       </button>
     </div>
   );
 }
 
 export default function Settings() {
-  const { largeText, setLargeText, toast } = useApp();
+  const { largeText, setLargeText, theme, setTheme, toast } = useApp();
   const { teacher, session, updateProfile, logout, exportBackup, signup, sync } = useData();
   const { openLanguagePicker } = useShell();
   const [name, setName] = useState(teacher?.name ?? '');
@@ -158,8 +159,21 @@ export default function Settings() {
         <InstallCard />
 
         <Card>
-          <CardHeader title="Accessibility" />
-          <div className="divide-y divide-ink-100">
+          <CardHeader title="Appearance" />
+          <p className="field-label">Theme</p>
+          <Tabs
+            label="Theme"
+            stretch
+            value={theme}
+            onChange={setTheme}
+            tabs={[
+              { value: 'light', label: 'Light', icon: <Sun className="h-4 w-4" aria-hidden /> },
+              { value: 'dark', label: 'Dark', icon: <Moon className="h-4 w-4" aria-hidden /> },
+              { value: 'system', label: 'Device', icon: <Monitor className="h-4 w-4" aria-hidden /> },
+            ]}
+          />
+          <p className="mt-2 text-sm text-ink-500">Dark is easier on the eyes in the evening and saves battery on many phones. Worksheets and PDFs always print on white.</p>
+          <div className="mt-3 divide-y divide-ink-100 border-t border-ink-100">
             <Toggle checked={largeText} onChange={setLargeText} label="Larger text" description="Easier to read from a distance in class." />
           </div>
           <p className="mt-3 text-sm text-ink-500">Animations follow your device's “reduce motion” setting.</p>

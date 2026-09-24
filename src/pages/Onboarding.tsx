@@ -82,7 +82,7 @@ export default function Onboarding() {
           ))}
         </ol>
 
-        <motion.div key={step} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} className="mt-6 rounded-3xl border border-ink-200/80 bg-white p-5 shadow-soft sm:p-6">
+        <motion.div key={step} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} className="mt-6 rounded-3xl border border-ink-200/80 bg-surface p-5 shadow-soft sm:p-6">
           {step === 0 && (
             <div className="space-y-4">
               <h2 className="flex items-center gap-2 text-lg font-bold">

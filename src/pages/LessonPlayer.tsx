@@ -89,7 +89,7 @@ export default function LessonPlayer() {
   return (
     <div className="flex min-h-screen flex-col bg-canvas">
       {/* Header */}
-      <header className="sticky top-0 z-20 border-b pt-[env(safe-area-inset-top)] border-ink-200/60 bg-white/90 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b pt-[env(safe-area-inset-top)] border-ink-200/60 bg-surface/90 backdrop-blur">
         <div className="mx-auto flex max-w-4xl items-center gap-3 px-4 py-3 sm:px-6">
           <Link
             to="/lessons"
@@ -122,7 +122,7 @@ export default function LessonPlayer() {
       <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-5 sm:px-6 sm:py-10">
         {finished ? (
           <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="space-y-5">
-            <div className="rounded-3xl bg-white p-6 text-center shadow-soft sm:p-10">
+            <div className="rounded-3xl bg-surface p-6 text-center shadow-soft sm:p-10">
               <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-leaf-50 text-leaf-600 sm:h-20 sm:w-20">
                 <PartyPopper className="h-8 w-8 sm:h-10 sm:w-10" aria-hidden />
               </span>
@@ -138,7 +138,7 @@ export default function LessonPlayer() {
               </div>
             </div>
             {activeClass && (
-              <section className="rounded-3xl bg-white p-4 shadow-soft sm:p-6">
+              <section className="rounded-3xl bg-surface p-4 shadow-soft sm:p-6">
                 <h2 className="font-display text-lg font-bold">Record results</h2>
                 <p className="mb-4 text-sm text-ink-500">
                   {lesson.outcomeCode} · {lesson.learningOutcome}
@@ -181,13 +181,13 @@ export default function LessonPlayer() {
                 </section>
               )}
 
-              <section className="rounded-3xl bg-white p-4 shadow-soft sm:p-8">
+              <section className="rounded-3xl bg-surface p-4 shadow-soft sm:p-8">
                 <h2 className="eyebrow mb-2 sm:mb-3">Teacher script</h2>
                 <SectionScript section={section} source={pair.source} target={pair.target} audio={audio} size="lg" />
               </section>
 
               {section.steps && (
-                <section className="rounded-3xl bg-white p-4 shadow-soft sm:p-8">
+                <section className="rounded-3xl bg-surface p-4 shadow-soft sm:p-8">
                   <h2 className="eyebrow mb-3">In class</h2>
                   {section.materials && section.materials.length > 0 && (
                     <p className="mb-3 rounded-xl bg-sun-50 px-3 py-2 text-sm text-sun-900">
@@ -224,7 +224,7 @@ export default function LessonPlayer() {
               )}
 
               {section.key === 'explain' && vocabulary.length > 0 && (
-                <section className="rounded-3xl bg-white p-4 shadow-soft sm:p-8">
+                <section className="rounded-3xl bg-surface p-4 shadow-soft sm:p-8">
                   <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                     <h2 className="eyebrow">Words for this lesson</h2>
                     <span className="text-xs text-ink-400">Tap to hear · {languageName(pair.target)}</span>
@@ -237,7 +237,7 @@ export default function LessonPlayer() {
                           onClick={() => void audio.play(`v-${i}`, v.target, pair.target)}
                           className={cn(
                             'flex w-full flex-col items-center rounded-2xl border p-3 text-center transition-all hover:-translate-y-0.5 hover:shadow-soft',
-                            audio.playingKey === `v-${i}` ? 'border-aqua-400 bg-aqua-50' : 'border-ink-200 bg-white',
+                            audio.playingKey === `v-${i}` ? 'border-aqua-400 bg-aqua-50' : 'border-ink-200 bg-surface',
                           )}
                           aria-label={`${v.hindi}, ${languageName(pair.target)} ${v.target}. Play`}
                         >
@@ -260,7 +260,7 @@ export default function LessonPlayer() {
       </main>
 
       {!finished && (
-        <footer className="sticky bottom-0 border-t border-ink-200/60 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
+        <footer className="sticky bottom-0 border-t border-ink-200/60 bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
           <div className="mx-auto flex max-w-4xl items-center gap-2 px-4 py-3 sm:gap-3 sm:px-6">
             <Button variant="outline" size="lg" onClick={() => go(-1)} disabled={step === 0} icon={<ArrowLeft className="h-5 w-5" />} aria-label="Previous step" className="px-3.5 sm:px-6">
               <span className="hidden sm:inline">Previous</span>

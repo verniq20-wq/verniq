@@ -98,7 +98,7 @@ export function LanguagePickerModal({ open, onClose }: { open: boolean; onClose:
                 aria-pressed={selected}
                 className={cn(
                   'flex min-h-[64px] items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-left transition-all duration-200',
-                  selected ? 'border-ocean-500 bg-ocean-50 ring-2 ring-ocean-200' : 'border-ink-200 bg-white hover:border-ocean-200 hover:bg-ocean-50/40',
+                  selected ? 'border-ocean-500 bg-ocean-50 ring-2 ring-ocean-200' : 'border-ink-200 bg-surface hover:border-ocean-200 hover:bg-ocean-50/40',
                 )}
               >
                 <span>
@@ -125,7 +125,7 @@ function Chip({ selected, onClick, children }: { selected: boolean; onClick: () 
       onClick={onClick}
       className={cn(
         'inline-flex min-h-[44px] items-center gap-2 rounded-xl border px-4 font-semibold transition-all duration-200',
-        selected ? 'border-ocean-500 bg-ocean-50 text-ocean-700' : 'border-ink-200 bg-white text-ink-700 hover:border-ocean-200',
+        selected ? 'border-ocean-500 bg-ocean-50 text-ocean-700' : 'border-ink-200 bg-surface text-ink-700 hover:border-ocean-200',
       )}
     >
       {children}

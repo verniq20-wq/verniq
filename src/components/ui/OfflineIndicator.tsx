@@ -134,7 +134,7 @@ export function OfflineIndicator() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.16 }}
-            className="absolute right-0 top-12 z-40 w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-ink-200 bg-white p-5 shadow-lift"
+            className="absolute right-0 top-12 z-40 w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-ink-200 bg-surface p-5 shadow-lift"
           >
             <OfflinePanel compact />
           </motion.div>

@@ -257,7 +257,7 @@ export default function LiveTranslation() {
         {/* Stage */}
         <section
           aria-label="Live translation"
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-ocean-800 via-ocean-700 to-ocean-600 px-4 py-6 text-white shadow-lift sm:px-10 sm:py-10"
+          className="light-scope relative overflow-hidden rounded-3xl bg-gradient-to-b from-ocean-800 via-ocean-700 to-ocean-600 px-4 py-6 text-white shadow-lift sm:px-10 sm:py-10"
         >
           <div aria-hidden className="absolute -left-20 top-10 h-64 w-64 rounded-full bg-aqua-400/15 blur-3xl" />
           <div aria-hidden className="absolute -right-10 bottom-0 h-72 w-72 rounded-full bg-ocean-300/10 blur-3xl" />
@@ -303,7 +303,7 @@ export default function LiveTranslation() {
                     onChange={(e) => setTyped(e.target.value)}
                     lang={speakerLang}
                     placeholder={fromTeacher ? `Type in ${teacherLang}…` : `Type in ${studentLang}…`}
-                    className="min-h-[48px] min-w-0 flex-1 rounded-xl border-0 bg-white px-4 text-ink-900 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-aqua-300"
+                    className="min-h-[48px] min-w-0 flex-1 rounded-xl border-0 bg-surface px-4 text-ink-900 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-aqua-300"
                     autoComplete="off"
                   />
                   <Button type="submit" variant="inverse" disabled={!typed.trim() || active} aria-label="Translate" className="min-h-[48px] px-4">
@@ -350,7 +350,7 @@ export default function LiveTranslation() {
                       <span
                         className={cn(
                           'rounded-full px-3 py-1.5 transition-colors duration-300',
-                          state === 'active' && 'bg-white text-ocean-700',
+                          state === 'active' && 'bg-surface text-ocean-700',
                           state === 'done' && 'bg-aqua-500/80 text-white',
                           state === 'pending' && 'bg-white/10 text-ocean-100',
                         )}
@@ -462,7 +462,7 @@ export default function LiveTranslation() {
                         />
                       )}
                       {t.method !== 'memory' && (
-                        <button type="button" onClick={() => openEditor(t)} className="inline-flex min-h-[36px] items-center gap-1.5 rounded-lg px-2 text-sm font-semibold text-ocean-700 hover:bg-white">
+                        <button type="button" onClick={() => openEditor(t)} className="inline-flex min-h-[36px] items-center gap-1.5 rounded-lg px-2 text-sm font-semibold text-ocean-700 hover:bg-surface">
                           <BookmarkPlus className="h-4 w-4" aria-hidden /> Save
                         </button>
                       )}

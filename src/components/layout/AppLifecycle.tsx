@@ -34,7 +34,7 @@ export function AppLifecycle() {
           initial={{ y: -40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -40, opacity: 0 }}
-          className="fixed inset-x-3 top-3 z-[65] mx-auto flex max-w-lg items-center gap-3 rounded-2xl border border-ocean-100 bg-white p-3 pl-4 shadow-lift"
+          className="fixed inset-x-3 top-3 z-[65] mx-auto flex max-w-lg items-center gap-3 rounded-2xl border border-ocean-100 bg-surface p-3 pl-4 shadow-lift"
         >
           <RefreshCw className="h-5 w-5 shrink-0 text-ocean-600" aria-hidden />
           <p className="min-w-0 flex-1 text-sm">

@@ -12,7 +12,7 @@ export function LessonCard({ lesson }: { lesson: Lesson }) {
   const { toggleOffline } = useApp();
 
   return (
-    <article className="group relative flex flex-col rounded-2xl border border-ink-200/80 bg-white p-4 shadow-soft transition sm:p-5-[transform,box-shadow,border-color] duration-200 hover:-translate-y-[3px] hover:border-ocean-200 hover:shadow-lift">
+    <article className="group relative flex flex-col rounded-2xl border border-ink-200/80 bg-white p-4 shadow-soft transition-[transform,box-shadow,border-color] duration-200 sm:p-5 hover:-translate-y-[3px] hover:border-ocean-200 hover:shadow-lift">
       <div className="flex items-start gap-3 sm:gap-4">
         <SubjectIcon subject={lesson.subject} />
         <div className="min-w-0 flex-1">

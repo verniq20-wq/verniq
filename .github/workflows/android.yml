@@ -1,8 +1,10 @@
-name: Android APK
+name: Android
 
 # Builds the Verniq Android app on every push to main.
-# Download the APK from the run's "Artifacts" section, or from the
-# "android-latest" release on the repository's Releases page.
+#
+# Always: a debug APK anyone can install (Releases → "android-latest").
+# When the signing secrets are set (see README → "Play Store release"):
+#   a signed release APK and a signed .aab for the Google Play Console.
 on:
   push:
     branches: [main]
@@ -11,9 +13,16 @@ on:
 permissions:
   contents: write
 
+env:
+  # The Android app talks to the Verniq server for accounts and sync.
+  VITE_VERNIQ_API_URL: https://verniq-production.up.railway.app
+  VERNIQ_VERSION_CODE: ${{ github.run_number }}
+
 jobs:
-  apk:
+  android:
     runs-on: ubuntu-latest
+    env:
+      HAS_KEY: ${{ secrets.VERNIQ_KEYSTORE_BASE64 != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -34,17 +43,37 @@ jobs:
           npm run build
           npx cap sync android
 
-      - name: Build APK
+      - name: Build debug APK
         working-directory: android
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
           cp app/build/outputs/apk/debug/app-debug.apk ../verniq.apk
 
+      - name: Build signed release (APK + Play Store bundle)
+        id: release
+        if: ${{ env.HAS_KEY == 'true' }}
+        env:
+          VERNIQ_KEYSTORE_PASSWORD: ${{ secrets.VERNIQ_KEYSTORE_PASSWORD }}
+          VERNIQ_KEY_ALIAS: ${{ secrets.VERNIQ_KEY_ALIAS }}
+          VERNIQ_KEY_PASSWORD: ${{ secrets.VERNIQ_KEY_PASSWORD }}
+        working-directory: android
+        run: |
+          echo "${{ secrets.VERNIQ_KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/verniq-upload.jks"
+          export VERNIQ_KEYSTORE="$RUNNER_TEMP/verniq-upload.jks"
+          ./gradlew assembleRelease bundleRelease --no-daemon
+          cp app/build/outputs/apk/release/app-release.apk ../verniq-release.apk
+          cp app/build/outputs/bundle/release/app-release.aab ../verniq-release.aab
+          rm -f "$RUNNER_TEMP/verniq-upload.jks"
+
       - uses: actions/upload-artifact@v4
         with:
           name: verniq-android
-          path: verniq.apk
+          path: |
+            verniq.apk
+            verniq-release.apk
+            verniq-release.aab
+          if-no-files-found: ignore
 
       - name: Publish to "android-latest" release
         uses: softprops/action-gh-release@v2
@@ -52,7 +81,14 @@ jobs:
           tag_name: android-latest
           name: Verniq Android (latest)
           prerelease: true
-          files: verniq.apk
+          fail_on_unmatched_files: false
+          files: |
+            verniq.apk
+            verniq-release.apk
+            verniq-release.aab
           body: |
-            Latest Android build of Verniq from `main`.
-            Install `verniq.apk` on an Android phone or tablet (allow "Install unknown apps" when asked).
+            Latest Android build of Verniq from `main` (build ${{ github.run_number }}).
+
+            - `verniq.apk` — install on any Android phone or tablet (allow "Install unknown apps" when asked).
+            - `verniq-release.aab` — signed bundle to upload to the Google Play Console (only when signing secrets are set).
+            - `verniq-release.apk` — the same signed build as an APK.

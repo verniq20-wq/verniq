@@ -1,8 +1,9 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeftRight, Check, Download } from 'lucide-react';
+import { ArrowLeftRight, Check } from 'lucide-react';
 import { useState } from 'react';
 import { LANGUAGES, TRIBAL_LANGUAGES, getLanguage } from '../../data/languages';
 import { useApp } from '../../store/AppContext';
+import { useData } from '../../store/DataContext';
 import type { LanguageCode } from '../../types';
 import { cn } from '../../utils';
 import { Button } from './Button';
@@ -10,7 +11,8 @@ import { Modal } from './Modal';
 
 /** Animated "Hindi ⇄ Ho" display. */
 export function LanguagePairDisplay({ size = 'md', light }: { size?: 'sm' | 'md' | 'lg'; light?: boolean }) {
-  const { pair } = useApp();
+  const { activeClass } = useData();
+  const pair = { source: activeClass?.sourceLanguage ?? 'hi', target: activeClass?.language ?? 'ho' };
   const src = getLanguage(pair.source);
   const tgt = getLanguage(pair.target);
   const text = { sm: 'text-sm', md: 'text-lg', lg: 'text-2xl' }[size];
@@ -45,12 +47,13 @@ export function LanguagePairDisplay({ size = 'md', light }: { size?: 'sm' | 'md'
  * Give it a new `key` each time it opens so the draft selection starts fresh.
  */
 export function LanguagePickerModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { pair, setPair, toast } = useApp();
-  const [source, setSource] = useState<LanguageCode>(pair.source);
-  const [target, setTarget] = useState<LanguageCode>(pair.target);
+  const { toast } = useApp();
+  const { activeClass, put } = useData();
+  const [source, setSource] = useState<LanguageCode>(activeClass?.sourceLanguage ?? 'hi');
+  const [target, setTarget] = useState<LanguageCode>(activeClass?.language ?? 'ho');
 
   const save = () => {
-    setPair({ source, target });
+    if (activeClass) void put('classes', { ...activeClass, sourceLanguage: source === 'en' ? 'en' : 'hi', language: target });
     toast({ tone: 'success', title: 'Classroom language updated', detail: `${getLanguage(source).name} ↔ ${getLanguage(target).name}` });
     onClose();
   };
@@ -60,7 +63,7 @@ export function LanguagePickerModal({ open, onClose }: { open: boolean; onClose:
       open={open}
       onClose={onClose}
       title="Classroom language"
-      description="Choose the language you teach in and your students’ home language."
+      description={`For ${activeClass?.name ?? 'this class'}: the language you teach in and your students’ home language.`}
       size="lg"
       footer={
         <>
@@ -102,17 +105,7 @@ export function LanguagePickerModal({ open, onClose }: { open: boolean; onClose:
                   <span className="block font-semibold text-ink-900">
                     {l.name} <span className="font-normal text-ink-400">· {l.nativeName}</span>
                   </span>
-                  <span className="mt-0.5 flex items-center gap-1 text-xs text-ink-500">
-                    {l.downloaded ? (
-                      <>
-                        <span className="h-1.5 w-1.5 rounded-full bg-ocean-500" aria-hidden /> Offline ready
-                      </>
-                    ) : (
-                      <>
-                        <Download className="h-3 w-3" aria-hidden /> {l.packSizeMb} MB download
-                      </>
-                    )}
-                  </span>
+                  <span className="mt-0.5 block text-xs text-ink-500">{l.script}</span>
                 </span>
                 {selected && <Check className="h-5 w-5 text-ocean-600" aria-hidden />}
               </button>

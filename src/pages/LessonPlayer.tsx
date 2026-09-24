@@ -2,13 +2,16 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Check, Clock, Compass, Mic, PartyPopper, Target, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { AudioButton } from '../components/ui/AudioButton';
+import { RubricRecorder } from '../components/class/RubricRecorder';
+import { SectionScript } from '../components/lesson/SectionView';
+import { Picture } from '../components/ui/Picture';
 import { Button, ButtonLink } from '../components/ui/Button';
 import { LanguagePairDisplay } from '../components/ui/LanguageSelector';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { EmptyState, Skeleton } from '../components/ui/States';
 import { languageName } from '../data/languages';
 import { useAudio } from '../hooks/useAudio';
+import { useClassroom } from '../hooks/useClassroom';
 import { useApp } from '../store/AppContext';
 import { cn } from '../utils';
 
@@ -16,9 +19,12 @@ import { cn } from '../utils';
 export default function LessonPlayer() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { lessons, lessonsLoading, upsertLesson, pair, toast } = useApp();
-  const lesson = lessons.find((l) => l.id === id);
-  const total = lesson?.sections.length ?? 0;
+  const { ready, records, put, activeStudents, assessments, activeClass } = useClassroom();
+  const { toast } = useApp();
+  const lesson = records.lessons.find((l) => l.id === id);
+  const total = lesson?.content.sections.length ?? 0;
+  const pair = { source: activeClass?.sourceLanguage ?? 'hi', target: lesson?.language ?? activeClass?.language ?? 'ho' } as const;
+  const [recorded, setRecorded] = useState(false);
 
   const [step, setStep] = useState(() => (lesson ? Math.min(Math.round(lesson.progress * total), total - 1) : 0));
   const [direction, setDirection] = useState(1);
@@ -33,15 +39,15 @@ export default function LessonPlayer() {
       const next = step + delta;
       if (next >= total) {
         setFinished(true);
-        upsertLesson({ ...lesson, status: 'completed', progress: 1 });
+        void put('lessons', { ...lesson, status: 'completed', progress: 1, scheduledFor: undefined });
         return;
       }
       if (next < 0) return;
       setDirection(delta);
       setStep(next);
-      upsertLesson({ ...lesson, status: 'in-progress', progress: Math.max(lesson.progress, next / total) });
+      void put('lessons', { ...lesson, status: lesson.status === 'completed' ? 'completed' : 'in-progress', progress: Math.max(lesson.progress, next / total) });
     },
-    [audio, lesson, step, total, upsertLesson],
+    [audio, lesson, step, total, put],
   );
 
   useEffect(() => {
@@ -55,7 +61,7 @@ export default function LessonPlayer() {
     return () => window.removeEventListener('keydown', onKey);
   }, [go, navigate]);
 
-  if (lessonsLoading) {
+  if (!ready) {
     return (
       <div className="mx-auto max-w-3xl space-y-4 p-6">
         <Skeleton className="h-12" />
@@ -77,7 +83,8 @@ export default function LessonPlayer() {
     );
   }
 
-  const section = lesson.sections[step];
+  const section = lesson.content.sections[step];
+  const vocabulary = lesson.content.vocabulary;
 
   return (
     <div className="flex min-h-screen flex-col bg-canvas">
@@ -114,22 +121,38 @@ export default function LessonPlayer() {
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-5 sm:px-6 sm:py-10">
         {finished ? (
-          <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="rounded-3xl bg-white p-8 text-center shadow-soft sm:p-12">
-            <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-leaf-50 text-leaf-600">
-              <PartyPopper className="h-10 w-10" aria-hidden />
-            </span>
-            <h1 className="mt-6 text-3xl font-extrabold">Lesson complete!</h1>
-            <p className="mx-auto mt-2 max-w-md text-lg text-ink-500">
-              Great teaching. {lesson.topic} is marked as taught and saved to class progress.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <ButtonLink to="/materials?tab=worksheets" size="lg">
-                Create a worksheet
-              </ButtonLink>
-              <ButtonLink to="/" size="lg" variant="outline">
-                Back to home
-              </ButtonLink>
+          <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="space-y-5">
+            <div className="rounded-3xl bg-white p-6 text-center shadow-soft sm:p-10">
+              <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-leaf-50 text-leaf-600 sm:h-20 sm:w-20">
+                <PartyPopper className="h-8 w-8 sm:h-10 sm:w-10" aria-hidden />
+              </span>
+              <h1 className="mt-5 text-2xl font-extrabold sm:text-3xl">Lesson complete</h1>
+              <p className="mx-auto mt-2 max-w-md text-ink-500 sm:text-lg">{lesson.topic} is marked as taught. Record how each child did so progress stays accurate.</p>
+              <div className="mt-6 flex flex-wrap justify-center gap-3">
+                <ButtonLink to={`/materials?tab=worksheets&lesson=${lesson.id}`} variant="outline">
+                  Make a worksheet
+                </ButtonLink>
+                <ButtonLink to="/" variant={recorded ? 'primary' : 'ghost'}>
+                  Back to home
+                </ButtonLink>
+              </div>
             </div>
+            {activeClass && (
+              <section className="rounded-3xl bg-white p-4 shadow-soft sm:p-6">
+                <h2 className="font-display text-lg font-bold">Record results</h2>
+                <p className="mb-4 text-sm text-ink-500">
+                  {lesson.outcomeCode} · {lesson.learningOutcome}
+                </p>
+                <RubricRecorder
+                  classId={activeClass.id}
+                  students={activeStudents}
+                  outcomeCode={lesson.outcomeCode}
+                  lessonId={lesson.id}
+                  assessments={assessments}
+                  onSaved={() => setRecorded(true)}
+                />
+              </section>
+            )}
           </motion.div>
         ) : (
           <AnimatePresence mode="wait" custom={direction}>
@@ -159,33 +182,18 @@ export default function LessonPlayer() {
               )}
 
               <section className="rounded-3xl bg-white p-4 shadow-soft sm:p-8">
-                <h2 className="eyebrow">Teacher script</h2>
-                <p lang="hi" className="mt-2 text-xl font-semibold leading-relaxed text-ink-900 sm:mt-3 sm:text-[28px]">
-                  “{section.script}”
-                </p>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <AudioButton
-                    variant="solid"
-                    label={`Play in ${languageName(pair.target)}`}
-                    playing={audio.playingKey === `${section.key}-t`}
-                    onPlay={() => void audio.play(`${section.key}-t`, section.scriptTarget ?? section.script, pair.target)}
-                    onStop={audio.stop}
-                  />
-                  <AudioButton
-                    label={`Play in ${languageName(pair.source)}`}
-                    playing={audio.playingKey === `${section.key}-s`}
-                    onPlay={() => void audio.play(`${section.key}-s`, section.script, pair.source)}
-                    onStop={audio.stop}
-                  />
-                </div>
-                {audio.simulated && (
-                  <p className="mt-3 text-xs text-ink-400">{languageName(pair.target)} voice pack not connected yet — playback is simulated in this demo.</p>
-                )}
+                <h2 className="eyebrow mb-2 sm:mb-3">Teacher script</h2>
+                <SectionScript section={section} source={pair.source} target={pair.target} audio={audio} size="lg" />
               </section>
 
               {section.steps && (
                 <section className="rounded-3xl bg-white p-4 shadow-soft sm:p-8">
                   <h2 className="eyebrow mb-3">In class</h2>
+                  {section.materials && section.materials.length > 0 && (
+                    <p className="mb-3 rounded-xl bg-sun-50 px-3 py-2 text-sm text-sun-900">
+                      <span className="font-semibold">You need:</span> {section.materials.join(', ')}
+                    </p>
+                  )}
                   <ul className="space-y-2">
                     {section.steps.map((s, i) => {
                       const k = `${section.key}-${i}`;
@@ -215,27 +223,31 @@ export default function LessonPlayer() {
                 </section>
               )}
 
-              {section.key === 'explain' && lesson.vocabulary.length > 0 && (
+              {section.key === 'explain' && vocabulary.length > 0 && (
                 <section className="rounded-3xl bg-white p-4 shadow-soft sm:p-8">
-                  <div className="mb-4 flex items-center justify-between gap-3">
-                    <h2 className="eyebrow">Vocabulary</h2>
-                    <span className="text-xs text-ink-400">Sample words · community review pending</span>
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                    <h2 className="eyebrow">Words for this lesson</h2>
+                    <span className="text-xs text-ink-400">Tap to hear · {languageName(pair.target)}</span>
                   </div>
-                  <ul className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-                    {lesson.vocabulary.map((v, i) => (
-                      <li key={v.english}>
+                  <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
+                    {vocabulary.map((v, i) => (
+                      <li key={`${v.hindi}-${i}`}>
                         <button
                           type="button"
                           onClick={() => void audio.play(`v-${i}`, v.target, pair.target)}
                           className={cn(
-                            'w-full rounded-2xl border p-3 text-center transition-all hover:-translate-y-0.5 hover:shadow-soft',
+                            'flex w-full flex-col items-center rounded-2xl border p-3 text-center transition-all hover:-translate-y-0.5 hover:shadow-soft',
                             audio.playingKey === `v-${i}` ? 'border-aqua-400 bg-aqua-50' : 'border-ink-200 bg-white',
                           )}
-                          aria-label={`${i + 1}: ${v.hindi}, ${languageName(pair.target)} ${v.target}. Play`}
+                          aria-label={`${v.hindi}, ${languageName(pair.target)} ${v.target}. Play`}
                         >
-                          <span className="block font-display text-3xl font-extrabold text-ocean-600">{i + 1}</span>
-                          <span className="mt-1 block text-sm text-ink-500">{v.hindi}</span>
-                          <span className="block font-semibold text-ink-900">{v.target}</span>
+                          {v.picture ? (
+                            <Picture picture={v.picture} size={36} />
+                          ) : v.value !== undefined ? (
+                            <span className="font-display text-3xl font-extrabold text-ocean-600">{v.value}</span>
+                          ) : null}
+                          <span className="mt-1 block font-semibold text-ink-900">{v.target}</span>
+                          <span className="block text-sm text-ink-500">{v.hindi}</span>
                         </button>
                       </li>
                     ))}

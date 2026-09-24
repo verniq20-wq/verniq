@@ -1,8 +1,7 @@
 import { Search, X } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { TEACHER } from '../../data/demo';
-import { DEMO_MODE } from '../../services/config';
+import { useData } from '../../store/DataContext';
 import { IconButton } from '../ui/Button';
 import { OfflineIndicator } from '../ui/OfflineIndicator';
 import { LogoMark } from './Logo';
@@ -20,7 +19,9 @@ export function TopBar() {
     setMobileSearch(false);
   };
 
-  const initials = TEACHER.name
+  const { teacher, activeClass, records, setActiveClass } = useData();
+  const name = teacher?.name ?? 'Teacher';
+  const initials = name
     .split(' ')
     .map((p) => p[0])
     .join('')
@@ -51,13 +52,21 @@ export function TopBar() {
         <div className="flex-1 sm:hidden" />
 
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
-          {DEMO_MODE && (
-            <span
-              className="hidden rounded-full bg-sun-50 px-2.5 py-1 text-xs font-semibold text-sun-700 ring-1 ring-inset ring-sun-100 lg:inline"
-              title="No backend connected — sample data and simulated AI responses"
-            >
-              Demo data
-            </span>
+          {records.classes.length > 1 && activeClass && (
+            <label className="hidden lg:block">
+              <span className="sr-only">Active class</span>
+              <select
+                value={activeClass.id}
+                onChange={(e) => void setActiveClass(e.target.value)}
+                className="h-10 rounded-xl border border-ink-200 bg-white px-3 text-sm font-semibold text-ink-700 shadow-soft focus:border-ocean-500 focus:outline-none"
+              >
+                {records.classes.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </label>
           )}
           <IconButton label="Search" className="sm:hidden" onClick={() => setMobileSearch(true)}>
             <Search className="h-[22px] w-[22px]" />
@@ -68,12 +77,12 @@ export function TopBar() {
           <Link
             to="/settings"
             className="ml-1 flex items-center gap-2.5 rounded-xl p-1 pr-1 transition-colors hover:bg-ink-100 lg:pr-3"
-            aria-label={`Profile: ${TEACHER.name}`}
+            aria-label={`Profile: ${name}`}
           >
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-sun-100 text-sm font-bold text-sun-700">{initials}</span>
             <span className="hidden text-left leading-tight lg:block">
-              <span className="block text-sm font-semibold text-ink-900">{TEACHER.name}</span>
-              <span className="block text-xs text-ink-500">Class {TEACHER.classLevel} Teacher</span>
+              <span className="block max-w-[160px] truncate text-sm font-semibold text-ink-900">{name}</span>
+              <span className="block text-xs text-ink-500">{activeClass ? `${activeClass.name} teacher` : 'Teacher'}</span>
             </span>
           </Link>
         </div>

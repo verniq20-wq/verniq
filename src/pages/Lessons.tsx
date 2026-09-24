@@ -1,21 +1,22 @@
-import { BookOpen, Search, SearchX, Sparkles, WifiOff, X } from 'lucide-react';
+import { BookOpen, ListTodo, Search, SearchX, Sparkles, X } from 'lucide-react';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { LessonCard } from '../components/lesson/LessonCard';
 import { Button, ButtonLink } from '../components/ui/Button';
 import { EmptyState, PageHeader, Skeleton } from '../components/ui/States';
-import { useApp } from '../store/AppContext';
+import { useClassroom } from '../hooks/useClassroom';
 import type { Subject } from '../types';
 import { cn } from '../utils';
 
 const SUBJECTS: ('All' | Subject)[] = ['All', 'Mathematics', 'Hindi', 'EVS', 'English'];
 
 export default function Lessons() {
-  const { lessons, lessonsLoading } = useApp();
+  const { lessons } = useClassroom();
+  const lessonsLoading = false;
   const [params, setParams] = useSearchParams();
   const q = params.get('q') ?? '';
   const subject = (params.get('subject') ?? 'All') as 'All' | Subject;
-  const offlineOnly = params.get('offline') === '1';
+  const offlineOnly = params.get('todo') === '1';
 
   const update = (key: string, value: string | null) => {
     const next = new URLSearchParams(params);
@@ -29,7 +30,7 @@ export default function Lessons() {
     return lessons.filter(
       (l) =>
         (subject === 'All' || l.subject === subject) &&
-        (!offlineOnly || l.savedOffline) &&
+        (!offlineOnly || l.status !== 'completed') &&
         (!needle || [l.topic, l.learningOutcome, l.subject, l.outcomeCode].some((f) => f?.toLowerCase().includes(needle))),
     );
   }, [lessons, q, subject, offlineOnly]);
@@ -40,7 +41,7 @@ export default function Lessons() {
     <>
       <PageHeader
         title="Lessons"
-        description="Curriculum-aligned lessons, ready in your classroom language."
+        description="Your lessons for this class — all saved on this device."
         action={
           <ButtonLink to="/studio" icon={<Sparkles className="h-4 w-4" />}>
             New lesson
@@ -81,13 +82,13 @@ export default function Lessons() {
           <button
             type="button"
             aria-pressed={offlineOnly}
-            onClick={() => update('offline', offlineOnly ? null : '1')}
+            onClick={() => update('todo', offlineOnly ? null : '1')}
             className={cn(
               'inline-flex min-h-[44px] shrink-0 items-center gap-2 rounded-xl border px-4 text-sm font-semibold transition-colors',
               offlineOnly ? 'border-aqua-600 bg-aqua-50 text-aqua-700' : 'border-ink-200 bg-white text-ink-600 hover:border-aqua-200',
             )}
           >
-            <WifiOff className="h-4 w-4" aria-hidden /> Saved offline
+            <ListTodo className="h-4 w-4" aria-hidden /> Not taught yet
           </button>
         </div>
       </div>

@@ -1,19 +1,49 @@
 import {
+  Baby,
+  Bicycle,
   Bird,
+  Book,
+  BowlFood,
+  Bread,
   BugBeetle,
+  Bus,
   Butterfly,
+  Carrot,
   Cat,
+  Circle,
+  Clock,
+  Cloud,
+  CloudRain,
+  Coins,
   Cow,
   Dog,
+  Drop,
+  Ear,
+  Egg,
+  Eye,
   Fish,
   Flower,
+  Footprints,
+  Hand,
+  Heart,
   Horse,
+  House,
   Leaf,
   Moon,
+  Mountains,
+  OrangeSlice,
+  Pencil,
+  Plant,
   Rabbit,
+  SoccerBall,
+  Square,
   Star,
   Sun,
+  Tooth,
   Tree,
+  Triangle,
+  User,
+  UsersThree,
   type Icon,
 } from '@phosphor-icons/react';
 import type { PictureKey } from '../../types';
@@ -36,6 +66,36 @@ const PICTURES: Record<PictureKey, { icon: Icon; color: string; bg: string }> = 
   flower: { icon: Flower, color: 'text-rose-500', bg: 'bg-rose-50' },
   leaf: { icon: Leaf, color: 'text-leaf-500', bg: 'bg-leaf-50' },
   star: { icon: Star, color: 'text-sun-500', bg: 'bg-sun-50' },
+  cloud: { icon: Cloud, color: 'text-ocean-400', bg: 'bg-ocean-50' },
+  rain: { icon: CloudRain, color: 'text-ocean-600', bg: 'bg-ocean-50' },
+  mountain: { icon: Mountains, color: 'text-leaf-700', bg: 'bg-leaf-50' },
+  drop: { icon: Drop, color: 'text-aqua-600', bg: 'bg-aqua-50' },
+  plant: { icon: Plant, color: 'text-leaf-600', bg: 'bg-leaf-50' },
+  orange: { icon: OrangeSlice, color: 'text-sun-600', bg: 'bg-sun-50' },
+  carrot: { icon: Carrot, color: 'text-sun-700', bg: 'bg-sun-50' },
+  egg: { icon: Egg, color: 'text-sun-600', bg: 'bg-sun-50' },
+  bread: { icon: Bread, color: 'text-sun-700', bg: 'bg-sun-50' },
+  rice: { icon: BowlFood, color: 'text-ink-700', bg: 'bg-ink-100' },
+  house: { icon: House, color: 'text-rose-500', bg: 'bg-rose-50' },
+  book: { icon: Book, color: 'text-ocean-600', bg: 'bg-ocean-50' },
+  pencil: { icon: Pencil, color: 'text-sun-600', bg: 'bg-sun-50' },
+  ball: { icon: SoccerBall, color: 'text-ink-700', bg: 'bg-ink-100' },
+  bus: { icon: Bus, color: 'text-sun-600', bg: 'bg-sun-50' },
+  bicycle: { icon: Bicycle, color: 'text-aqua-600', bg: 'bg-aqua-50' },
+  clock: { icon: Clock, color: 'text-ocean-600', bg: 'bg-ocean-50' },
+  coins: { icon: Coins, color: 'text-sun-600', bg: 'bg-sun-50' },
+  hand: { icon: Hand, color: 'text-rose-500', bg: 'bg-rose-50' },
+  eye: { icon: Eye, color: 'text-ocean-600', bg: 'bg-ocean-50' },
+  ear: { icon: Ear, color: 'text-rose-500', bg: 'bg-rose-50' },
+  foot: { icon: Footprints, color: 'text-ink-700', bg: 'bg-ink-100' },
+  heart: { icon: Heart, color: 'text-rose-500', bg: 'bg-rose-50' },
+  tooth: { icon: Tooth, color: 'text-ocean-500', bg: 'bg-ocean-50' },
+  baby: { icon: Baby, color: 'text-rose-500', bg: 'bg-rose-50' },
+  person: { icon: User, color: 'text-ocean-600', bg: 'bg-ocean-50' },
+  family: { icon: UsersThree, color: 'text-aqua-600', bg: 'bg-aqua-50' },
+  triangle: { icon: Triangle, color: 'text-sun-600', bg: 'bg-sun-50' },
+  circle: { icon: Circle, color: 'text-ocean-600', bg: 'bg-ocean-50' },
+  square: { icon: Square, color: 'text-leaf-600', bg: 'bg-leaf-50' },
 };
 
 interface PictureProps {
@@ -59,6 +119,13 @@ export function Picture({ picture, size = 48, tile, className, label }: PictureP
 /** A numeral with a ten-frame of dots, so children see the quantity as well as the symbol. */
 export function NumberVisual({ value, size = 'lg' }: { value: number; size?: 'sm' | 'lg' }) {
   const dots = Array.from({ length: 10 }, (_, i) => i < value);
+  if (value > 10) {
+    return (
+      <span className={cn('font-display font-extrabold leading-none text-ocean-600', size === 'lg' ? 'text-[88px]' : 'text-5xl')} role="img" aria-label={`${value}`}>
+        {value}
+      </span>
+    );
+  }
   return (
     <span className="inline-flex flex-col items-center gap-3" role="img" aria-label={`${value}`}>
       <span className={cn('font-display font-extrabold leading-none text-ocean-600', size === 'lg' ? 'text-[88px]' : 'text-5xl')} aria-hidden>

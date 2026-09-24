@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { RotateCw } from 'lucide-react';
-import type { Flashcard as FlashcardType, LanguageCode } from '../../types';
+import type { FlashcardContent, LanguageCode } from '../../types';
+
+export type FlashcardType = FlashcardContent['cards'][number];
 import { languageName } from '../../data/languages';
 import { AudioButton } from '../ui/AudioButton';
 import { NumberVisual, Picture } from '../ui/Picture';
@@ -75,7 +77,7 @@ export function Flashcard({ card, flipped, onFlip, targetLang, playing, onPlay, 
             {card.visual.type === 'picture' ? (
               <Picture picture={card.visual.picture} size={72} />
             ) : (
-              <span className="font-display text-6xl font-extrabold text-ocean-600">{card.visual.value}</span>
+              <span className="font-display text-6xl font-extrabold text-ocean-600">{card.visual.type === 'number' ? card.visual.value : card.visual.letter}</span>
             )}
           </div>
           <p className="mt-6 text-sm text-ocean-100">Let children answer in {lang} first, then Hindi.</p>
@@ -87,5 +89,11 @@ export function Flashcard({ card, flipped, onFlip, targetLang, playing, onPlay, 
 
 function CardVisual({ card }: { card: FlashcardType }) {
   if (card.visual.type === 'number') return <NumberVisual value={card.visual.value} />;
+  if (card.visual.type === 'letter')
+    return (
+      <span lang="hi" className="flex h-40 w-40 items-center justify-center rounded-[28%] bg-ocean-50 font-display text-[96px] font-extrabold leading-none text-ocean-600 sm:h-44 sm:w-44">
+        {card.visual.letter}
+      </span>
+    );
   return <Picture picture={card.visual.picture} size={112} tile className="h-40 w-40 sm:h-44 sm:w-44" label={card.english} />;
 }

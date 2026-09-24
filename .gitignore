@@ -26,3 +26,7 @@ dist-ssr
 # Local env
 .env
 .env.local
+
+# Server build and local database
+server/dist
+.pglite

@@ -4,6 +4,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  // In development, API calls go to the local server (npm run dev:server)
+  server: { proxy: { '/api': 'http://localhost:3000' } },
   plugins: [
     react(),
     // Installable web app + offline support: the service worker precaches the whole app

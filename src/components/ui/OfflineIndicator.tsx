@@ -2,27 +2,36 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Check, RefreshCw, AlertCircle } from 'lucide-react';
 import { STATUS_META } from './statusMeta';
 import { useEffect, useRef, useState } from 'react';
-import { useApp } from '../../store/AppContext';
+import { useData } from '../../store/DataContext';
 import { cn, timeAgo } from '../../utils';
 import { Button } from './Button';
-import { ProgressBar } from './ProgressBar';
 
 
-const OFFLINE_FEATURES = ['Lessons', 'Translation', 'Audio', 'Worksheets', 'Flashcards'];
+const OFFLINE_FEATURES = ['Lessons', 'Translation', 'Voice', 'Worksheets', 'Class records'];
 
-/** The reassuring offline card — offline is a mode, not an error. */
+/** The reassuring connection card — offline is a mode, not an error. */
 export function OfflinePanel({ compact }: { compact?: boolean }) {
-  const { connectivity, syncNow } = useApp();
-  const { status, syncProgress, syncUpdates, lastSyncedAt } = connectivity;
+  const { sync, syncNow } = useData();
+  const { status, pending, lastSyncedAt, error, localOnly } = sync;
+
+  if (localOnly) {
+    return (
+      <div className="space-y-2">
+        <p className="flex items-center gap-2 font-semibold text-ink-900">
+          <span className="h-2.5 w-2.5 rounded-full bg-ocean-500" aria-hidden /> Saved on this device only
+        </p>
+        <p className="text-sm text-ink-600">Everything works offline. Create an account in Settings to back up your classes and use them on other devices.</p>
+      </div>
+    );
+  }
 
   if (status === 'syncing') {
     return (
-      <div className="space-y-3">
+      <div className="space-y-2">
         <p className="flex items-center gap-2 font-semibold text-ink-900">
           <RefreshCw className="h-4 w-4 animate-spin text-amber-500" aria-hidden /> Syncing Verniq…
         </p>
-        <p className="text-sm text-ink-500">Downloading {syncUpdates} updates</p>
-        <ProgressBar value={syncProgress} label="Sync progress" showValue size="md" />
+        <p className="text-sm text-ink-500">{pending ? `Sending ${pending} ${pending === 1 ? 'change' : 'changes'}` : 'Checking for updates from your other devices'}</p>
       </div>
     );
   }
@@ -33,11 +42,9 @@ export function OfflinePanel({ compact }: { compact?: boolean }) {
         <p className="flex items-center gap-2 font-semibold text-ink-900">
           <AlertCircle className="h-4 w-4 text-rose-500" aria-hidden /> Sync required
         </p>
-        <p className="text-sm text-ink-600">
-          New curriculum updates are waiting. Your saved lessons still work — sync when you have a connection.
-        </p>
+        <p className="text-sm text-ink-600">{error ?? 'Some changes are waiting to be backed up.'} Your work is safe on this device.</p>
         <Button size="sm" onClick={() => void syncNow()} icon={<RefreshCw className="h-4 w-4" />}>
-          Sync now
+          Try again
         </Button>
       </div>
     );
@@ -49,8 +56,10 @@ export function OfflinePanel({ compact }: { compact?: boolean }) {
         <p className="flex items-center gap-2 font-semibold text-ink-900">
           <span className="h-2.5 w-2.5 rounded-full bg-ocean-500" aria-hidden /> Offline mode
         </p>
-        <p className="mt-1 text-sm text-ink-600">Verniq is ready to teach without internet.</p>
-        <ul className={cn('mt-3 grid grid-cols-1 gap-1.5', compact ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3')}>
+        <p className="mt-1 text-sm text-ink-600">
+          Verniq is ready to teach without internet.{pending ? ` ${pending} ${pending === 1 ? 'change' : 'changes'} will sync when you reconnect.` : ''}
+        </p>
+        <ul className={cn('mt-3 grid gap-1.5', compact ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3')}>
           {OFFLINE_FEATURES.map((f) => (
             <li key={f} className="flex items-center gap-1.5 text-sm text-ink-700">
               <Check className="h-4 w-4 text-aqua-600" aria-hidden /> {f}
@@ -64,9 +73,11 @@ export function OfflinePanel({ compact }: { compact?: boolean }) {
   return (
     <div>
       <p className="flex items-center gap-2 font-semibold text-ink-900">
-        <span className="h-2.5 w-2.5 rounded-full bg-leaf-500" aria-hidden /> Online · all content up to date
+        <span className="h-2.5 w-2.5 rounded-full bg-leaf-500" aria-hidden /> Online · backed up
       </p>
-      <p className="mt-1 text-sm text-ink-500">Last synced {timeAgo(lastSyncedAt).toLowerCase()}. Everything you save also works offline.</p>
+      <p className="mt-1 text-sm text-ink-500">
+        {lastSyncedAt ? `Last synced ${timeAgo(lastSyncedAt).toLowerCase()}.` : 'Not synced yet.'} Everything you save also works offline.
+      </p>
       <Button size="sm" variant="outline" className="mt-3" onClick={() => void syncNow()} icon={<RefreshCw className="h-4 w-4" />}>
         Sync now
       </Button>
@@ -76,7 +87,8 @@ export function OfflinePanel({ compact }: { compact?: boolean }) {
 
 /** Pill in the top bar; opens a small panel with details. */
 export function OfflineIndicator() {
-  const { connectivity } = useApp();
+  const { sync } = useData();
+  const connectivity = { status: sync.localOnly ? ('offline' as const) : sync.status };
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const meta = STATUS_META[connectivity.status];

@@ -1,5 +1,5 @@
 import { Languages } from 'lucide-react';
-import { useApp } from '../../store/AppContext';
+import { useData } from '../../store/DataContext';
 import { cn } from '../../utils';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
@@ -8,7 +8,8 @@ import { STATUS_META } from '../ui/statusMeta';
 
 /** Compact row on phones and tablets; a full card beside today's lesson on desktop. */
 export function LanguageStatusCard({ onChange }: { onChange: () => void }) {
-  const { connectivity } = useApp();
+  const { sync } = useData();
+  const connectivity = { status: sync.localOnly ? ('offline' as const) : sync.status };
   const meta = STATUS_META[connectivity.status];
   return (
     <Card className="flex h-full items-center gap-3 lg:flex-col lg:items-stretch lg:gap-0">

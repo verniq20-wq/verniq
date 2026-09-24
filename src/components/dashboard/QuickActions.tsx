@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowUpRight, BookOpen, FileText, Images, Mic, type LucideIcon } from 'lucide-react';
+import { ArrowUpRight, ClipboardCheck, FileText, Mic, Sparkles, type LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '../../utils';
 
@@ -13,9 +13,9 @@ interface Action {
 
 const ACTIONS: Action[] = [
   { to: '/live', title: 'Live Translation', description: 'Talk with students', icon: Mic, tint: 'bg-aqua-50 text-aqua-600 group-hover:bg-aqua-500 group-hover:text-white' },
-  { to: '/lessons', title: 'Start Lesson', description: "Teach today's topic", icon: BookOpen, tint: 'bg-ocean-50 text-ocean-600 group-hover:bg-ocean-600 group-hover:text-white' },
-  { to: '/materials?tab=worksheets', title: 'Create Worksheet', description: 'Generate bilingual material', icon: FileText, tint: 'bg-sun-50 text-sun-600 group-hover:bg-sun-500 group-hover:text-white' },
-  { to: '/materials?tab=flashcards', title: 'Flashcards', description: 'Create visual learning cards', icon: Images, tint: 'bg-leaf-50 text-leaf-600 group-hover:bg-leaf-500 group-hover:text-white' },
+  { to: '/studio', title: 'Create Lesson', description: 'Plan with the AI Studio', icon: Sparkles, tint: 'bg-ocean-50 text-ocean-600 group-hover:bg-ocean-600 group-hover:text-white' },
+  { to: '/class?tab=attendance', title: 'Attendance', description: 'Mark today in one tap each', icon: ClipboardCheck, tint: 'bg-leaf-50 text-leaf-600 group-hover:bg-leaf-500 group-hover:text-white' },
+  { to: '/materials?tab=worksheets', title: 'Worksheet', description: 'Printable, in both languages', icon: FileText, tint: 'bg-sun-50 text-sun-600 group-hover:bg-sun-500 group-hover:text-white' },
 ];
 
 export function QuickActions() {

@@ -1,22 +1,22 @@
-import { Check, Download, Info } from 'lucide-react';
-import { useState } from 'react';
+import { CloudUpload, Download, LogOut, Save, ShieldCheck } from 'lucide-react';
+import { useState, type FormEvent } from 'react';
 import { InstallCard } from '../components/layout/InstallCard';
-import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card, CardHeader } from '../components/ui/Card';
 import { LanguagePairDisplay } from '../components/ui/LanguageSelector';
+import { Modal } from '../components/ui/Modal';
 import { OfflinePanel } from '../components/ui/OfflineIndicator';
+import { TextField } from '../components/ui/Select';
 import { PageHeader } from '../components/ui/States';
-import { TEACHER } from '../data/demo';
-import { LANGUAGES } from '../data/languages';
+import { ApiError, NetworkError } from '../data/api';
 import { useShell } from '../hooks/useShell';
-import { DEMO_MODE } from '../services/config';
-import { useApp, type ConnectivityMode } from '../store/AppContext';
-import { cn } from '../utils';
+import { useApp } from '../store/AppContext';
+import { useData } from '../store/DataContext';
+import { cn, download, todayISO } from '../utils';
 
 function Toggle({ checked, onChange, label, description }: { checked: boolean; onChange: (v: boolean) => void; label: string; description: string }) {
   return (
-    <label className="flex cursor-pointer items-center justify-between gap-4 py-3">
+    <div className="flex items-center justify-between gap-4 py-3">
       <span>
         <span className="block font-semibold text-ink-900">{label}</span>
         <span className="block text-sm text-ink-500">{description}</span>
@@ -25,74 +25,137 @@ function Toggle({ checked, onChange, label, description }: { checked: boolean; o
         type="button"
         role="switch"
         aria-checked={checked}
+        aria-label={label}
         onClick={() => onChange(!checked)}
         className={cn('relative h-8 w-14 shrink-0 rounded-full transition-colors duration-200', checked ? 'bg-aqua-500' : 'bg-ink-200')}
       >
         <span className={cn('absolute top-1 h-6 w-6 rounded-full bg-white shadow-soft transition-transform duration-200', checked ? 'translate-x-7' : 'translate-x-1')} />
-        <span className="sr-only">{label}</span>
       </button>
-    </label>
+    </div>
   );
 }
 
 export default function Settings() {
-  const { largeText, setLargeText, connectivity, setConnectivityMode, toast } = useApp();
+  const { largeText, setLargeText, toast } = useApp();
+  const { teacher, session, updateProfile, logout, exportBackup, signup, sync } = useData();
   const { openLanguagePicker } = useShell();
-  const [packs, setPacks] = useState(LANGUAGES);
-  const [downloading, setDownloading] = useState<string | null>(null);
+  const [name, setName] = useState(teacher?.name ?? '');
+  const [school, setSchool] = useState(teacher?.school ?? '');
+  const [district, setDistrict] = useState(teacher?.district ?? '');
+  const [confirmOut, setConfirmOut] = useState(false);
+  const [account, setAccount] = useState({ email: '', password: '' });
+  const [accountBusy, setAccountBusy] = useState(false);
+  const [accountError, setAccountError] = useState<string | null>(null);
+  const local = session?.mode === 'local';
+  const profileDirty = name !== (teacher?.name ?? '') || school !== (teacher?.school ?? '') || district !== (teacher?.district ?? '');
 
-  const download = (code: string) => {
-    setDownloading(code);
-    setTimeout(() => {
-      setPacks((ps) => ps.map((p) => (p.code === code ? { ...p, downloaded: true } : p)));
-      setDownloading(null);
-      toast({ tone: 'success', title: 'Language pack ready offline', detail: packs.find((p) => p.code === code)?.name });
-    }, 1400);
+  const saveProfile = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) return;
+    await updateProfile({ name: name.trim(), school: school.trim() || undefined, district: district.trim() || undefined });
+    toast({ tone: 'success', title: 'Profile saved' });
   };
 
-  const modes: { value: ConnectivityMode; label: string }[] = [
-    { value: 'auto', label: 'Follow device' },
-    { value: 'offline', label: 'Offline' },
-    { value: 'sync-required', label: 'Sync required' },
-  ];
+  const backup = async () => {
+    download(await exportBackup(), `verniq-backup-${todayISO()}.json`);
+    toast({ tone: 'success', title: 'Backup downloaded', detail: 'Keep it somewhere safe.' });
+  };
+
+  const createAccount = async (e: FormEvent) => {
+    e.preventDefault();
+    setAccountError(null);
+    setAccountBusy(true);
+    try {
+      await signup({ name: teacher?.name ?? name, email: account.email.trim(), password: account.password, school: teacher?.school, district: teacher?.district });
+      toast({ tone: 'success', title: 'Account created', detail: 'Your work is uploading now.' });
+    } catch (err) {
+      setAccountError(
+        err instanceof NetworkError
+          ? 'No internet connection. Try again when you are online — your work stays safe on this device.'
+          : err instanceof ApiError
+            ? err.message
+            : 'Something went wrong. Please try again.',
+      );
+    } finally {
+      setAccountBusy(false);
+    }
+  };
 
   return (
     <>
-      <PageHeader title="Settings" description="Your profile, classroom language and offline content." />
+      <PageHeader title="Settings" description="Your profile, account, classroom language and this device." />
 
       <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-2">
         <Card>
-          <CardHeader title="Profile" />
-          <div className="flex items-center gap-4">
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-sun-100 font-display text-lg font-bold text-sun-700">
-              {TEACHER.name.split(' ').map((p) => p[0]).join('')}
-            </span>
-            <div className="min-w-0">
-              <p className="font-semibold text-ink-900">{TEACHER.name}</p>
-              <p className="text-sm text-ink-500">
-                Class {TEACHER.classLevel} · {TEACHER.school}
-              </p>
-              <p className="text-sm text-ink-500">{TEACHER.district}</p>
+          <CardHeader title="Profile" subtitle={local ? 'Stored on this device' : teacher?.email} />
+          <form onSubmit={saveProfile} className="space-y-4">
+            <TextField label="Your name" value={name} onChange={setName} required autoComplete="name" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <TextField label="School" value={school} onChange={setSchool} />
+              <TextField label="District" value={district} onChange={setDistrict} />
             </div>
+            <Button type="submit" disabled={!profileDirty || !name.trim()} icon={<Save className="h-4 w-4" />}>
+              Save profile
+            </Button>
+          </form>
+        </Card>
+
+        <Card>
+          <CardHeader title="Account & backup" subtitle={local ? 'Using Verniq without an account' : 'Signed in — your work is backed up'} />
+          {local ? (
+            <form onSubmit={createAccount} className="space-y-4">
+              <p className="text-sm text-ink-600">Create a free account to back up your classes and use them on another phone or tablet. Everything on this device is uploaded.</p>
+              <TextField label="Email" type="email" autoComplete="email" value={account.email} onChange={(email) => setAccount((a) => ({ ...a, email }))} required />
+              <TextField
+                label="Password"
+                type="password"
+                autoComplete="new-password"
+                minLength={8}
+                hint="At least 8 characters."
+                value={account.password}
+                onChange={(password) => setAccount((a) => ({ ...a, password }))}
+                required
+              />
+              {accountError && (
+                <p role="alert" className="rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                  {accountError}
+                </p>
+              )}
+              <Button type="submit" loading={accountBusy} icon={<CloudUpload className="h-4 w-4" />}>
+                Create account & upload
+              </Button>
+            </form>
+          ) : (
+            <p className="flex items-start gap-2 text-sm text-ink-600">
+              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-leaf-600" aria-hidden />
+              Changes are saved on this device first and sent to your account when there is internet.
+              {sync.pending > 0 && ` ${sync.pending} change${sync.pending === 1 ? '' : 's'} waiting.`}
+            </p>
+          )}
+          <div className="mt-5 flex flex-wrap gap-2 border-t border-ink-100 pt-4">
+            <Button variant="outline" icon={<Download className="h-4 w-4" />} onClick={() => void backup()}>
+              Download backup
+            </Button>
+            <Button variant="ghost" icon={<LogOut className="h-4 w-4" />} onClick={() => setConfirmOut(true)} className="text-rose-600 hover:bg-rose-50 hover:text-rose-700">
+              {local ? 'Reset this device' : 'Sign out'}
+            </Button>
           </div>
         </Card>
 
         <Card>
-          <CardHeader title="Classroom language" />
-          <div>
-            <LanguagePairDisplay size="lg" />
-          </div>
+          <CardHeader title="Classroom language" subtitle="For the class you are viewing" />
+          <LanguagePairDisplay size="lg" />
           <Button variant="outline" className="mt-4 sm:mt-5" onClick={openLanguagePicker}>
             Change language
           </Button>
         </Card>
 
-        <InstallCard />
-
         <Card>
           <CardHeader title="Offline & sync" subtitle="Verniq keeps working without internet." />
           <OfflinePanel />
         </Card>
+
+        <InstallCard />
 
         <Card>
           <CardHeader title="Accessibility" />
@@ -101,67 +164,37 @@ export default function Settings() {
           </div>
           <p className="mt-3 text-sm text-ink-500">Animations follow your device's “reduce motion” setting.</p>
         </Card>
-
-        <Card className="lg:col-span-2">
-          <CardHeader title="Language packs" subtitle="Download packs to translate, speak and generate offline." />
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {packs.map((l) => (
-              <li key={l.code} className="flex items-center justify-between gap-3 rounded-2xl border border-ink-200 p-4">
-                <div className="min-w-0">
-                  <p className="font-semibold text-ink-900">
-                    {l.name} <span className="font-normal text-ink-400">{l.nativeName !== l.name && l.nativeName}</span>
-                  </p>
-                  <p className="text-xs text-ink-500">
-                    {l.script} · {l.packSizeMb} MB
-                  </p>
-                </div>
-                {l.downloaded ? (
-                  <Badge tone="aqua" icon={<Check className="h-3.5 w-3.5" aria-hidden />}>
-                    Offline
-                  </Badge>
-                ) : (
-                  <Button size="sm" variant="soft" loading={downloading === l.code} onClick={() => download(l.code)} icon={<Download className="h-4 w-4" />} aria-label={`Download ${l.name} pack`}>
-                    Get
-                  </Button>
-                )}
-              </li>
-            ))}
-          </ul>
-        </Card>
-
-        {DEMO_MODE && (
-          <Card className="border-sun-200 bg-sun-50/50 lg:col-span-2">
-            <CardHeader
-              title="Demo controls"
-              subtitle="No backend is connected. Lessons, translations and materials use sample data and simulated AI responses."
-            />
-            <p className="field-label">Simulate connection</p>
-            <div className="flex flex-wrap gap-2" role="group" aria-label="Simulate connection">
-              {modes.map((m) => (
-                <button
-                  key={m.value}
-                  type="button"
-                  aria-pressed={connectivity.mode === m.value}
-                  onClick={() => setConnectivityMode(m.value)}
-                  className={cn(
-                    'min-h-[44px] rounded-xl border px-4 text-sm font-semibold transition-colors',
-                    connectivity.mode === m.value ? 'border-ocean-600 bg-ocean-600 text-white' : 'border-ink-200 bg-white text-ink-700 hover:border-ocean-200',
-                  )}
-                >
-                  {m.label}
-                </button>
-              ))}
-            </div>
-            <p className="mt-4 flex gap-2 text-sm text-ink-600">
-              <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-              <span className="min-w-0">
-                Set <code className="break-all rounded bg-white px-1.5 py-0.5 text-xs">VITE_VERNIQ_API_URL</code> and implement the functions in{' '}
-                <code className="rounded bg-white px-1.5 py-0.5 text-xs">src/services</code> to connect real services.
-              </span>
-            </p>
-          </Card>
-        )}
       </div>
+
+      <p className="mt-6 text-center text-xs text-ink-400">
+        Verniq builds lessons, worksheets and translations on this device from its curriculum library and your own word list — no data is sent to outside AI services.
+      </p>
+
+      <Modal
+        open={confirmOut}
+        onClose={() => setConfirmOut(false)}
+        size="sm"
+        title={local ? 'Reset this device?' : 'Sign out?'}
+        description={
+          local
+            ? 'Everything you made without an account will be deleted from this device. Download a backup first if you want to keep it.'
+            : sync.pending > 0
+              ? `${sync.pending} change${sync.pending === 1 ? ' has' : 's have'} not been uploaded yet and will be lost. Connect to the internet and sync first.`
+              : 'Your work is safe in your account. Sign in again any time.'
+        }
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setConfirmOut(false)}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={() => void logout()}>
+              {local ? 'Delete & reset' : 'Sign out'}
+            </Button>
+          </>
+        }
+      >
+        <p className="text-sm text-ink-600">{teacher?.name}</p>
+      </Modal>
     </>
   );
 }

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Clock, Target, WifiOff } from 'lucide-react';
-import type { Lesson } from '../../types';
+import type { LessonDoc } from '../../types';
 import { ButtonLink } from '../ui/Button';
 import { ProgressBar } from '../ui/ProgressBar';
 
@@ -34,8 +34,8 @@ function CountingIllustration() {
   );
 }
 
-export function TodayLessonCard({ lesson }: { lesson: Lesson }) {
-  const sectionsDone = Math.round(lesson.progress * lesson.sections.length);
+export function TodayLessonCard({ lesson }: { lesson: LessonDoc }) {
+  const sectionsDone = Math.round(lesson.progress * lesson.content.sections.length);
   return (
     <section
       aria-labelledby="today-lesson"
@@ -49,15 +49,13 @@ export function TodayLessonCard({ lesson }: { lesson: Lesson }) {
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.12em] sm:px-3 sm:text-xs">Today's lesson</span>
-            {lesson.savedOffline && (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold sm:px-3 sm:text-xs">
-                <WifiOff className="h-3.5 w-3.5" aria-hidden /> Works offline
-              </span>
-            )}
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold sm:px-3 sm:text-xs">
+              <WifiOff className="h-3.5 w-3.5" aria-hidden /> Works offline
+            </span>
           </div>
 
           <p className="mt-4 text-xs font-bold uppercase tracking-[0.14em] text-aqua-100 sm:mt-5 sm:text-sm">
-            {lesson.subject} · Class {lesson.classLevel}
+            {lesson.subject} · Class {lesson.grade}
           </p>
           <h2 id="today-lesson" className="mt-1 font-display text-[26px] font-extrabold leading-tight text-white sm:text-4xl">
             {lesson.topic}
@@ -82,7 +80,7 @@ export function TodayLessonCard({ lesson }: { lesson: Lesson }) {
             <div className="mt-4 max-w-sm sm:mt-5">
               <div className="mb-1.5 flex justify-between text-xs font-semibold text-ocean-100">
                 <span>
-                  Step {sectionsDone + 1} of {lesson.sections.length}
+                  Step {sectionsDone + 1} of {lesson.content.sections.length}
                 </span>
                 <span>{Math.round(lesson.progress * 100)}%</span>
               </div>

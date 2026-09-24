@@ -3,6 +3,7 @@ import { RotateCw } from 'lucide-react';
 import type { Flashcard as FlashcardType, LanguageCode } from '../../types';
 import { languageName } from '../../data/languages';
 import { AudioButton } from '../ui/AudioButton';
+import { NumberVisual, Picture } from '../ui/Picture';
 
 interface FlashcardProps {
   card: FlashcardType;
@@ -18,7 +19,7 @@ interface FlashcardProps {
 export function Flashcard({ card, flipped, onFlip, targetLang, playing, onPlay, onStop }: FlashcardProps) {
   const lang = languageName(targetLang);
   return (
-    <div className="relative h-[380px] w-full [perspective:1200px] sm:h-[420px]">
+    <div className="relative h-[min(400px,58svh)] min-h-[340px] w-full [perspective:1200px] sm:h-[420px]">
       <motion.div
         className="relative h-full w-full [transform-style:preserve-3d]"
         animate={{ rotateY: flipped ? 180 : 0 }}
@@ -28,7 +29,7 @@ export function Flashcard({ card, flipped, onFlip, targetLang, playing, onPlay, 
         <div
           role="button"
           tabIndex={0}
-          aria-label={`${card.english}. Hindi ${card.hindi}. ${lang} ${card.target}. Press Enter to flip.`}
+          aria-label={`${card.english}. Hindi ${card.hindi}. ${lang} ${card.target || 'word not added yet'}. Press Enter to flip.`}
           onClick={onFlip}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
@@ -36,18 +37,22 @@ export function Flashcard({ card, flipped, onFlip, targetLang, playing, onPlay, 
               onFlip();
             }
           }}
-          className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center rounded-[28px] border border-ink-200 bg-white p-6 shadow-lift [backface-visibility:hidden] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ocean-200"
+          className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center rounded-[28px] border border-ink-200 bg-white p-5 shadow-lift sm:p-6 [backface-visibility:hidden] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ocean-200"
         >
-          <span className="text-[96px] leading-none sm:text-[112px]" aria-hidden>
-            {card.emoji}
-          </span>
-          <p className="mt-6 font-display text-3xl font-extrabold uppercase tracking-wide text-ink-900">{card.english}</p>
-          <p lang="hi" className="mt-1 text-2xl text-ink-600">
+          <CardVisual card={card} />
+          <p className="mt-5 font-display text-2xl font-extrabold tracking-tight text-ink-900 sm:text-3xl">{card.english}</p>
+          <p lang="hi" className="mt-0.5 text-xl text-ink-600 sm:text-2xl">
             {card.hindi}
           </p>
-          <p className="mt-1 text-2xl font-bold text-ocean-600">{card.target}</p>
-          <div className="mt-5 flex gap-2">
-            <AudioButton label={`Listen · ${lang}`} variant="compact" playing={playing === 'target'} onPlay={() => onPlay('target')} onStop={onStop} />
+          {card.target ? (
+            <p className="mt-0.5 text-xl font-bold text-ocean-600 sm:text-2xl">{card.target}</p>
+          ) : (
+            <p className="mt-1.5 rounded-full bg-ink-100 px-3 py-1 text-xs font-semibold text-ink-500">{lang} word not added yet</p>
+          )}
+          <div className="mt-4 flex gap-2">
+            {card.target && (
+              <AudioButton label={`Listen · ${lang}`} variant="compact" playing={playing === 'target'} onPlay={() => onPlay('target')} onStop={onStop} />
+            )}
             <AudioButton label="हिन्दी" variant="compact" playing={playing === 'hindi'} onPlay={() => onPlay('hindi')} onStop={onStop} />
           </div>
           <span className="absolute right-4 top-4 inline-flex items-center gap-1 text-xs font-semibold text-ink-400">
@@ -59,19 +64,28 @@ export function Flashcard({ card, flipped, onFlip, targetLang, playing, onPlay, 
         <div
           aria-hidden={!flipped}
           onClick={onFlip}
-          className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center rounded-[28px] bg-ocean-gradient p-8 text-center text-white shadow-lift [backface-visibility:hidden] [transform:rotateY(180deg)]"
+          className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center rounded-[28px] bg-ocean-gradient p-6 text-center sm:p-8 text-white shadow-lift [backface-visibility:hidden] [transform:rotateY(180deg)]"
         >
           <p className="text-sm font-bold uppercase tracking-[0.16em] text-aqua-100">Ask the class</p>
           <p lang="hi" className="mt-4 font-display text-3xl font-bold leading-snug">
             यह क्या है?
           </p>
           <p className="mt-2 text-xl text-ocean-100">What is this? · {lang}</p>
-          <div className="mt-8 flex h-24 w-24 items-center justify-center rounded-3xl bg-white/15 text-5xl" aria-hidden>
-            {card.emoji}
+          <div className="mt-8 flex h-28 w-28 items-center justify-center rounded-3xl bg-white" aria-hidden>
+            {card.visual.type === 'picture' ? (
+              <Picture picture={card.visual.picture} size={72} />
+            ) : (
+              <span className="font-display text-6xl font-extrabold text-ocean-600">{card.visual.value}</span>
+            )}
           </div>
           <p className="mt-6 text-sm text-ocean-100">Let children answer in {lang} first, then Hindi.</p>
         </div>
       </motion.div>
     </div>
   );
+}
+
+function CardVisual({ card }: { card: FlashcardType }) {
+  if (card.visual.type === 'number') return <NumberVisual value={card.visual.value} />;
+  return <Picture picture={card.visual.picture} size={112} tile className="h-40 w-40 sm:h-44 sm:w-44" label={card.english} />;
 }

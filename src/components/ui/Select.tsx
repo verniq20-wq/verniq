@@ -27,7 +27,7 @@ export function Select({ label, options, onChange, hint, className, id, ...rest 
       <div className="relative">
         <select
           id={selectId}
-          className={cn('field cursor-pointer appearance-none pr-11')}
+          className={cn('field cursor-pointer appearance-none pr-10 sm:pr-11')}
           onChange={(e) => onChange(e.target.value)}
           {...rest}
         >
@@ -37,7 +37,7 @@ export function Select({ label, options, onChange, hint, className, id, ...rest 
             </option>
           ))}
         </select>
-        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-ink-400" aria-hidden />
+        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-ink-400 sm:right-4" aria-hidden />
       </div>
       {hint && <p className="mt-1.5 text-xs text-ink-500">{hint}</p>}
     </div>

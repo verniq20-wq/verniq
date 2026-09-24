@@ -6,7 +6,7 @@
  * `needs-review`: they must be validated by native speakers before
  * classroom use. Replace with API responses via the services layer.
  */
-import type { Flashcard, Lesson, NotificationItem, Student, TranslationTurn, VocabularyItem } from '../types';
+import type { Flashcard, Lesson, NotificationItem, PictureKey, Student, TranslationTurn, VocabularyItem } from '../types';
 
 export const TEACHER = {
   name: 'Sunita Kumari',
@@ -18,16 +18,16 @@ export const TEACHER = {
 };
 
 export const NUMBER_VOCAB: VocabularyItem[] = [
-  { hindi: 'एक', target: 'मियद', english: 'One', emoji: '1️⃣' },
-  { hindi: 'दो', target: 'बरिया', english: 'Two', emoji: '2️⃣' },
-  { hindi: 'तीन', target: 'आपिया', english: 'Three', emoji: '3️⃣' },
-  { hindi: 'चार', target: 'उपुनिया', english: 'Four', emoji: '4️⃣' },
-  { hindi: 'पाँच', target: 'मोंड़ेया', english: 'Five', emoji: '5️⃣' },
-  { hindi: 'छह', target: 'तुरुइया', english: 'Six', emoji: '6️⃣' },
-  { hindi: 'सात', target: 'एया', english: 'Seven', emoji: '7️⃣' },
-  { hindi: 'आठ', target: 'इरिलिया', english: 'Eight', emoji: '8️⃣' },
-  { hindi: 'नौ', target: 'आरेया', english: 'Nine', emoji: '9️⃣' },
-  { hindi: 'दस', target: 'गेलेया', english: 'Ten', emoji: '🔟' },
+  { hindi: 'एक', target: 'मियद', english: 'One' },
+  { hindi: 'दो', target: 'बरिया', english: 'Two' },
+  { hindi: 'तीन', target: 'आपिया', english: 'Three' },
+  { hindi: 'चार', target: 'उपुनिया', english: 'Four' },
+  { hindi: 'पाँच', target: 'मोंड़ेया', english: 'Five' },
+  { hindi: 'छह', target: 'तुरुइया', english: 'Six' },
+  { hindi: 'सात', target: 'एया', english: 'Seven' },
+  { hindi: 'आठ', target: 'इरिलिया', english: 'Eight' },
+  { hindi: 'नौ', target: 'आरेया', english: 'Nine' },
+  { hindi: 'दस', target: 'गेलेया', english: 'Ten' },
 ];
 
 const numbersLesson: Lesson = {
@@ -153,19 +153,28 @@ export const DEMO_LESSONS: Lesson[] = [
   },
 ];
 
+const pic = (picture: PictureKey) => ({ type: 'picture' as const, picture });
+
+/** Target-language words left empty have not been collected yet — the UI says so instead of guessing. */
 export const ANIMAL_FLASHCARDS: Flashcard[] = [
-  { id: 'f1', emoji: '🐘', english: 'Elephant', hindi: 'हाथी', target: 'हाथी', review: 'needs-review' },
-  { id: 'f2', emoji: '🐕', english: 'Dog', hindi: 'कुत्ता', target: 'सेता', review: 'needs-review' },
-  { id: 'f3', emoji: '🐅', english: 'Tiger', hindi: 'बाघ', target: 'कुला', review: 'needs-review' },
-  { id: 'f4', emoji: '🐐', english: 'Goat', hindi: 'बकरी', target: 'मेरोम', review: 'needs-review' },
-  { id: 'f5', emoji: '🐟', english: 'Fish', hindi: 'मछली', target: 'हाकु', review: 'needs-review' },
-  { id: 'f6', emoji: '🐦', english: 'Bird', hindi: 'चिड़िया', target: 'चेंड़े', review: 'needs-review' },
-  { id: 'f7', emoji: '🐄', english: 'Cow', hindi: 'गाय', target: 'गाय', review: 'needs-review' },
-  { id: 'f8', emoji: '🐒', english: 'Monkey', hindi: 'बंदर', target: 'गाड़ी', review: 'needs-review' },
-  { id: 'f9', emoji: '🐓', english: 'Hen', hindi: 'मुर्गी', target: 'सिम', review: 'needs-review' },
-  { id: 'f10', emoji: '🐍', english: 'Snake', hindi: 'साँप', target: 'बिङ', review: 'needs-review' },
-  { id: 'f11', emoji: '🐸', english: 'Frog', hindi: 'मेंढक', target: 'रोटे', review: 'needs-review' },
-  { id: 'f12', emoji: '🐻', english: 'Bear', hindi: 'भालू', target: 'बना', review: 'needs-review' },
+  { id: 'a1', visual: pic('dog'), english: 'Dog', hindi: 'कुत्ता', target: 'सेता', review: 'needs-review' },
+  { id: 'a2', visual: pic('cat'), english: 'Cat', hindi: 'बिल्ली', target: 'पुसि', review: 'needs-review' },
+  { id: 'a3', visual: pic('cow'), english: 'Cow', hindi: 'गाय', target: 'गाय', review: 'needs-review' },
+  { id: 'a4', visual: pic('horse'), english: 'Horse', hindi: 'घोड़ा', target: 'सादोम', review: 'needs-review' },
+  { id: 'a5', visual: pic('bird'), english: 'Bird', hindi: 'चिड़िया', target: 'चेंड़े', review: 'needs-review' },
+  { id: 'a6', visual: pic('fish'), english: 'Fish', hindi: 'मछली', target: 'हाकु', review: 'needs-review' },
+  { id: 'a7', visual: pic('rabbit'), english: 'Rabbit', hindi: 'खरगोश', target: 'कुलै', review: 'needs-review' },
+  { id: 'a8', visual: pic('butterfly'), english: 'Butterfly', hindi: 'तितली', target: '', review: 'needs-review' },
+  { id: 'a9', visual: pic('beetle'), english: 'Beetle', hindi: 'भृंग', target: '', review: 'needs-review' },
+];
+
+export const NATURE_FLASHCARDS: Flashcard[] = [
+  { id: 'n1', visual: pic('sun'), english: 'Sun', hindi: 'सूरज', target: 'सिङगि', review: 'needs-review' },
+  { id: 'n2', visual: pic('moon'), english: 'Moon', hindi: 'चाँद', target: 'चांडु', review: 'needs-review' },
+  { id: 'n3', visual: pic('tree'), english: 'Tree', hindi: 'पेड़', target: 'दारु', review: 'needs-review' },
+  { id: 'n4', visual: pic('flower'), english: 'Flower', hindi: 'फूल', target: 'बा', review: 'needs-review' },
+  { id: 'n5', visual: pic('leaf'), english: 'Leaf', hindi: 'पत्ता', target: 'सकम', review: 'needs-review' },
+  { id: 'n6', visual: pic('star'), english: 'Star', hindi: 'तारा', target: '', review: 'needs-review' },
 ];
 
 /** Sample conversation turns used by the demo voice session. */

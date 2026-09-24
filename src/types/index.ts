@@ -38,7 +38,6 @@ export interface VocabularyItem {
   hindi: string;
   target: string;
   english: string;
-  emoji?: string;
 }
 
 export interface Lesson {
@@ -83,7 +82,7 @@ export type VoicePhase = 'idle' | 'listening' | 'understanding' | 'translating' 
 export type Difficulty = 'easy' | 'medium' | 'challenging';
 
 export type WorksheetItem =
-  | { kind: 'count'; prompt: string; promptTarget: string; emoji: string; count: number }
+  | { kind: 'count'; prompt: string; promptTarget: string; picture: PictureKey; count: number }
   | { kind: 'match'; prompt: string; promptTarget: string; pairs: { left: string; right: string }[] }
   | { kind: 'fill'; prompt: string; promptTarget: string; sequence: (number | null)[] }
   | { kind: 'circle'; prompt: string; promptTarget: string; options: string[]; answer: string };
@@ -101,9 +100,17 @@ export interface Worksheet {
   createdAt: number;
 }
 
+/** Illustration keys, rendered as duotone icons by the UI (see components/ui/Picture.tsx). */
+export type PictureKey =
+  | 'dog' | 'cat' | 'cow' | 'horse' | 'bird' | 'fish' | 'rabbit' | 'butterfly' | 'beetle'
+  | 'sun' | 'moon' | 'tree' | 'flower' | 'leaf' | 'star';
+
+/** What a flashcard shows: an illustration, or a numeral with a matching dot pattern. */
+export type FlashcardVisual = { type: 'picture'; picture: PictureKey } | { type: 'number'; value: number };
+
 export interface Flashcard {
   id: string;
-  emoji: string;
+  visual: FlashcardVisual;
   english: string;
   hindi: string;
   target: string;

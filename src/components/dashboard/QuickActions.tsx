@@ -21,7 +21,7 @@ const ACTIONS: Action[] = [
 export function QuickActions() {
   return (
     <section aria-labelledby="quick-actions">
-      <h2 id="quick-actions" className="mb-4 text-lg font-bold">
+      <h2 id="quick-actions" className="mb-3 text-base font-bold sm:mb-4 sm:text-lg">
         Quick actions
       </h2>
       <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
@@ -29,20 +29,20 @@ export function QuickActions() {
           <motion.li key={a.to} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i, duration: 0.25 }}>
             <Link
               to={a.to}
-              className="group flex h-full min-h-[148px] flex-col rounded-2xl border border-ink-200/80 bg-white p-4 shadow-soft transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-[3px] hover:border-ocean-200 hover:shadow-lift sm:p-5"
+              className="group flex h-full min-h-[112px] flex-col rounded-2xl border border-ink-200/80 bg-white p-3.5 shadow-soft transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-[3px] hover:border-ocean-200 hover:shadow-lift sm:min-h-[148px] sm:p-5"
             >
               <div className="flex items-start justify-between">
-                <span className={cn('flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-200 group-hover:scale-105', a.tint)}>
-                  <a.icon className="h-6 w-6" aria-hidden />
+                <span className={cn('flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-200 group-hover:scale-105 sm:h-12 sm:w-12 sm:rounded-2xl', a.tint)}>
+                  <a.icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />
                 </span>
                 <ArrowUpRight
-                  className="h-5 w-5 text-ink-300 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ocean-500"
+                  className="h-4 w-4 text-ink-300 transition-all sm:h-5 sm:w-5 duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ocean-500"
                   aria-hidden
                 />
               </div>
-              <span className="mt-auto pt-4">
-                <span className="block font-display text-base font-bold text-ink-900 sm:text-lg">{a.title}</span>
-                <span className="mt-0.5 block text-sm text-ink-500">{a.description}</span>
+              <span className="mt-auto pt-3 sm:pt-4">
+                <span className="block font-display text-[15px] font-bold leading-snug text-ink-900 sm:text-lg">{a.title}</span>
+                <span className="mt-0.5 block truncate text-xs text-ink-500 sm:text-sm">{a.description}</span>
               </span>
             </Link>
           </motion.li>

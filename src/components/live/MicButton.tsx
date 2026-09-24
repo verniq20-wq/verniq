@@ -22,11 +22,11 @@ export function MicButton({ phase, onStart, onStop, level }: MicButtonProps) {
     <div className="relative flex items-center justify-center">
       {listening && (
         <>
-          <span aria-hidden className="absolute h-28 w-28 animate-ring rounded-full border-2 border-aqua-300" />
-          <span aria-hidden className="absolute h-28 w-28 animate-ring rounded-full border-2 border-aqua-300 [animation-delay:0.6s]" />
+          <span aria-hidden className="absolute h-24 w-24 sm:h-28 sm:w-28 animate-ring rounded-full border-2 border-aqua-300" />
+          <span aria-hidden className="absolute h-24 w-24 sm:h-28 sm:w-28 animate-ring rounded-full border-2 border-aqua-300 [animation-delay:0.6s]" />
           <motion.span
             aria-hidden
-            className="absolute h-28 w-28 rounded-full bg-aqua-400/25"
+            className="absolute h-24 w-24 sm:h-28 sm:w-28 rounded-full bg-aqua-400/25"
             animate={{ scale: 1 + level * 0.35 }}
             transition={{ duration: 0.12 }}
           />
@@ -40,7 +40,7 @@ export function MicButton({ phase, onStart, onStop, level }: MicButtonProps) {
         aria-label={label}
         aria-pressed={listening}
         className={cn(
-          'relative flex h-28 w-28 items-center justify-center rounded-full text-white transition-[background-color,box-shadow] duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/70 focus-visible:ring-offset-4 focus-visible:ring-offset-ocean-800',
+          'relative flex h-24 w-24 sm:h-28 sm:w-28 items-center justify-center rounded-full text-white transition-[background-color,box-shadow] duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/70 focus-visible:ring-offset-4 focus-visible:ring-offset-ocean-800',
           listening ? 'bg-aqua-500 shadow-glow' : 'bg-white/15 ring-1 ring-inset ring-white/30 hover:bg-white/25',
           (busy || speaking) && 'cursor-default',
         )}

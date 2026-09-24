@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Check, CloudDownload, Play, RefreshCw, RotateCcw, Sparkles, WifiOff } from 'lucide-react';
-import { useRef, useState, type FormEvent } from 'react';
+import { ArrowRight, BookOpen, Check, CloudDownload, Languages, Play, RefreshCw, RotateCcw, Sparkles, Target, WifiOff } from 'lucide-react';
+import { useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { AIStatus } from '../components/ui/AIStatus';
 import { AudioButton } from '../components/ui/AudioButton';
 import { Button, ButtonLink } from '../components/ui/Button';
@@ -9,10 +9,17 @@ import { Select, TextField } from '../components/ui/Select';
 import { ErrorState, PageHeader } from '../components/ui/States';
 import { TRIBAL_LANGUAGES, languageName } from '../data/languages';
 import { useAudio } from '../hooks/useAudio';
-import { LESSON_STAGES, generateLesson, regenerateSection } from '../services/lessonService';
+import { LESSON_STAGES, generateLesson, regenerateSection, type LessonStageId } from '../services/lessonService';
 import { useApp } from '../store/AppContext';
 import type { LanguageCode, Lesson, LessonRequest, Subject } from '../types';
 import { cn, sleep } from '../utils';
+
+const STAGE_ICONS: Record<LessonStageId, ReactNode> = {
+  curriculum: <Sparkles className="h-4 w-4" />,
+  structure: <BookOpen className="h-4 w-4" />,
+  language: <Languages className="h-4 w-4" />,
+  activities: <Target className="h-4 w-4" />,
+};
 
 const TOPIC_SUGGESTIONS: Record<Subject, string[]> = {
   Mathematics: ['Numbers 1–10', 'Shapes Around Us', 'Bigger and Smaller'],
@@ -95,11 +102,11 @@ export default function AIStudio() {
         description="Pick the class and learning outcome. Verniq writes the lesson, the teacher script and activities in both languages."
       />
 
-      <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-[380px_1fr]">
         {/* Form */}
         <Card className="h-fit lg:sticky lg:top-24">
           <form onSubmit={submit} className="space-y-5">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-[112px_1fr] gap-3 sm:grid-cols-2 sm:gap-4">
               <Select
                 label="Class"
                 value={String(req.classLevel)}
@@ -157,7 +164,7 @@ export default function AIStudio() {
               <ErrorState key="error" onRetry={() => void submit()} onContinueOffline={() => setError(false)} />
             ) : generating ? (
               <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <AIStatus stages={LESSON_STAGES} current={stage} doneLabel="Lesson ready" />
+                <AIStatus stages={LESSON_STAGES.map((s) => ({ ...s, icon: STAGE_ICONS[s.id] }))} current={stage} doneLabel="Lesson ready" />
               </motion.div>
             ) : lesson && section ? (
               <motion.div key="result" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
@@ -221,16 +228,16 @@ export default function AIStudio() {
                           <p className="eyebrow">
                             Step {active + 1} · {section.durationMin} min
                           </p>
-                          <h2 className="mt-1 text-2xl font-bold">{section.title}</h2>
+                          <h2 className="mt-1 text-xl font-bold sm:text-2xl">{section.title}</h2>
                         </div>
                         <Button variant="soft" size="sm" onClick={() => void regen(active)} icon={<RotateCcw className="h-4 w-4" />} disabled={!!regenerating}>
                           Regenerate section
                         </Button>
                       </div>
 
-                      <div className="mt-5 rounded-2xl bg-ink-50 p-5">
+                      <div className="mt-4 rounded-2xl bg-ink-50 p-4 sm:mt-5 sm:p-5">
                         <p className="eyebrow mb-2">Teacher script</p>
-                        <p lang="hi" className="text-xl font-medium leading-relaxed text-ink-900">
+                        <p lang="hi" className="text-lg font-medium leading-relaxed text-ink-900 sm:text-xl">
                           “{section.script}”
                         </p>
                         <AudioButton
@@ -300,21 +307,21 @@ export default function AIStudio() {
               </motion.div>
             ) : (
               <motion.div key="intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <div className="rounded-3xl border border-dashed border-ink-200 bg-white p-8 sm:p-10">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-ocean-soft text-2xl" aria-hidden>
-                    ✨
+                <div className="rounded-3xl border border-dashed border-ink-200 bg-white p-4 sm:p-10">
+                  <span className="hidden h-14 w-14 items-center justify-center rounded-2xl bg-ocean-soft text-ocean-600 ring-1 ring-inset ring-ocean-100 sm:flex" aria-hidden>
+                    <Sparkles className="h-7 w-7" strokeWidth={1.75} />
                   </span>
-                  <h2 className="mt-5 text-xl font-bold">What you'll get</h2>
-                  <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <h2 className="text-base font-bold sm:mt-5 sm:text-xl">What you'll get</h2>
+                  <ul className="mt-3 grid grid-cols-1 gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-3">
                     {[
                       ['01', 'Introduction', 'A warm opening linked to home life'],
                       ['02', 'Explain', 'Teacher script in both languages'],
                       ['03', 'Activity', 'Hands-on, low-resource classroom task'],
                       ['04', 'Practice', 'Slate and partner practice'],
                       ['05', 'Assessment', 'Quick oral check for understanding'],
-                      ['✓', 'Vocabulary', 'Key words in Hindi and the home language'],
+                      ['06', 'Vocabulary', 'Key words in Hindi and the home language'],
                     ].map(([n, t, d]) => (
-                      <li key={t} className="flex gap-3 rounded-2xl bg-ink-50 p-4">
+                      <li key={t} className="flex gap-3 rounded-2xl bg-ink-50 p-3 sm:p-4">
                         <span className="font-display text-sm font-bold text-aqua-600">{n}</span>
                         <span>
                           <span className="block font-semibold text-ink-900">{t}</span>

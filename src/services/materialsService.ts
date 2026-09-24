@@ -1,4 +1,4 @@
-import { ANIMAL_FLASHCARDS, NUMBER_VOCAB } from '../data/demo';
+import { ANIMAL_FLASHCARDS, NATURE_FLASHCARDS, NUMBER_VOCAB } from '../data/demo';
 import type { Difficulty, Flashcard, LanguageCode, Lesson, Worksheet, WorksheetItem } from '../types';
 import { sleep, uid } from '../utils';
 import { DEMO_LATENCY_MS } from './config';
@@ -15,8 +15,8 @@ function itemsFor(difficulty: Difficulty): WorksheetItem[] {
   const blanks = difficulty === 'easy' ? [2] : difficulty === 'medium' ? [1, 4] : [1, 3, 5];
 
   return [
-    { kind: 'count', prompt: 'गिनो और लिखो', promptTarget: 'लेखाय मे आर ओल मे', emoji: '🍎', count: countA },
-    { kind: 'count', prompt: 'गिनो और लिखो', promptTarget: 'लेखाय मे आर ओल मे', emoji: '🐟', count: countB },
+    { kind: 'count', prompt: 'गिनो और लिखो', promptTarget: 'लेखाय मे आर ओल मे', picture: 'flower', count: countA },
+    { kind: 'count', prompt: 'गिनो और लिखो', promptTarget: 'लेखाय मे आर ओल मे', picture: 'fish', count: countB },
     {
       kind: 'match',
       prompt: 'संख्या को सही शब्द से मिलाओ',
@@ -66,9 +66,13 @@ export async function generateWorksheet(
 export async function generateFlashcards(topic: string, count: number): Promise<Flashcard[]> {
   await sleep(DEMO_LATENCY_MS * 2);
   const q = topic.toLowerCase();
-  const pool: Flashcard[] = /number|गिनती|संख्या/.test(q)
-    ? NUMBER_VOCAB.map((v, i) => ({ id: `n${i}`, emoji: v.emoji ?? '🔢', english: v.english, hindi: v.hindi, target: v.target, review: 'needs-review' as const }))
-    : ANIMAL_FLASHCARDS;
+  const pool: Flashcard[] = /number|count|गिनती|संख्या/.test(q)
+    ? NUMBER_VOCAB.map((v, i) => ({ id: `n${i}`, visual: { type: 'number', value: i + 1 }, english: v.english, hindi: v.hindi, target: v.target, review: 'needs-review' }))
+    : /nature|plant|tree|sky|sun|moon|flower|प्रकृति/.test(q)
+      ? NATURE_FLASHCARDS
+      : /animal|जानवर|पशु/.test(q)
+        ? ANIMAL_FLASHCARDS
+        : [...ANIMAL_FLASHCARDS, ...NATURE_FLASHCARDS];
   const shuffled = [...pool].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, Math.min(count, pool.length)).map((c) => ({ ...c, id: uid('card') }));
 }

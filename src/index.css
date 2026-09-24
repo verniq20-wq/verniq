@@ -50,7 +50,7 @@
   }
 
   .field {
-    @apply min-h-[48px] w-full rounded-xl border border-ink-200 bg-white px-4 text-base text-ink-900 shadow-soft transition-colors placeholder:text-ink-400 hover:border-ink-300 focus:border-ocean-500 focus:outline-none focus:ring-2 focus:ring-ocean-200;
+    @apply min-h-[48px] w-full rounded-xl border border-ink-200 bg-white px-3.5 text-base sm:px-4 text-ink-900 shadow-soft transition-colors placeholder:text-ink-400 hover:border-ink-300 focus:border-ocean-500 focus:outline-none focus:ring-2 focus:ring-ocean-200;
   }
 
   .eyebrow {

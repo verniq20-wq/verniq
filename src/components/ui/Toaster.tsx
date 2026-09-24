@@ -15,7 +15,7 @@ export function Toaster() {
   return (
     <div
       aria-live="polite"
-      className="pointer-events-none fixed inset-x-0 bottom-24 z-[60] flex flex-col items-center gap-2 px-4 lg:bottom-6 lg:items-end lg:px-6"
+      className="pointer-events-none fixed inset-x-0 top-[calc(env(safe-area-inset-top)+4.25rem)] z-[60] flex flex-col items-center gap-2 px-3 md:bottom-6 md:top-auto md:items-end md:px-6"
     >
       <AnimatePresence initial={false}>
         {toasts.map((t) => (
@@ -27,7 +27,7 @@ export function Toaster() {
             exit={{ opacity: 0, y: 8, scale: 0.97 }}
             transition={{ duration: 0.2 }}
             role="status"
-            className={cn('pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border border-ink-200 bg-white p-4 shadow-lift')}
+            className={cn('pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border border-ink-200 bg-white p-3 shadow-lift sm:p-4')}
           >
             {icons[t.tone]}
             <div className="min-w-0 flex-1">

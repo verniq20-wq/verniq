@@ -39,30 +39,31 @@ export function TodayLessonCard({ lesson }: { lesson: Lesson }) {
   return (
     <section
       aria-labelledby="today-lesson"
-      className="relative overflow-hidden rounded-3xl bg-ocean-gradient p-6 text-white shadow-lift sm:p-8"
+      className="relative overflow-hidden rounded-3xl bg-ocean-gradient p-5 text-white shadow-lift sm:p-8"
     >
       {/* soft light shapes */}
       <div aria-hidden className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" />
       <div aria-hidden className="absolute -bottom-32 left-1/3 h-72 w-72 rounded-full bg-aqua-300/20 blur-3xl" />
 
-      <div className="relative grid gap-6 md:grid-cols-[1fr_220px] md:items-center">
+      <div className="relative grid grid-cols-1 gap-6 md:grid-cols-[1fr_220px] md:items-center">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em]">Today's lesson</span>
+            <span className="rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.12em] sm:px-3 sm:text-xs">Today's lesson</span>
             {lesson.savedOffline && (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold sm:px-3 sm:text-xs">
                 <WifiOff className="h-3.5 w-3.5" aria-hidden /> Works offline
               </span>
             )}
           </div>
 
-          <p className="mt-5 text-sm font-bold uppercase tracking-[0.14em] text-aqua-100">{lesson.subject}</p>
-          <h2 id="today-lesson" className="mt-1 font-display text-3xl font-extrabold leading-tight text-white sm:text-4xl">
+          <p className="mt-4 text-xs font-bold uppercase tracking-[0.14em] text-aqua-100 sm:mt-5 sm:text-sm">
+            {lesson.subject} · Class {lesson.classLevel}
+          </p>
+          <h2 id="today-lesson" className="mt-1 font-display text-[26px] font-extrabold leading-tight text-white sm:text-4xl">
             {lesson.topic}
           </h2>
-          <p className="mt-1 text-lg text-ocean-100">Class {lesson.classLevel}</p>
 
-          <dl className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+          <dl className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-sm sm:mt-5">
             <div className="flex items-center gap-2">
               <Target className="h-4 w-4 text-aqua-200" aria-hidden />
               <dt className="sr-only">Learning outcome</dt>
@@ -78,7 +79,7 @@ export function TodayLessonCard({ lesson }: { lesson: Lesson }) {
           </dl>
 
           {lesson.progress > 0 && lesson.progress < 1 && (
-            <div className="mt-5 max-w-sm">
+            <div className="mt-4 max-w-sm sm:mt-5">
               <div className="mb-1.5 flex justify-between text-xs font-semibold text-ocean-100">
                 <span>
                   Step {sectionsDone + 1} of {lesson.sections.length}
@@ -89,16 +90,17 @@ export function TodayLessonCard({ lesson }: { lesson: Lesson }) {
             </div>
           )}
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-5 flex flex-wrap gap-3 sm:mt-6">
             <ButtonLink
               to={`/lessons/${lesson.id}/play`}
               size="lg"
               variant="inverse"
+              className="w-full sm:w-auto"
               iconRight={<ArrowRight className="h-5 w-5" />}
             >
               {lesson.progress > 0 ? 'Continue lesson' : 'Start lesson'}
             </ButtonLink>
-            <ButtonLink to="/live" size="lg" variant="glass">
+            <ButtonLink to="/live" size="lg" variant="glass" className="hidden sm:inline-flex">
               Open live translation
             </ButtonLink>
           </div>

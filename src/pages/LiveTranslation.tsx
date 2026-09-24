@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowDown, Info, Settings2, Sparkles, Trash2 } from 'lucide-react';
+import { ChalkboardTeacher, Student } from '@phosphor-icons/react';
+import { ArrowDown, Info, MessagesSquare, Settings2, Sparkles, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { MicButton } from '../components/live/MicButton';
 import { AudioButton } from '../components/ui/AudioButton';
@@ -75,7 +76,7 @@ export default function LiveTranslation() {
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <header className="flex items-end justify-between gap-3">
         <div>
           <p className="flex items-center gap-2 font-display text-sm font-extrabold uppercase tracking-[0.16em] text-aqua-600">
             Verniq Live
@@ -89,42 +90,66 @@ export default function LiveTranslation() {
               {active ? 'Live' : 'Ready'}
             </span>
           </p>
-          <h1 className="mt-2">
-            <LanguagePairDisplay size="lg" />
+          <h1 className="mt-1.5 sm:mt-2">
+            <span className="sm:hidden">
+              <LanguagePairDisplay size="md" />
+            </span>
+            <span className="hidden sm:inline">
+              <LanguagePairDisplay size="lg" />
+            </span>
           </h1>
         </div>
-        <Button variant="outline" onClick={openLanguagePicker} icon={<Settings2 className="h-4 w-4" />}>
-          Change language
+        <Button variant="outline" size="sm" onClick={openLanguagePicker} icon={<Settings2 className="h-4 w-4" />} className="sm:min-h-[44px] sm:px-4 sm:text-[15px]">
+          <span className="sm:hidden">Change</span>
+          <span className="hidden sm:inline">Change language</span>
         </Button>
       </header>
 
       <Tabs
         label="Who is speaking"
         size="lg"
+        stretch
+        className="sm:inline-grid sm:w-auto"
         value={direction}
         onChange={(d) => {
           if (phase === 'idle') setDirection(d);
         }}
         tabs={[
-          { value: 'teacher-to-student', label: `Teacher speaks · ${teacherLang} → ${studentLang}`, icon: <span aria-hidden>👩‍🏫</span> },
-          { value: 'student-to-teacher', label: `Student speaks · ${studentLang} → ${teacherLang}`, icon: <span aria-hidden>👧</span> },
+          {
+            value: 'teacher-to-student',
+            label: (
+              <span>
+                Teacher<span className="hidden sm:inline"> speaks · {teacherLang} → {studentLang}</span>
+              </span>
+            ),
+            icon: <ChalkboardTeacher size={20} weight="duotone" aria-hidden />,
+          },
+          {
+            value: 'student-to-teacher',
+            label: (
+              <span>
+                Student<span className="hidden sm:inline"> speaks · {studentLang} → {teacherLang}</span>
+              </span>
+            ),
+            icon: <Student size={20} weight="duotone" aria-hidden />,
+          },
         ]}
       />
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_380px]">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 xl:grid-cols-[1fr_380px]">
         {/* Stage */}
         <section
           aria-label="Live translation"
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-ocean-800 via-ocean-700 to-ocean-600 px-5 py-8 text-white shadow-lift sm:px-10 sm:py-10"
+          className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-ocean-800 via-ocean-700 to-ocean-600 px-4 py-6 text-white shadow-lift sm:px-10 sm:py-10"
         >
           <div aria-hidden className="absolute -left-20 top-10 h-64 w-64 rounded-full bg-aqua-400/15 blur-3xl" />
           <div aria-hidden className="absolute -right-10 bottom-0 h-72 w-72 rounded-full bg-ocean-300/10 blur-3xl" />
 
           <div className="relative flex flex-col items-center text-center">
             {/* Speaker */}
-            <Speaker emoji={fromTeacher ? '👩‍🏫' : '👧'} role={fromTeacher ? 'Teacher' : 'Student'} lang={fromTeacher ? teacherLang : studentLang} active={phase === 'listening'} />
+            <Speaker teacher={fromTeacher} role={fromTeacher ? 'Teacher' : 'Student'} lang={fromTeacher ? teacherLang : studentLang} active={phase === 'listening'} />
 
-            <div className="mt-6 min-h-[88px] w-full max-w-xl">
+            <div className="mt-4 min-h-[72px] w-full max-w-xl sm:mt-6 sm:min-h-[88px]">
               <p className="text-sm font-semibold text-aqua-200" aria-live="polite">
                 {PHASE_TEXT[phase]}
               </p>
@@ -135,7 +160,7 @@ export default function LiveTranslation() {
                     initial={{ opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className="mt-2 font-display text-2xl font-bold leading-snug sm:text-3xl"
+                    className="mt-1.5 font-display text-xl font-bold leading-snug sm:mt-2 sm:text-3xl"
                     lang={fromTeacher ? pair.source : undefined}
                   >
                     “{transcript}”
@@ -184,11 +209,11 @@ export default function LiveTranslation() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className="mt-3 rounded-2xl bg-white/10 p-5 text-left ring-1 ring-inset ring-white/15 backdrop-blur-sm"
+                    className="mt-3 rounded-2xl bg-white/10 p-4 text-left sm:p-5 ring-1 ring-inset ring-white/15 backdrop-blur-sm"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-3xl" aria-hidden>
-                        {latest.direction === 'teacher-to-student' ? '👧' : '👩‍🏫'}
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15" aria-hidden>
+                        <Avatar teacher={latest.direction !== 'teacher-to-student'} className="h-6 w-6" />
                       </span>
                       <div className="min-w-0 flex-1">
                         <p className="text-xs font-semibold uppercase tracking-wider text-aqua-200">
@@ -223,7 +248,7 @@ export default function LiveTranslation() {
           {turns.length === 0 ? (
             <EmptyState
               className="border-none py-8"
-              emoji="💬"
+              icon={MessagesSquare}
               title="No conversation yet"
               description="Speak to your students — every exchange is kept here so you can replay it."
             />
@@ -241,7 +266,7 @@ export default function LiveTranslation() {
                       className={cn('rounded-2xl p-4', teacher ? 'bg-ocean-50' : 'bg-sun-50')}
                     >
                       <p className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-                        <span aria-hidden>{teacher ? '👩‍🏫' : '👧'}</span> {teacher ? 'Teacher' : 'Student'} · {languageName(t.sourceLang)}
+                        <Avatar teacher={teacher} size="sm" className="-mt-0.5 mr-1 inline" /> {teacher ? 'Teacher' : 'Student'} · {languageName(t.sourceLang)}
                       </p>
                       <p className="mt-1 text-[15px] text-ink-700">{t.sourceText}</p>
                       <p className="mt-2 font-semibold text-ink-900">{t.translatedText}</p>
@@ -278,17 +303,22 @@ export default function LiveTranslation() {
   );
 }
 
-function Speaker({ emoji, role, lang, active }: { emoji: string; role: string; lang: string; active: boolean }) {
+function Avatar({ teacher, size = 'md', className }: { teacher: boolean; size?: 'sm' | 'md'; className?: string }) {
+  const Icon = teacher ? ChalkboardTeacher : Student;
+  return <Icon size={size === 'sm' ? 16 : 40} weight="duotone" className={className} aria-hidden />;
+}
+
+function Speaker({ teacher, role, lang, active }: { teacher: boolean; role: string; lang: string; active: boolean }) {
   return (
     <div className="flex flex-col items-center">
       <span
         className={cn(
-          'flex h-20 w-20 items-center justify-center rounded-full bg-white/10 text-4xl ring-1 ring-inset ring-white/20 transition-shadow duration-300',
+          'flex h-16 w-16 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-inset ring-white/20 transition-shadow duration-300 sm:h-20 sm:w-20',
           active && 'shadow-glow',
         )}
         aria-hidden
       >
-        {emoji}
+        <Avatar teacher={teacher} />
       </span>
       <p className="mt-2 text-xs font-bold uppercase tracking-[0.16em] text-white">{role}</p>
       <p className="text-xs text-ocean-100">{lang}</p>

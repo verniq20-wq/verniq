@@ -50,7 +50,7 @@ export function OfflinePanel({ compact }: { compact?: boolean }) {
           <span className="h-2.5 w-2.5 rounded-full bg-ocean-500" aria-hidden /> Offline mode
         </p>
         <p className="mt-1 text-sm text-ink-600">Verniq is ready to teach without internet.</p>
-        <ul className={cn('mt-3 grid gap-1.5', compact ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3')}>
+        <ul className={cn('mt-3 grid grid-cols-1 gap-1.5', compact ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3')}>
           {OFFLINE_FEATURES.map((f) => (
             <li key={f} className="flex items-center gap-1.5 text-sm text-ink-700">
               <Check className="h-4 w-4 text-aqua-600" aria-hidden /> {f}

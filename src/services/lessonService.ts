@@ -4,10 +4,10 @@ import { sleep, uid } from '../utils';
 import { DEMO_LATENCY_MS } from './config';
 
 export const LESSON_STAGES = [
-  { id: 'curriculum', label: 'Understanding curriculum', icon: '✨' },
-  { id: 'structure', label: 'Structuring lesson', icon: '📚' },
-  { id: 'language', label: 'Preparing language content', icon: '🌐' },
-  { id: 'activities', label: 'Creating activities', icon: '🎯' },
+  { id: 'curriculum', label: 'Understanding curriculum' },
+  { id: 'structure', label: 'Structuring lesson' },
+  { id: 'language', label: 'Preparing language content' },
+  { id: 'activities', label: 'Creating activities' },
 ] as const;
 
 export type LessonStageId = (typeof LESSON_STAGES)[number]['id'];

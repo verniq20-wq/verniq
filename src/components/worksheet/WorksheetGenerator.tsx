@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Download, Pencil, Printer, RotateCcw, Share2, Sparkles } from 'lucide-react';
+import { Check, Download, FileText, Pencil, Printer, RotateCcw, Share2, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { TRIBAL_LANGUAGES } from '../../data/languages';
 import { WORKSHEET_STAGES, generateWorksheet } from '../../services/materialsService';
@@ -60,7 +60,7 @@ export function WorksheetGenerator() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Flow indicator */}
       <ol className="flex items-center gap-1 overflow-x-auto pb-1 text-sm scrollbar-none" aria-label="Worksheet steps">
         {FLOW.map((f, i) => (
@@ -75,14 +75,14 @@ export function WorksheetGenerator() {
               )}
             >
               {i < flowStep ? <Check className="h-3.5 w-3.5" aria-hidden /> : <span className="tabular-nums">{i + 1}</span>}
-              {f}
+              <span className={cn(i !== flowStep && 'hidden sm:inline')}>{f}</span>
             </span>
-            {i < FLOW.length - 1 && <span className="h-px w-4 bg-ink-200" aria-hidden />}
+            {i < FLOW.length - 1 && <span className="h-px w-2 bg-ink-200 sm:w-4" aria-hidden />}
           </li>
         ))}
       </ol>
 
-      <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-[340px_1fr]">
         <Card className="h-fit space-y-5 lg:sticky lg:top-24">
           <Select
             label="1 · Lesson"
@@ -158,7 +158,7 @@ export function WorksheetGenerator() {
             ) : (
               <EmptyState
                 key="empty"
-                emoji="📄"
+                icon={FileText}
                 title="Your worksheet will appear here"
                 description="Choose a lesson, language and difficulty. Verniq creates a printable bilingual worksheet with counting, matching and fill-in activities."
               />

@@ -1,4 +1,4 @@
-import { Search, Sparkles, WifiOff, X } from 'lucide-react';
+import { BookOpen, Search, SearchX, Sparkles, WifiOff, X } from 'lucide-react';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { LessonCard } from '../components/lesson/LessonCard';
@@ -93,7 +93,7 @@ export default function Lessons() {
       </div>
 
       {lessonsLoading ? (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {[0, 1, 2, 3, 4, 5].map((i) => (
             <Skeleton key={i} className="h-[230px] rounded-2xl" />
           ))}
@@ -103,7 +103,7 @@ export default function Lessons() {
           <p className="mb-3 text-sm text-ink-500" aria-live="polite">
             {filtered.length} {filtered.length === 1 ? 'lesson' : 'lessons'}
           </p>
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {filtered.map((l) => (
               <LessonCard key={l.id} lesson={l} />
             ))}
@@ -111,7 +111,7 @@ export default function Lessons() {
         </>
       ) : hasFilters ? (
         <EmptyState
-          emoji="🔍"
+          icon={SearchX}
           title="No lessons match"
           description="Try a different word, or create a new lesson on this topic with Verniq AI."
           action={
@@ -127,7 +127,7 @@ export default function Lessons() {
         />
       ) : (
         <EmptyState
-          emoji="📚"
+          icon={BookOpen}
           title="No lessons created yet."
           description="Create your first curriculum-aligned lesson with Verniq AI."
           action={<ButtonLink to="/studio">Create lesson</ButtonLink>}

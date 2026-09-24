@@ -60,14 +60,14 @@ export default function Settings() {
     <>
       <PageHeader title="Settings" description="Your profile, classroom language and offline content." />
 
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-2">
         <Card>
           <CardHeader title="Profile" />
           <div className="flex items-center gap-4">
-            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sun-100 font-display text-lg font-bold text-sun-700">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-sun-100 font-display text-lg font-bold text-sun-700">
               {TEACHER.name.split(' ').map((p) => p[0]).join('')}
             </span>
-            <div>
+            <div className="min-w-0">
               <p className="font-semibold text-ink-900">{TEACHER.name}</p>
               <p className="text-sm text-ink-500">
                 Class {TEACHER.classLevel} · {TEACHER.school}
@@ -79,8 +79,10 @@ export default function Settings() {
 
         <Card>
           <CardHeader title="Classroom language" />
-          <LanguagePairDisplay size="lg" />
-          <Button variant="outline" className="mt-5" onClick={openLanguagePicker}>
+          <div>
+            <LanguagePairDisplay size="lg" />
+          </div>
+          <Button variant="outline" className="mt-4 sm:mt-5" onClick={openLanguagePicker}>
             Change language
           </Button>
         </Card>
@@ -102,7 +104,7 @@ export default function Settings() {
 
         <Card className="lg:col-span-2">
           <CardHeader title="Language packs" subtitle="Download packs to translate, speak and generate offline." />
-          <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {packs.map((l) => (
               <li key={l.code} className="flex items-center justify-between gap-3 rounded-2xl border border-ink-200 p-4">
                 <div className="min-w-0">
@@ -152,8 +154,10 @@ export default function Settings() {
             </div>
             <p className="mt-4 flex gap-2 text-sm text-ink-600">
               <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-              Set <code className="rounded bg-white px-1.5 py-0.5 text-xs">VITE_VERNIQ_API_URL</code> and implement the functions in
-              <code className="rounded bg-white px-1.5 py-0.5 text-xs">src/services</code> to connect real services.
+              <span className="min-w-0">
+                Set <code className="break-all rounded bg-white px-1.5 py-0.5 text-xs">VITE_VERNIQ_API_URL</code> and implement the functions in{' '}
+                <code className="rounded bg-white px-1.5 py-0.5 text-xs">src/services</code> to connect real services.
+              </span>
             </p>
           </Card>
         )}

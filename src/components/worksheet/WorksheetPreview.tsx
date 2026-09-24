@@ -4,6 +4,7 @@ import { TEACHER } from '../../data/demo';
 import { languageName } from '../../data/languages';
 import type { Worksheet, WorksheetItem } from '../../types';
 import { cn } from '../../utils';
+import { Picture } from '../ui/Picture';
 
 function Prompt({ n, item, lang }: { n: number; item: WorksheetItem; lang: string }) {
   return (
@@ -28,12 +29,10 @@ function Item({ item, n, lang }: { item: WorksheetItem; n: number; lang: string 
       return (
         <div>
           <Prompt n={n} item={item} lang={lang} />
-          <div className="flex items-center gap-4 pl-10">
-            <div className="flex max-w-[220px] flex-wrap gap-1.5 text-3xl" aria-label={`${item.count} pictures`}>
+          <div className="flex items-center gap-4 pl-0 sm:pl-10">
+            <div className="flex max-w-[240px] flex-wrap gap-1.5" role="img" aria-label={`${item.count} ${item.picture} pictures`}>
               {Array.from({ length: item.count }).map((_, i) => (
-                <span key={i} aria-hidden>
-                  {item.emoji}
-                </span>
+                <Picture key={i} picture={item.picture} size={34} />
               ))}
             </div>
             <span className="ml-auto h-14 w-14 shrink-0 rounded-xl border-2 border-dashed border-ink-300" aria-label="Answer box" />
@@ -46,12 +45,12 @@ function Item({ item, n, lang }: { item: WorksheetItem; n: number; lang: string 
       return (
         <div>
           <Prompt n={n} item={item} lang={lang} />
-          <div className="flex flex-wrap gap-2 pl-10">
+          <div className="flex flex-wrap gap-2 pl-0 sm:pl-10">
             {item.sequence.map((v, i) => (
               <span
                 key={i}
                 className={cn(
-                  'flex h-12 w-12 items-center justify-center rounded-xl font-display text-xl font-bold',
+                  'flex h-11 w-11 items-center justify-center rounded-xl font-display text-xl font-bold sm:h-12 sm:w-12',
                   v === null ? 'border-2 border-dashed border-sun-400 bg-sun-50' : 'bg-ink-50 text-ink-800',
                 )}
               >
@@ -65,7 +64,7 @@ function Item({ item, n, lang }: { item: WorksheetItem; n: number; lang: string 
       return (
         <div>
           <Prompt n={n} item={item} lang={lang} />
-          <div className="flex gap-4 pl-10">
+          <div className="flex gap-3 pl-0 sm:gap-4 sm:pl-10">
             {item.options.map((o) => (
               <span key={o} className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-ink-200 font-display text-2xl font-bold text-ink-800">
                 {o}
@@ -82,7 +81,7 @@ function MatchItem({ item, n, lang }: { item: Extract<WorksheetItem, { kind: 'ma
   return (
     <div>
       <Prompt n={n} item={item} lang={lang} />
-      <div className="grid grid-cols-2 gap-x-12 gap-y-2 pl-10 sm:max-w-md">
+      <div className="grid grid-cols-2 gap-x-6 gap-y-2 pl-0 sm:max-w-md sm:gap-x-12 sm:pl-10">
         {item.pairs.map((p, i) => (
           <div key={p.left} className="contents">
             <span className="flex items-center justify-between rounded-xl bg-ocean-50 px-4 py-2 font-display text-xl font-bold text-ocean-700">
@@ -110,7 +109,7 @@ export function WorksheetPreview({ worksheet, editable }: { worksheet: Worksheet
       suppressContentEditableWarning
       aria-label="Worksheet preview"
       className={cn(
-        'mx-auto w-full max-w-[720px] rounded-2xl border border-ink-200 bg-white p-6 shadow-lift outline-none sm:p-10',
+        'mx-auto w-full max-w-[720px] rounded-2xl border border-ink-200 bg-white p-4 shadow-lift outline-none sm:p-10',
         editable && 'ring-2 ring-sun-300 ring-offset-4 ring-offset-canvas',
       )}
     >
@@ -129,7 +128,7 @@ export function WorksheetPreview({ worksheet, editable }: { worksheet: Worksheet
         </div>
       </header>
 
-      <div className="mt-6 space-y-8">
+      <div className="mt-5 space-y-6 sm:mt-6 sm:space-y-8">
         {worksheet.items.map((item, i) => (
           <Item key={i} item={item} n={i + 1} lang={lang} />
         ))}

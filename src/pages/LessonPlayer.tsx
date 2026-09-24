@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Check, Clock, Mic, PartyPopper, Target, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Clock, Compass, Mic, PartyPopper, Target, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AudioButton } from '../components/ui/AudioButton';
@@ -68,7 +68,7 @@ export default function LessonPlayer() {
     return (
       <div className="mx-auto max-w-xl p-6 pt-20">
         <EmptyState
-          emoji="🧭"
+          icon={Compass}
           title="We couldn't find that lesson"
           description="It may have been removed from this device. Your other saved lessons are still here."
           action={<ButtonLink to="/lessons">Back to lessons</ButtonLink>}
@@ -112,7 +112,7 @@ export default function LessonPlayer() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-6 sm:px-6 sm:py-10">
+      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-5 sm:px-6 sm:py-10">
         {finished ? (
           <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="rounded-3xl bg-white p-8 text-center shadow-soft sm:p-12">
             <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-leaf-50 text-leaf-600">
@@ -147,20 +147,20 @@ export default function LessonPlayer() {
               </p>
 
               {step === 0 && (
-                <section className="rounded-3xl border border-ocean-100 bg-ocean-soft p-6">
+                <section className="rounded-3xl border border-ocean-100 bg-ocean-soft p-4 sm:p-6">
                   <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.12em] text-ocean-700">
                     <Target className="h-4 w-4" aria-hidden /> Learning objective
                   </h2>
-                  <p className="mt-2 font-display text-xl font-bold text-ink-900 sm:text-2xl">
-                    Students will {lesson.learningOutcome.charAt(0).toLowerCase() + lesson.learningOutcome.slice(1)}
-                    {lesson.topic ? ` — ${lesson.topic}` : ''}.
+                  <p className="mt-2 font-display text-lg font-bold text-ink-900 sm:text-2xl">
+                    {lesson.learningOutcome}
+                    <span className="block text-sm font-semibold text-ocean-700 sm:text-base">{lesson.topic}</span>
                   </p>
                 </section>
               )}
 
-              <section className="rounded-3xl bg-white p-6 shadow-soft sm:p-8">
+              <section className="rounded-3xl bg-white p-4 shadow-soft sm:p-8">
                 <h2 className="eyebrow">Teacher script</h2>
-                <p lang="hi" className="mt-3 text-2xl font-semibold leading-relaxed text-ink-900 sm:text-[28px]">
+                <p lang="hi" className="mt-2 text-xl font-semibold leading-relaxed text-ink-900 sm:mt-3 sm:text-[28px]">
                   “{section.script}”
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
@@ -184,7 +184,7 @@ export default function LessonPlayer() {
               </section>
 
               {section.steps && (
-                <section className="rounded-3xl bg-white p-6 shadow-soft sm:p-8">
+                <section className="rounded-3xl bg-white p-4 shadow-soft sm:p-8">
                   <h2 className="eyebrow mb-3">In class</h2>
                   <ul className="space-y-2">
                     {section.steps.map((s, i) => {
@@ -206,7 +206,7 @@ export default function LessonPlayer() {
                             >
                               {done && <Check className="h-4 w-4" aria-hidden />}
                             </span>
-                            <span className={cn('text-lg', done ? 'text-ink-400 line-through' : 'text-ink-800')}>{s}</span>
+                            <span className={cn('text-base sm:text-lg', done ? 'text-ink-400 line-through' : 'text-ink-800')}>{s}</span>
                           </button>
                         </li>
                       );
@@ -216,7 +216,7 @@ export default function LessonPlayer() {
               )}
 
               {section.key === 'explain' && lesson.vocabulary.length > 0 && (
-                <section className="rounded-3xl bg-white p-6 shadow-soft sm:p-8">
+                <section className="rounded-3xl bg-white p-4 shadow-soft sm:p-8">
                   <div className="mb-4 flex items-center justify-between gap-3">
                     <h2 className="eyebrow">Vocabulary</h2>
                     <span className="text-xs text-ink-400">Sample words · community review pending</span>
@@ -249,16 +249,18 @@ export default function LessonPlayer() {
 
       {!finished && (
         <footer className="sticky bottom-0 border-t border-ink-200/60 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
-          <div className="mx-auto flex max-w-4xl items-center gap-3 px-4 py-3 sm:px-6">
-            <Button variant="outline" size="lg" onClick={() => go(-1)} disabled={step === 0} icon={<ArrowLeft className="h-5 w-5" />}>
+          <div className="mx-auto flex max-w-4xl items-center gap-2 px-4 py-3 sm:gap-3 sm:px-6">
+            <Button variant="outline" size="lg" onClick={() => go(-1)} disabled={step === 0} icon={<ArrowLeft className="h-5 w-5" />} aria-label="Previous step" className="px-3.5 sm:px-6">
               <span className="hidden sm:inline">Previous</span>
             </Button>
             <Link
               to="/live"
+              aria-label="Live translate"
               onClick={() => toast({ tone: 'info', title: 'Lesson paused', detail: 'Come back any time — your place is saved.' })}
-              className="mx-auto inline-flex min-h-[52px] items-center gap-2 rounded-xl px-4 font-semibold text-aqua-700 hover:bg-aqua-50"
+              className="mx-auto inline-flex min-h-[52px] items-center gap-2 whitespace-nowrap rounded-xl px-3 font-semibold text-aqua-700 hover:bg-aqua-50 sm:px-4"
             >
-              <Mic className="h-5 w-5" aria-hidden /> Live translate
+              <Mic className="h-5 w-5" aria-hidden /> <span className="hidden min-[360px]:inline sm:hidden">Translate</span>
+              <span className="hidden sm:inline">Live translate</span>
             </Link>
             <Button size="lg" onClick={() => go(1)} iconRight={<ArrowRight className="h-5 w-5" />}>
               {step === total - 1 ? 'Finish' : 'Next'}

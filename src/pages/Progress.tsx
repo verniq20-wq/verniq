@@ -12,8 +12,8 @@ function StatTile({ icon, label, value, sub, tint }: { icon: React.ReactNode; la
   return (
     <Card className="flex flex-col">
       <span className={cn('flex h-10 w-10 items-center justify-center rounded-xl', tint)}>{icon}</span>
-      <p className="mt-4 font-display text-3xl font-extrabold tabular-nums text-ink-900">{value}</p>
-      <p className="text-sm font-semibold text-ink-700">{label}</p>
+      <p className="mt-3 font-display text-2xl font-extrabold tabular-nums text-ink-900 sm:mt-4 sm:text-3xl">{value}</p>
+      <p className="text-sm font-semibold leading-snug text-ink-700">{label}</p>
       {sub && <p className="mt-0.5 text-xs text-ink-500">{sub}</p>}
     </Card>
   );
@@ -71,7 +71,7 @@ export default function Progress() {
         }
       />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatTile icon={<Users className="h-5 w-5" aria-hidden />} tint="bg-ocean-50 text-ocean-600" label="Students" value={String(TEACHER.studentCount)} sub="Class 1" />
         <StatTile icon={<BookCheck className="h-5 w-5" aria-hidden />} tint="bg-aqua-50 text-aqua-600" label="Lessons completed" value="18 / 22" sub="4 left this term" />
         <StatTile icon={<ListChecks className="h-5 w-5" aria-hidden />} tint="bg-leaf-50 text-leaf-600" label="Activities completed" value="91%" sub="Up 5% from last month" />
@@ -82,14 +82,14 @@ export default function Progress() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
           <div className="sm:w-56">
             <p className="eyebrow">Learning progress</p>
-            <p className="mt-1 font-display text-5xl font-extrabold tabular-nums text-ink-900">82%</p>
+            <p className="mt-1 font-display text-4xl font-extrabold tabular-nums text-ink-900 sm:text-5xl">82%</p>
             <p className="text-sm text-ink-500">of Class 1 outcomes on track</p>
           </div>
           <ProgressBar className="flex-1" value={0.82} label="Class learning progress" size="lg" />
         </div>
       </Card>
 
-      <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_400px]">
+      <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[1fr_400px]">
         <Card>
           <CardHeader
             title="Outcome mastery by topic"

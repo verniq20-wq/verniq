@@ -15,10 +15,12 @@ interface TabsProps<T extends string> {
   label: string;
   className?: string;
   size?: 'md' | 'lg';
+  /** Fill the available width with equal-width tabs */
+  stretch?: boolean;
 }
 
 /** Segmented tabs with a sliding indicator and arrow-key navigation. */
-export function Tabs<T extends string>({ tabs, value, onChange, label, className, size = 'md' }: TabsProps<T>) {
+export function Tabs<T extends string>({ tabs, value, onChange, label, className, size = 'md', stretch }: TabsProps<T>) {
   const group = useId();
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -36,7 +38,12 @@ export function Tabs<T extends string>({ tabs, value, onChange, label, className
   };
 
   return (
-    <div role="tablist" aria-label={label} className={cn('inline-flex max-w-full gap-1 overflow-x-auto rounded-2xl bg-ink-100 p-1 scrollbar-none', className)}>
+    <div role="tablist" aria-label={label} className={cn(
+        'max-w-full gap-1 overflow-x-auto rounded-2xl bg-ink-100 p-1 scrollbar-none',
+        stretch ? 'grid w-full' : 'inline-flex',
+        className,
+      )}
+      style={stretch ? { gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` } : undefined}>
       {tabs.map((t, i) => {
         const active = t.value === value;
         return (
@@ -52,8 +59,8 @@ export function Tabs<T extends string>({ tabs, value, onChange, label, className
             onClick={() => onChange(t.value)}
             onKeyDown={(e) => onKey(e, i)}
             className={cn(
-              'relative inline-flex shrink-0 items-center gap-2 rounded-xl font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean-500',
-              size === 'lg' ? 'min-h-[48px] px-5 text-[15px]' : 'min-h-[40px] px-4 text-sm',
+              'relative inline-flex shrink-0 items-center justify-center gap-2 rounded-xl font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean-500',
+              size === 'lg' ? 'min-h-[48px] px-3 text-[15px] sm:px-5' : 'min-h-[40px] px-3 text-sm sm:px-4',
               active ? 'text-ocean-700' : 'text-ink-500 hover:text-ink-800',
             )}
           >

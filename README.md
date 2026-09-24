@@ -113,9 +113,10 @@ src/
 ## Design system
 
 - **Colours** (see `tailwind.config.js`): `ocean` (primary, deep ocean blue), `aqua` (secondary, turquoise), `sun` (warm educational accent), `ink` (neutrals), and status colours `leaf` (success), `amber` (warning) and `rose` (error). The ocean → aqua gradient is used sparingly: today's lesson, the live stage and the logo.
+- **Icons**: Lucide for interface icons, Phosphor duotone for illustrations (flashcards, worksheets, subjects). No emoji.
 - **Type**: Plus Jakarta Sans for headings, Inter for body text, Noto Sans Devanagari for Hindi and Ho.
 - **Motion**: Framer Motion, 150–300 ms ease-out transitions, and the device's reduce-motion setting is respected.
-- **Connectivity states**: 🟢 Online · 🟡 Syncing · 🔵 Offline ready · 🔴 Sync required. Offline is presented as a normal mode, not an error.
+- **Connectivity states**: Online (green) · Syncing (amber) · Offline ready (blue) · Sync required (red), each with an icon and label. Offline is presented as a normal mode, not an error.
 
 ## Accessibility
 

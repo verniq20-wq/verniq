@@ -70,7 +70,7 @@ export function FlashcardStudio() {
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[340px_1fr]">
       <Card className="h-fit lg:sticky lg:top-24">
         <form onSubmit={generate} className="space-y-5">
           <TextField label="Topic" value={topic} onChange={setTopic} required placeholder="e.g. Animals, Numbers" />
@@ -94,7 +94,9 @@ export function FlashcardStudio() {
         {loading ? (
           <div className="mx-auto max-w-md space-y-4" role="status" aria-label="Creating flashcards">
             <Skeleton className="h-[400px] rounded-[28px]" />
-            <p className="text-center text-sm font-semibold text-ocean-700">🖼 Drawing pictures · 🌐 Writing {target} words…</p>
+            <p className="flex items-center justify-center gap-2 text-center text-sm font-semibold text-ocean-700">
+              <Sparkles className="h-4 w-4 animate-pulse" aria-hidden /> Choosing pictures and writing {target} words…
+            </p>
           </div>
         ) : card ? (
           <div className="mx-auto max-w-md">

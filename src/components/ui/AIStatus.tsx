@@ -1,11 +1,12 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { cn } from '../../utils';
 
 interface Stage {
   id: string;
   label: string;
-  icon?: string;
+  icon?: ReactNode;
 }
 
 interface AIStatusProps {
@@ -40,7 +41,7 @@ export function AIStatus({ stages, current, doneLabel = 'Ready', className }: AI
                   state === 'pending' && 'bg-white/70 text-ink-400',
                 )}
               >
-                {state === 'done' ? <Check className="h-4 w-4" aria-hidden /> : <span aria-hidden>{s.icon ?? i + 1}</span>}
+                {state === 'done' ? <Check className="h-4 w-4" aria-hidden /> : <span aria-hidden className="flex">{s.icon ?? i + 1}</span>}
                 {state === 'active' && <span className="absolute inset-0 animate-ring rounded-full border-2 border-ocean-400" aria-hidden />}
               </span>
               <span className={cn('text-[15px]', state === 'active' ? 'font-semibold text-ink-900' : 'text-ink-600')}>

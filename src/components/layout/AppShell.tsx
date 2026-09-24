@@ -27,7 +27,7 @@ export function AppShell() {
       <Sidebar onChangeLanguage={openLanguagePicker} />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />
-        <main id="main" className="mx-auto w-full max-w-7xl flex-1 px-4 pb-28 pt-6 sm:px-6 md:pb-12 lg:px-8 lg:pt-8">
+        <main id="main" className="mx-auto w-full max-w-7xl flex-1 px-4 pb-[calc(env(safe-area-inset-bottom)+6rem)] pt-5 sm:px-6 md:pb-12 md:pt-6 lg:px-8 lg:pt-8">
           <motion.div
             key={location.pathname}
             initial={{ opacity: 0, y: 8 }}

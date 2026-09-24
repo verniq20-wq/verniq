@@ -1,17 +1,17 @@
 import { motion } from 'framer-motion';
-import { CloudOff, RotateCcw } from 'lucide-react';
+import { CloudOff, RotateCcw, type LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { cn } from '../../utils';
 import { Button } from './Button';
 
 export function EmptyState({
-  emoji,
+  icon: Icon,
   title,
   description,
   action,
   className,
 }: {
-  emoji: string;
+  icon: LucideIcon;
   title: string;
   description: string;
   action?: ReactNode;
@@ -21,10 +21,10 @@ export function EmptyState({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className={cn('flex flex-col items-center rounded-2xl border border-dashed border-ink-200 bg-white px-6 py-12 text-center', className)}
+      className={cn('flex flex-col items-center rounded-2xl border border-dashed border-ink-200 bg-white px-5 py-10 text-center sm:px-6 sm:py-12', className)}
     >
-      <span className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-ocean-soft text-3xl" aria-hidden>
-        {emoji}
+      <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-ocean-soft text-ocean-600 ring-1 ring-inset ring-ocean-100" aria-hidden>
+        <Icon className="h-7 w-7" strokeWidth={1.75} />
       </span>
       <h3 className="text-lg font-bold">{title}</h3>
       <p className="mt-1.5 max-w-sm text-[15px] text-ink-500">{description}</p>
@@ -85,11 +85,11 @@ export function PageHeader({
   action?: ReactNode;
 }) {
   return (
-    <header className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+    <header className="mb-5 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
       <div>
         {eyebrow && <div className="eyebrow mb-2">{eyebrow}</div>}
-        <h1 className="text-[28px] font-extrabold leading-tight tracking-tight sm:text-[32px]">{title}</h1>
-        {description && <p className="mt-1.5 max-w-2xl text-base text-ink-500">{description}</p>}
+        <h1 className="text-2xl font-extrabold leading-tight tracking-tight sm:text-[32px]">{title}</h1>
+        {description && <p className="mt-1 max-w-2xl text-[15px] text-ink-500 sm:mt-1.5 sm:text-base">{description}</p>}
       </div>
       {action && <div className="flex shrink-0 flex-wrap gap-3">{action}</div>}
     </header>

@@ -62,7 +62,7 @@ export function BottomNav() {
                 end={to === '/'}
                 onClick={() => setMoreOpen(false)}
                 className={({ isActive }) =>
-                  cn('relative flex min-h-[64px] flex-col items-center justify-center gap-1 text-[11px] font-semibold', isActive ? 'text-ocean-700' : 'text-ink-500')
+                  cn('relative flex min-h-[60px] flex-col items-center justify-center gap-1 text-[11px] font-semibold', isActive ? 'text-ocean-700' : 'text-ink-500')
                 }
               >
                 {({ isActive }) =>
@@ -95,7 +95,7 @@ export function BottomNav() {
               onClick={() => setMoreOpen((o) => !o)}
               aria-expanded={moreOpen}
               className={cn(
-                'relative flex min-h-[64px] w-full flex-col items-center justify-center gap-1 text-[11px] font-semibold',
+                'relative flex min-h-[60px] w-full flex-col items-center justify-center gap-1 text-[11px] font-semibold',
                 moreActive || moreOpen ? 'text-ocean-700' : 'text-ink-500',
               )}
             >

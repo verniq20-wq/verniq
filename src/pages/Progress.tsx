@@ -1,6 +1,7 @@
 import { AlertTriangle, BarChart3, BookCheck, ClipboardCheck, Download, ListChecks, Sparkles, Users } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { NipunBadge } from '../components/lesson/NipunBadge';
 import { Button, ButtonLink } from '../components/ui/Button';
 import { Card, CardHeader } from '../components/ui/Card';
 import { EmptyState, PageHeader } from '../components/ui/States';
@@ -97,6 +98,7 @@ export default function Progress() {
                         <span className="text-ink-500 sm:block sm:truncate" title={o.statement}>
                           {o.statement}
                         </span>
+                        <NipunBadge code={o.code} compact className="mt-0.5" />
                       </span>
                       <span className="relative h-7 rounded-md bg-ink-50">
                         <span className={cn('absolute inset-y-0 left-0 rounded-r-[4px] transition-colors', hover === o.code ? 'bg-ocean-600' : 'bg-ocean-500')} style={{ width: percent(o.mastered) }} />

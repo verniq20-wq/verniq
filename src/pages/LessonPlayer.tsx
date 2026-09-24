@@ -14,12 +14,13 @@ import { useAudio } from '../hooks/useAudio';
 import { useClassroom } from '../hooks/useClassroom';
 import { useApp } from '../store/AppContext';
 import { cn } from '../utils';
+import { NipunBadge } from '../components/lesson/NipunBadge';
 
 /** Distraction-free classroom mode. */
 export default function LessonPlayer() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { ready, records, put, activeStudents, assessments, activeClass } = useClassroom();
+  const { ready, records, put, activeStudents, assessments, activeClass, glossaryFor } = useClassroom();
   const { toast } = useApp();
   const lesson = records.lessons.find((l) => l.id === id);
   const total = lesson?.content.sections.length ?? 0;
@@ -178,6 +179,7 @@ export default function LessonPlayer() {
                     {lesson.learningOutcome}
                     <span className="block text-sm font-semibold text-ocean-700 sm:text-base">{lesson.topic}</span>
                   </p>
+                  <NipunBadge code={lesson.outcomeCode} className="mt-2 text-sm" />
                 </section>
               )}
 
@@ -234,7 +236,7 @@ export default function LessonPlayer() {
                       <li key={`${v.hindi}-${i}`}>
                         <button
                           type="button"
-                          onClick={() => void audio.play(`v-${i}`, v.target, pair.target)}
+                          onClick={() => void audio.play(`v-${i}`, v.target, pair.target, glossaryFor(pair.target).find((g) => g.hindi === v.hindi)?.audio)}
                           className={cn(
                             'flex w-full flex-col items-center rounded-2xl border p-3 text-center transition-all hover:-translate-y-0.5 hover:shadow-soft',
                             audio.playingKey === `v-${i}` ? 'border-aqua-400 bg-aqua-50' : 'border-ink-200 bg-surface',

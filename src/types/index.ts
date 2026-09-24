@@ -33,6 +33,8 @@ export interface TranslationTurn {
   coverage: number;
   phraseId?: string;
   segments?: TranslationSegment[];
+  /** Time from the end of speech (or typing) to the translation being ready */
+  latencyMs?: number;
   at: number;
 }
 

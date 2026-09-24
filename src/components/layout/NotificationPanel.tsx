@@ -35,7 +35,7 @@ export function NotificationPanel() {
       <IconButton label={`Notifications${unreadCount ? `, ${unreadCount} unread` : ''}`} onClick={() => setOpen((o) => !o)} aria-expanded={open}>
         <Bell className="h-[22px] w-[22px]" />
         {unreadCount > 0 && (
-          <span className="absolute right-1.5 top-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-sun-500 px-1 text-[10px] font-bold text-white ring-2 ring-white">
+          <span className="absolute right-1.5 top-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-sun-500 px-1 text-[10px] font-bold text-white ring-2 ring-surface">
             {unreadCount}
           </span>
         )}
@@ -47,7 +47,7 @@ export function NotificationPanel() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.16 }}
-            className="absolute right-0 top-12 z-40 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-ink-200 bg-surface shadow-lift"
+            className="fixed inset-x-4 top-[calc(env(safe-area-inset-top)+4.25rem)] z-40 overflow-hidden sm:absolute sm:inset-x-auto sm:right-0 sm:top-12 sm:w-96 rounded-2xl border border-ink-200 bg-surface shadow-lift"
           >
             <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4">
               <h2 className="text-base font-bold">Notifications</h2>

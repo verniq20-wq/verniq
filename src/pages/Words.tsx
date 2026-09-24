@@ -1,5 +1,5 @@
-import { BadgeCheck, BookA, MessageSquareQuote, Play, Plus, Search, UserCheck } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { BadgeCheck, BookA, Download, MessageSquareQuote, Play, Plus, Search, Upload, UserCheck } from 'lucide-react';
+import { useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
@@ -10,12 +10,14 @@ import { Select, TextField } from '../components/ui/Select';
 import { EmptyState, PageHeader } from '../components/ui/States';
 import { Tabs } from '../components/ui/Tabs';
 import { PhraseEditor, type PhraseDraft } from '../components/words/PhraseEditor';
+import { RecordButton } from '../components/words/RecordButton';
 import { languageName } from '../data/languages';
 import { useAudio } from '../hooks/useAudio';
 import { useClassroom } from '../hooks/useClassroom';
 import { useApp } from '../store/AppContext';
 import type { GlossaryCategory, GlossaryEntry, ReviewStatus } from '../types';
-import { cn, newId } from '../utils';
+import { corpusCsv, readCorpus } from '../data/corpus';
+import { cn, download, newId } from '../utils';
 
 type Tab = 'words' | 'phrases';
 
@@ -66,6 +68,7 @@ export default function Words() {
       <PageHeader
         title={`${lang} words`}
         description={`Verniq only uses ${lang} words from this list and your phrasebook. Add and correct them — every lesson, card and translation updates.`}
+        action={<CorpusActions />}
       />
       <Tabs
         label="Word list sections"
@@ -80,6 +83,75 @@ export default function Words() {
         ]}
       />
       {tab === 'words' ? <WordList /> : <Phrasebook />}
+    </>
+  );
+}
+
+// ─── Share: export / import ─────────────────────────────────
+function CorpusActions() {
+  const { glossary, phrases, records, pair, putMany } = useClassroom();
+  const { toast } = useApp();
+  const input = useRef<HTMLInputElement>(null);
+  const lang = languageName(pair.target);
+
+  const exportCsv = () => {
+    download(new Blob([corpusCsv(glossary, phrases)], { type: 'text/csv;charset=utf-8' }), `verniq-${lang.toLowerCase()}-words.csv`);
+  };
+
+  const importFile = async (file: File) => {
+    const rows = readCorpus(await file.text());
+    if (!rows.length) {
+      toast({ tone: 'warning', title: 'No words found', detail: 'Use columns: hindi, english, target — or a file exported from Verniq.' });
+      return;
+    }
+    const own = new Map(records.glossary.filter((g) => g.language === pair.target).map((g) => [g.hindi, g]));
+    const seed = new Map(glossary.map((g) => [g.hindi, g]));
+    const words = rows
+      .filter((r) => r.kind === 'word')
+      .map((r) => {
+        const prev = own.get(r.hindi);
+        const base = seed.get(r.hindi);
+        return {
+          id: prev?.id ?? newId(),
+          language: pair.target,
+          hindi: r.hindi,
+          english: r.english || base?.english || '',
+          target: r.target,
+          category: base?.category ?? r.category,
+          ...(base?.picture ? { picture: base.picture } : {}),
+          ...(base?.value !== undefined ? { value: base.value } : {}),
+          ...(prev?.audio ? { audio: prev.audio } : {}),
+          status: 'teacher' as const,
+        };
+      });
+    const known = new Set(phrases.map((p) => p.hindi.trim()));
+    const newPhrases = rows
+      .filter((r) => r.kind === 'phrase' && !known.has(r.hindi))
+      .map((r) => ({ id: newId(), language: pair.target, hindi: r.hindi, target: r.target, ...(r.english ? { english: r.english } : {}), speaker: r.speaker, uses: 0 }));
+    if (words.length) await putMany('glossary', words);
+    if (newPhrases.length) await putMany('phrases', newPhrases);
+    toast({ tone: 'success', title: `Imported ${words.length} words and ${newPhrases.length} phrases`, detail: `Added to your ${lang} list as your own words.` });
+  };
+
+  return (
+    <>
+      <Button variant="outline" icon={<Upload className="h-4 w-4" />} onClick={() => input.current?.click()}>
+        Import
+      </Button>
+      <Button variant="outline" icon={<Download className="h-4 w-4" />} onClick={exportCsv}>
+        Export CSV
+      </Button>
+      <input
+        ref={input}
+        type="file"
+        accept=".csv,text/csv"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          e.target.value = '';
+          if (f) void importFile(f);
+        }}
+      />
     </>
   );
 }
@@ -209,7 +281,7 @@ function WordEditor({ entry, own, onClose }: { entry: GlossaryEntry; own: boolea
         <div className="flex items-end gap-2">
           <TextField className="flex-1" label={lang} value={e.target} onChange={(target) => setE({ ...e, target })} placeholder="How children say it at home" />
           {e.target && (
-            <Button variant="soft" aria-label="Listen" className="min-h-[48px]" onClick={() => void audio.play('w', e.target, e.language)}>
+            <Button variant="soft" aria-label="Listen" className="min-h-[48px]" onClick={() => void audio.play('w', e.target, e.language, e.audio)}>
               <Play className="h-4 w-4 fill-current" aria-hidden />
             </Button>
           )}
@@ -220,6 +292,11 @@ function WordEditor({ entry, own, onClose }: { entry: GlossaryEntry; own: boolea
           onChange={(v) => setE({ ...e, category: v as GlossaryCategory })}
           options={CATEGORIES.filter((c) => c.value !== 'all' && c.value !== 'missing')}
         />
+        <div>
+          <p className="field-label">Pronunciation</p>
+          <RecordButton value={e.audio} onChange={(a) => setE({ ...e, audio: a })} label={`Record ${lang} word`} />
+          <p className="mt-1.5 text-xs text-ink-500">Played on flashcards, lesson key words and in Live instead of the approximate Hindi voice.</p>
+        </div>
         <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-ink-200 p-3">
           <input type="checkbox" className="mt-1 h-5 w-5 accent-leaf-600" checked={e.status === 'verified'} onChange={(ev) => setE({ ...e, status: ev.target.checked ? 'verified' : 'teacher' })} />
           <span>

@@ -1,5 +1,6 @@
 import { forwardRef, useMemo } from 'react';
 import { Trash2 } from 'lucide-react';
+import { nipunLabel, outcomeByCode } from '../../../engine/curriculum';
 import { languageName } from '../../data/languages';
 import type { LanguageCode, WorksheetContent, WorksheetItem } from '../../types';
 import { cn } from '../../utils';
@@ -11,6 +12,7 @@ interface Meta {
   grade: number;
   subject: string;
   language: LanguageCode;
+  outcomeCode?: string;
 }
 
 interface Props {
@@ -171,6 +173,7 @@ function MatchBody({ item }: { item: Extract<WorksheetItem, { kind: 'match' }> }
 /** Printable bilingual worksheet. In edit mode the title and instructions become fields. */
 export const WorksheetPreview = forwardRef<HTMLElement, Props>(function WorksheetPreview({ worksheet, meta, editable, onChange }, ref) {
   const lang = languageName(meta.language);
+  const nipun = meta.outcomeCode ? outcomeByCode(meta.outcomeCode)?.nipun : undefined;
   const edit = (i: number, patch: Partial<WorksheetItem>) =>
     onChange?.({ ...worksheet, items: worksheet.items.map((it, idx) => (idx === i ? ({ ...it, ...patch } as WorksheetItem) : it)) });
   const removeItem = (i: number) => onChange?.({ ...worksheet, items: worksheet.items.filter((_, idx) => idx !== i) });
@@ -224,9 +227,10 @@ export const WorksheetPreview = forwardRef<HTMLElement, Props>(function Workshee
         ))}
       </div>
 
-      <footer className="mt-10 flex items-center justify-between border-t border-ink-100 pt-3 text-[11px] text-ink-400">
+      <footer className="mt-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-ink-100 pt-3 text-[11px] text-ink-400">
         <span>
           Hindi + {lang} · {worksheet.difficulty}
+          {nipun && ` · ${nipunLabel(nipun)}: ${nipun.target}`}
         </span>
         <span>Made with Verniq</span>
       </footer>

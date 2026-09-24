@@ -3,6 +3,7 @@ import { ChalkboardTeacher, Student } from '@phosphor-icons/react';
 import { ArrowDown, BookmarkPlus, Info, Keyboard, MessagesSquare, PenLine, Send, Settings2, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
+import { normalize } from '../../engine/text';
 import { describeResult, translate } from '../../engine/translator';
 import { MicButton } from '../components/live/MicButton';
 import { AudioButton } from '../components/ui/AudioButton';
@@ -78,6 +79,7 @@ export default function LiveTranslation() {
 
   const deliver = useCallback(
     async (text: string, known?: Phrase) => {
+      const t0 = performance.now();
       const src = text.trim();
       if (!src) {
         setPhase('idle');
@@ -113,9 +115,19 @@ export default function LiveTranslation() {
         setPhase('idle');
         return;
       }
+      // A teacher's recording is only right for the student-language side of an exact phrase,
+      // or for a single known word that has its own recording.
+      const words = result.segments.filter((sg) => sg.via !== 'stopword');
+      const clip =
+        fromTeacher && result.method === 'memory'
+          ? phrase?.audio
+          : fromTeacher && words.length === 1 && words[0].known
+            ? glossary.find((g) => normalize(g.hindi) === words[0].source)?.audio
+            : undefined;
+      const latencyMs = Math.round(performance.now() - t0);
+      setTurns((ts) => ts.map((x) => (x.id === turn.id ? { ...x, latencyMs } : x)));
       setPhase('speaking');
-      // A teacher's recording is only right for the student-language side of an exact phrase.
-      const res = await audio.play(turn.id, result.text, listenerLang, fromTeacher && result.method === 'memory' ? phrase?.audio : undefined);
+      const res = await audio.play(turn.id, result.text, listenerLang, clip);
       setViaNote(VIA_NOTE[res.via] ?? null);
       setPhase('idle');
     },
@@ -384,7 +396,8 @@ export default function LiveTranslation() {
                     </p>
                     <p className="mt-2 text-xs text-ocean-100">
                       {latest.method === 'memory' ? 'Saved translation' : describeResult({ text: latest.translatedText, segments: latest.segments ?? [], coverage: latest.coverage, method: latest.method === 'typed' ? 'gloss' : latest.method })}
-                      {latest.method === 'gloss' && ' · underlined words were kept as spoken'}
+                      {latest.method === 'gloss' && latest.coverage < 1 && ' · underlined words were kept as spoken'}
+                      {latest.latencyMs !== undefined && ` · ready in ${(latest.latencyMs / 1000).toFixed(latest.latencyMs < 1000 ? 2 : 1)} s`}
                     </p>
                     {phase === 'speaking' && <Waveform active tone="white" bars={32} className="mt-3 h-8" />}
                     <div className="mt-3 flex flex-wrap gap-2">

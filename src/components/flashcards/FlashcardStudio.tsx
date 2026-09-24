@@ -191,7 +191,7 @@ export function FlashcardStudio({ openParam }: { openParam?: string | null }) {
                     onFlip={() => setFlipped((f) => !f)}
                     targetLang={language}
                     playing={audio.playingKey === `${card.id}-t` ? 'target' : audio.playingKey === `${card.id}-h` ? 'hindi' : null}
-                    onPlay={(w) => void audio.play(`${card.id}-${w === 'target' ? 't' : 'h'}`, w === 'target' ? card.target : card.hindi, w === 'target' ? language : 'hi')}
+                    onPlay={(w) => void audio.play(`${card.id}-${w === 'target' ? 't' : 'h'}`, w === 'target' ? card.target : card.hindi, w === 'target' ? language : 'hi', w === 'target' ? glossary.find((g) => g.hindi === card.hindi)?.audio : undefined)}
                     onStop={audio.stop}
                   />
                 </motion.div>

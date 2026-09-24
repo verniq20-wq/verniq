@@ -123,6 +123,11 @@ const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 const lang = z.enum(['hi', 'ho', 'sat', 'mun', 'kru', 'gon', 'bhb', 'en']);
 const subject = z.enum(['Mathematics', 'Hindi', 'EVS', 'English']);
 const text = (max: number) => z.string().max(max);
+/** A short recording stored as a data URL (up to ~20 s of compressed audio). */
+const audioDataUrl = z
+  .string()
+  .max(700_000)
+  .regex(/^data:audio\/[a-z0-9.+-]+(;codecs=[a-z0-9.,]+)?;base64,/i);
 
 export const SCHEMAS: Record<Collection, z.ZodType> = {
   classes: z.object({
@@ -204,6 +209,7 @@ export const SCHEMAS: Record<Collection, z.ZodType> = {
     picture: text(30).optional(),
     value: z.number().optional(),
     status: z.enum(['unverified', 'teacher', 'verified']),
+    audio: audioDataUrl.optional(),
   }),
   phrases: z.object({
     id,
@@ -213,11 +219,7 @@ export const SCHEMAS: Record<Collection, z.ZodType> = {
     target: text(600),
     english: text(600).optional(),
     speaker: z.enum(['teacher', 'student']),
-    audio: z
-      .string()
-      .max(700_000)
-      .regex(/^data:audio\/[a-z0-9.+-]+(;codecs=[a-z0-9.,]+)?;base64,/i)
-      .optional(),
+    audio: audioDataUrl.optional(),
     uses: z.number().int().min(0),
   }),
 };

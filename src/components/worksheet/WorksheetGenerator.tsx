@@ -128,7 +128,7 @@ export function WorksheetGenerator({ lessonParam, openParam }: { lessonParam?: s
 
   const meta = (() => {
     const src = lessons.find((l) => l.id === draft?.lessonId) ?? lesson;
-    return { title: draft?.title ?? '', school: teacher?.school, grade: saved?.grade ?? src?.grade ?? 1, subject: saved?.subject ?? src?.subject ?? '', language: saved?.language ?? src?.language ?? 'ho' };
+    return { title: draft?.title ?? '', school: teacher?.school, grade: saved?.grade ?? src?.grade ?? 1, subject: saved?.subject ?? src?.subject ?? '', language: saved?.language ?? src?.language ?? 'ho', outcomeCode: src?.outcomeCode };
   })();
 
   return (

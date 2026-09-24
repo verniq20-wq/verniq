@@ -31,13 +31,17 @@ Verniq helps primary-school teachers teach children in their mother tongue. It p
 
 Verniq's intelligence is built in (`engine/`) and runs on the device, so it works offline and never sends data to an outside AI service. It is deliberately explainable and never invents home-language words.
 
-- **Curriculum library** (`curriculum.ts`): learning outcomes for Classes 1–5 in Mathematics, Hindi, English and EVS, each with topics, keywords and activity types.
+- **Curriculum library** (`curriculum.ts`): learning outcomes for Classes 1–5 in Mathematics, Hindi, English and EVS, each with topics, keywords and activity types. Foundational outcomes are mapped to the NIPUN Bharat Lakshya (Classes 1–3 literacy and numeracy targets), shown on lessons, worksheets and progress.
 - **Lesson composer** (`composer.ts`): matches the topic to the best outcome (keywords + class), picks the vocabulary, and fills a bank of classroom activities (`activities.ts`) — introduction, explanation, activity, practice, assessment — with the topic, words and objects. "Try another idea" swaps in a different activity.
 - **Translator** (`translator.ts`): 1) exact match in the teacher's phrasebook, 2) a very similar saved sentence, flagging the words that differ, 3) word-by-word from the word list, keeping unknown words as spoken and showing how many words were known. Corrections become phrases and are used word-for-word next time.
 - **Materials** (`materials.ts`): worksheet questions (count, match, fill the sequence, circle, write, sort, true/false) and flashcards are generated from the lesson's words, so every answer is correct by construction.
 - **Insights** (`insights.ts`): simple, stated rules on attendance and results (e.g. attendance under 75%, "not yet" on an outcome, fewer than 60% secure → plan revision).
 
 **Home-language words.** The starter Ho list (`glossary.ts`) is marked *not checked* until a speaker confirms it. Teachers add and correct words in *Words*; their version replaces the starter word everywhere. Other languages start empty and are built up by the teacher.
+
+**Recordings.** Speech synthesis does not exist for Ho, Mundari or Santali, so tribal-language audio is hand-recorded: teachers (or community speakers) record words in *Words*, sentences in the phrasebook, and the home-language version of any lesson line from the lesson itself. Recordings sync with the account and play offline.
+
+**Sharing words.** *Words → Export CSV* writes the word list and phrasebook as a Hindi ↔ home-language parallel corpus; *Import* reads that file or any sheet with `hindi, english, <language>` columns — so lists collected with native speakers can move between teachers.
 
 **Voice.** Speech recognition and text-to-speech use the device (browser Web Speech API; Android system engines through Capacitor plugins). Hindi and English are supported by those engines. There is no engine for tribal languages yet, so Verniq plays the teacher's own recording of a phrase when there is one, otherwise it reads the Devanagari with a Hindi voice and says so.
 

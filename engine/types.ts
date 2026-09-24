@@ -31,6 +31,15 @@ export interface Outcome {
   topics: string[];
   keywords: string[];
   tags: ActivityTag[];
+  /** Matching NIPUN Bharat Lakshya (foundational target), where one applies */
+  nipun?: NipunTarget;
+}
+
+/** A NIPUN Bharat Lakshya — Classes 1–3 foundational literacy and numeracy targets. */
+export interface NipunTarget {
+  grade: 1 | 2 | 3;
+  area: 'Literacy' | 'Numeracy';
+  target: string;
 }
 
 export type GlossaryCategory =
@@ -51,6 +60,8 @@ export interface GlossaryEntry {
   /** Numeric value for number words */
   value?: number;
   status: ReviewStatus;
+  /** Teacher's recording of the word, as a data URL */
+  audio?: string;
 }
 
 /** A sentence the teacher has confirmed — the translation memory. */

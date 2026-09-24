@@ -114,7 +114,7 @@ export async function listen(lang: LanguageCode, cb: ListenCallbacks): Promise<L
         : e.error === 'no-speech'
           ? 'No speech was heard. Try again a little closer to the device.'
           : e.error === 'network'
-            ? 'Speech recognition needs an internet connection in this browser.'
+            ? 'This browser needs internet to recognise speech. Type instead — or use the Verniq Android app with Hindi downloaded for offline speech recognition (Android Settings → Languages → Speech).'
             : `Speech recognition stopped (${e.error}).`,
     );
   };

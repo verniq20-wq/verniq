@@ -16,6 +16,7 @@ import { useClassroom } from '../hooks/useClassroom';
 import { useApp } from '../store/AppContext';
 import { SUBJECTS, type LessonDoc, type LessonSectionKey, type Subject } from '../types';
 import { cn, newId, sleep, todayISO } from '../utils';
+import { NipunBadge } from '../components/lesson/NipunBadge';
 
 const STAGES = [
   { id: 'curriculum', label: 'Matching the curriculum', icon: <Target className="h-4 w-4" /> },
@@ -170,7 +171,10 @@ export default function AIStudio() {
                         )}
                       >
                         <span className={cn('mt-0.5 rounded-md px-1.5 py-0.5 font-display text-xs font-bold', selected ? 'bg-ocean-600 text-white' : 'bg-ink-100 text-ink-600')}>{m.outcome.code}</span>
-                        <span className="text-sm leading-snug text-ink-700">{m.outcome.statement}</span>
+                        <span className="min-w-0">
+                          <span className="block text-sm leading-snug text-ink-700">{m.outcome.statement}</span>
+                          <NipunBadge code={m.outcome.code} compact className="mt-1" />
+                        </span>
                       </button>
                     );
                   })}
@@ -205,6 +209,7 @@ export default function AIStudio() {
                   <p className="mt-1 text-sm text-ink-600">
                     <span className="font-semibold">{lesson.outcomeCode}</span> · {lesson.learningOutcome}
                   </p>
+                  <NipunBadge code={lesson.outcomeCode} className="mt-1" />
                   <div className="mt-3 flex flex-wrap gap-2">
                     <ButtonLink to={`/lessons/${lesson.id}/play`} size="sm" icon={<Play className="h-4 w-4 fill-current" />}>
                       Start lesson

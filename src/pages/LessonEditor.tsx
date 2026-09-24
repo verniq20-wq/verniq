@@ -11,6 +11,7 @@ import { EmptyState, PageHeader } from '../components/ui/States';
 import { useClassroom } from '../hooks/useClassroom';
 import { useApp } from '../store/AppContext';
 import type { LessonDoc, LessonSection } from '../types';
+import { NipunBadge } from '../components/lesson/NipunBadge';
 
 function TextArea({ label, value, onChange, rows = 4, lang, hint }: { label: string; value: string; onChange: (v: string) => void; rows?: number; lang?: string; hint?: string }) {
   return (
@@ -112,6 +113,7 @@ export default function LessonEditor() {
             />
             <div className="sm:col-span-2">
               <TextArea label="Learning outcome" rows={2} value={draft.learningOutcome} onChange={(learningOutcome) => setDraft({ ...draft, learningOutcome })} />
+              <NipunBadge code={draft.outcomeCode} className="mt-2" />
             </div>
           </div>
         </Card>

@@ -5,7 +5,7 @@
  * framework and NIPUN Bharat foundational goals. Codes are Verniq's own
  * (subject prefix + class + number), not official NCERT codes.
  */
-import type { Outcome, Subject } from './types';
+import type { NipunTarget, Outcome, Subject } from './types';
 
 const o = (
   code: string,
@@ -18,7 +18,7 @@ const o = (
   tags: Outcome['tags'],
 ): Outcome => ({ code, grade, subject, statement, statementHi, topics, keywords, tags });
 
-export const OUTCOMES: Outcome[] = [
+const BASE_OUTCOMES: Outcome[] = [
   // ─── Mathematics ─────────────────────────────────────────────
   o('M1.01', 1, 'Mathematics', 'Counts objects up to 20 and says the number names', 'वस्तुओं को 20 तक गिनता है और संख्याओं के नाम बोलता है', ['Numbers 1–10', 'Numbers 11–20', 'Counting objects'], ['count', 'counting', 'number', 'numbers', 'गिनती', 'संख्या', '1–10', 'one', 'ten'], ['counting', 'number-sense']),
   o('M1.02', 1, 'Mathematics', 'Recognises and writes numerals 1 to 9 and 0', 'अंक 0 से 9 पहचानता और लिखता है', ['Writing numbers', 'Number recognition', 'Zero'], ['numeral', 'write', 'recognition', 'recognise', 'zero', 'अंक', 'शून्य', 'पहचान'], ['number-sense', 'writing']),
@@ -82,6 +82,51 @@ export const OUTCOMES: Outcome[] = [
   o('EV5.01', 5, 'EVS', 'Explains sources of water, its uses and ways to keep it clean', 'पानी के स्रोत, उपयोग और उसे साफ़ रखने के तरीके समझाता है', ['Water', 'Clean water'], ['water', 'source', 'clean', 'पानी', 'स्रोत'], ['water', 'health']),
   o('EV5.02', 5, 'EVS', 'Records observations of seeds, germination and plant growth', 'बीज, अंकुरण और पौधों की वृद्धि के अवलोकन दर्ज करता है', ['Seeds', 'Germination'], ['seed', 'germination', 'grow', 'बीज', 'अंकुरण'], ['plants', 'data']),
 ];
+
+/**
+ * NIPUN Bharat Lakshya (Classes 1–3) each outcome works towards. Target text
+ * follows the published NIPUN Lakshya lists; the class is the NIPUN class of
+ * the target, which can be earlier than the class the outcome is taught in.
+ */
+const N = (grade: 1 | 2 | 3, area: NipunTarget['area'], target: string): NipunTarget => ({ grade, area, target });
+const NIPUN: Record<string, NipunTarget> = {
+  'M1.01': N(1, 'Numeracy', 'Counts objects up to 20'),
+  'M1.02': N(1, 'Numeracy', 'Reads and writes numbers up to 99'),
+  'M1.03': N(1, 'Numeracy', 'Counts objects up to 20'),
+  'M1.04': N(2, 'Numeracy', 'Identifies and describes 2-D shapes like rectangle, triangle, circle, oval'),
+  'M1.05': N(1, 'Numeracy', 'Uses addition and subtraction of numbers up to 9 in daily life situations'),
+  'M1.06': N(3, 'Numeracy', 'Identifies, extends and communicates rules for simple patterns'),
+  'M1.07': N(1, 'Numeracy', 'Estimates and verifies length using non-standard non-uniform units'),
+  'M2.01': N(1, 'Numeracy', 'Reads and writes numbers up to 99'),
+  'M2.02': N(2, 'Numeracy', 'Uses addition and subtraction of numbers up to 99, sum not exceeding 99'),
+  'M2.03': N(3, 'Numeracy', 'Solves daily life problems using addition and subtraction of numbers'),
+  'M2.04': N(3, 'Numeracy', 'Identifies a particular date and corresponding day on a calendar'),
+  'M2.05': N(2, 'Numeracy', 'Estimates and measures length/distance/capacity using non-standard uniform units'),
+  'M3.01': N(2, 'Numeracy', 'Reads and writes numbers up to 999'),
+  'M3.02': N(3, 'Numeracy', 'Constructs and uses multiplication facts (tables) of numbers 2 to 10'),
+  'M3.03': N(2, 'Numeracy', 'Performs multiplication as repeated addition and division as equal sharing'),
+  'H1.01': N(1, 'Literacy', 'Uses sound–symbol correspondence to write words with invented spellings'),
+  'H1.02': N(1, 'Literacy', 'Develops familiarity with matras in words occurring in familiar contexts'),
+  'H1.03': N(1, 'Literacy', 'Participates actively during read-aloud and storytelling sessions'),
+  'H1.04': N(1, 'Literacy', 'Converses with friends and class teacher about her needs and surroundings'),
+  'H2.01': N(1, 'Literacy', 'Reads small sentences consisting of at least 4–5 simple words'),
+  'H2.02': N(2, 'Literacy', 'Writes short, simple sentences correctly to express herself'),
+  'H2.03': N(2, 'Literacy', "Reads and narrates / re-tells stories from children's literature"),
+  'H3.01': N(3, 'Literacy', 'Reads at least 60 words per minute correctly and with comprehension'),
+  'H3.02': N(3, 'Literacy', 'Uses action words, naming words and punctuation marks for writing'),
+  'EN1.01': N(1, 'Literacy', 'Converses with friends and class teacher about her needs and surroundings'),
+  'EN1.02': N(1, 'Literacy', 'Uses sound–symbol correspondence to write words with invented spellings'),
+  'EN2.01': N(1, 'Literacy', 'Reads small sentences consisting of at least 4–5 simple words'),
+  'EN3.01': N(3, 'Literacy', 'Can answer at least 3 out of 4 questions based on reading'),
+};
+
+export const OUTCOMES: Outcome[] = BASE_OUTCOMES.map((x) => (NIPUN[x.code] ? { ...x, nipun: NIPUN[x.code] } : x));
+
+/** Short label, e.g. "NIPUN Bharat · Class 1 numeracy". */
+export function nipunLabel(t: NipunTarget): string {
+  return `NIPUN Bharat · Class ${t.grade} ${t.area.toLowerCase()}`;
+}
+
 
 export function outcomesFor(subject: Subject, grade?: number): Outcome[] {
   return OUTCOMES.filter((x) => x.subject === subject && (grade === undefined || x.grade === grade));

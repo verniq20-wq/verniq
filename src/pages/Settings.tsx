@@ -154,6 +154,10 @@ export default function Settings() {
         <Card>
           <CardHeader title="Offline & sync" subtitle="Verniq keeps working without internet." />
           <OfflinePanel />
+          <p className="mt-4 border-t border-ink-100 pt-3 text-sm text-ink-500">
+            Lessons, translation, worksheets and flashcards are made on this device and need no internet. For offline voice on Android, download Hindi under
+            Android Settings → Languages → Speech (on-device recognition).
+          </p>
         </Card>
 
         <InstallCard />

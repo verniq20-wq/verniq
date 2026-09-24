@@ -9,6 +9,7 @@ import { extname, join, normalize, resolve } from 'node:path';
 import { createGzip } from 'node:zlib';
 import { createApp } from './app';
 import { openDb } from './db';
+import { initAuthSecret } from './auth';
 
 const ROOT = resolve(process.env.STATIC_DIR ?? join(process.cwd(), 'dist'));
 const PORT = Number(process.env.PORT) || 3000;
@@ -86,6 +87,8 @@ async function serveStatic(req: IncomingMessage, res: ServerResponse) {
 
 async function start() {
   const db = await openDb();
+  const secretSource = await initAuthSecret(db, db.kind === 'postgres' || !!process.env.PGLITE_DIR);
+  console.log(`[auth] signing secret from ${secretSource}`);
   const api = createApp(db);
   const apiListener = getRequestListener(api.fetch);
   const server = createServer((req, res) => {

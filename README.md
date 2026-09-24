@@ -52,7 +52,7 @@ The server (`server/`) is a small Node app (Hono) that also serves the web app:
 
 | Endpoint | |
 | --- | --- |
-| `POST /api/auth/signup`, `POST /api/auth/login` | Accounts (scrypt password hashes, signed tokens, rate-limited) |
+| `POST /api/auth/signup`, `POST /api/auth/login` | Accounts (scrypt password hashes, signed 60-day tokens, rate-limited) |
 | `GET/PATCH /api/me` | Teacher profile |
 | `GET /api/bootstrap` | All of the teacher's records |
 | `POST /api/sync` | Batched upserts/deletes with validation and ownership checks |
@@ -109,7 +109,8 @@ The app asks for the microphone only (speech and recordings). App ID `app.verniq
 `railway.json` builds with `npm run build` and starts `npm start`; health check `/healthz`. Add a **Postgres** database to the project and give the Verniq service:
 
 - `DATABASE_URL` — a reference to the Postgres service's `DATABASE_URL`
-- `AUTH_SECRET` — 32+ random characters (changing it signs everyone out)
+
+The token-signing secret is created once and stored in the database automatically. To manage it yourself, set `AUTH_SECRET` (32+ random characters; changing it signs everyone out).
 
 ## Project structure
 

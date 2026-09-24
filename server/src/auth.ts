@@ -7,13 +7,29 @@ import { promisify } from 'node:util';
 
 const scrypt = promisify(scryptCb) as (pw: string, salt: Buffer, len: number) => Promise<Buffer>;
 
-const SECRET = (() => {
-  const s = process.env.AUTH_SECRET;
-  if (s && s.length >= 32) return s;
-  const generated = randomBytes(48).toString('base64url');
-  console.warn('[auth] AUTH_SECRET is not set (or shorter than 32 chars). Using a temporary secret — sessions reset on restart.');
-  return generated;
-})();
+let SECRET = randomBytes(48).toString('base64url');
+
+/**
+ * Choose the token-signing secret: AUTH_SECRET if set, otherwise a random
+ * secret created once and kept in the database, so sign-ins survive restarts
+ * without any manual setup.
+ */
+export async function initAuthSecret(db: { query: (sql: string, params?: unknown[]) => Promise<Record<string, unknown>[]> }, persistent: boolean) {
+  const env = process.env.AUTH_SECRET;
+  if (env && env.length >= 32) {
+    SECRET = env;
+    return 'env';
+  }
+  if (!persistent) {
+    console.warn('[auth] No AUTH_SECRET and an in-memory database: sign-ins reset on restart.');
+    return 'temporary';
+  }
+  await db.query('CREATE TABLE IF NOT EXISTS app_settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)');
+  await db.query('INSERT INTO app_settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO NOTHING', ['auth_secret', randomBytes(48).toString('base64url')]);
+  const rows = await db.query('SELECT value FROM app_settings WHERE key = $1', ['auth_secret']);
+  SECRET = String(rows[0].value);
+  return 'database';
+}
 
 const TOKEN_TTL_MS = 1000 * 60 * 60 * 24 * 60; // 60 days — teachers work offline for long stretches
 

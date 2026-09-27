@@ -14,7 +14,7 @@ import { cn, newId, todayISO, parseStudentLines } from '../utils';
 const STEPS = ['Your school', 'Your class', 'Students'];
 
 export default function Onboarding() {
-  const { teacher, updateProfile, put, putMany, glossaryFor, phrasesFor } = useData();
+  const { teacher, updateProfile, put, putMany, glossaryFor, phrasesFor, logout } = useData();
   const [step, setStep] = useState(0);
   const [school, setSchool] = useState(teacher?.school ?? '');
   const [district, setDistrict] = useState(teacher?.district ?? '');
@@ -146,7 +146,12 @@ export default function Onboarding() {
         </motion.div>
 
         <div className="mt-5 flex items-center justify-between gap-3">
-          <Button variant="ghost" onClick={() => setStep((s) => s - 1)} disabled={step === 0 || busy} icon={<ArrowLeft className="h-4 w-4" />}>
+          <Button
+            variant="ghost"
+            onClick={() => (step === 0 ? void logout() : setStep((s) => s - 1))}
+            disabled={busy}
+            icon={<ArrowLeft className="h-4 w-4" />}
+          >
             Back
           </Button>
           {step < STEPS.length - 1 ? (

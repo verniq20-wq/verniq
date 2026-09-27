@@ -174,6 +174,8 @@ async function applyOp(db: Db, teacherId: string, op: SyncOp): Promise<SyncResul
     return { ...base, ok: true };
   }
 
+  // Starter words share ids across teachers; a teacher's own copy must use its own id.
+  if (op.collection === 'glossary' && op.id.startsWith('seed-')) return { ...base, ok: false, error: 'starter word ids are reserved' };
   const parsed = SCHEMAS[op.collection].safeParse(op.data);
   if (!parsed.success) return { ...base, ok: false, error: `invalid: ${parsed.error.issues[0]?.path.join('.')} ${parsed.error.issues[0]?.message}` };
   const data = parsed.data as { id: string; updatedAt: number } & Record<string, unknown>;

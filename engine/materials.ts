@@ -174,17 +174,25 @@ export function generateWorksheet(req: WorksheetRequest, ctx: Ctx): WorksheetCon
     }
   }
 
-  // Fallback so every lesson gets a usable worksheet
+  // Fallback so every lesson gets a usable worksheet. When the lesson has
+  // too few words (e.g. reading fluency), use picture words from the word list.
+  if (items.length < 2 && req.vocabulary.length < 3) {
+    const extra = shuffle(ctx.glossary.filter((g) => g.picture && g.category !== 'number'), random)
+      .slice(0, 6)
+      .map((g) => ({ hindi: g.hindi, target: g.target, english: g.english, picture: g.picture }));
+    req = { ...req, vocabulary: [...req.vocabulary, ...extra.filter((e) => !req.vocabulary.some((v) => v.hindi === e.hindi))] };
+  }
   if (items.length < 2 && req.vocabulary.length >= 3) {
     const lettered = req.vocabulary.filter((v) => v.hindi.includes(' — '));
     if (lettered.length >= 3) {
       const pairs = shuffle(lettered, random).slice(0, 4 + level);
       items.push({ kind: 'match', ...prompt('अक्षर को उसके शब्द से मिलाओ', ctx), pairs: pairs.map((v) => ({ left: v.hindi.split(' — ')[0], right: v.hindi.split(' — ')[1] })) });
-      const target = pick(pairs, random);
+      const choices = pairs.slice(0, 4);
+      const target = pick(choices, random);
       items.push({
         kind: 'circle',
         ...prompt(`"${target.hindi.split(' — ')[1]}" किस अक्षर से शुरू होता है? गोला बनाओ`, ctx),
-        options: shuffle(pairs.slice(0, 4).map((v) => v.hindi.split(' — ')[0]), random),
+        options: shuffle(choices.map((v) => v.hindi.split(' — ')[0]), random),
         answer: target.hindi.split(' — ')[0],
       });
       items.push({ kind: 'write', ...prompt('अक्षर देखकर शब्द लिखो', ctx), words: pairs.slice(0, 3).map((v) => ({ hint: v.hindi.split(' — ')[0] })) });

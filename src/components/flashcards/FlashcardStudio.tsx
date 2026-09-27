@@ -92,7 +92,7 @@ export function FlashcardStudio({ openParam }: { openParam?: string | null }) {
     const doc = await put('materials', {
       id: saved?.id ?? newId(),
       kind: 'flashcards',
-      title: saved?.title ?? topic.trim(),
+      title: saved?.title ?? (topic.trim().slice(0, 160) || 'Flashcards'),
       grade: activeClass?.grade ?? 1,
       subject: 'EVS',
       language,
@@ -127,7 +127,7 @@ export function FlashcardStudio({ openParam }: { openParam?: string | null }) {
     <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-[340px_1fr]">
       <Card className="h-fit lg:sticky lg:top-24">
         <form onSubmit={generate} className="space-y-5">
-          <TextField label="Topic" value={topic} onChange={setTopic} required placeholder="e.g. Animals, Numbers" list="flash-topics" />
+          <TextField label="Topic" maxLength={160} value={topic} onChange={setTopic} required placeholder="e.g. Animals, Numbers" list="flash-topics" />
           <datalist id="flash-topics">
             {TOPICS.map((t) => (
               <option key={t} value={t} />

@@ -40,7 +40,7 @@ export default defineConfig({
       },
       workbox: {
         // Latin + Devanagari font files only; other scripts are fetched on demand
-        globPatterns: ['**/*.{js,css,html,svg,png}', 'assets/*-{latin,latin-ext,devanagari}-*.woff2'],
+        globPatterns: ['**/*.{js,css,html,svg,png}', 'assets/*-{latin,latin-ext,devanagari,ol-chiki}-*.woff2'],
         navigateFallback: '/index.html',
         cleanupOutdatedCaches: true,
       },

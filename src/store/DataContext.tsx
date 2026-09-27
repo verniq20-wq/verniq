@@ -24,6 +24,10 @@ export interface SyncState {
   lastSyncedAt?: number;
   error?: string;
   localOnly: boolean;
+  /** Changes the server refused; they stay on this device and are retried */
+  rejected: { key: string; reason: string }[];
+  /** The sign-in expired; the teacher must sign in again (work on the device is kept) */
+  expired: boolean;
 }
 
 interface DataState {
@@ -64,6 +68,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [lastSyncedAt, setLastSyncedAt] = useState<number | undefined>();
   const [error, setError] = useState<string | undefined>();
   const [reachable, setReachable] = useState(true);
+  const [expired, setExpired] = useState(false);
+  const [rejected, setRejected] = useState<Record<string, string>>({});
+  const rejectedRef = useRef<Record<string, string>>({});
+  rejectedRef.current = rejected;
   const sessionRef = useRef<StoredSession | null>(null);
   sessionRef.current = session;
   const flushing = useRef(false);
@@ -72,12 +80,15 @@ export function DataProvider({ children }: { children: ReactNode }) {
   // ─── Load from device ──────────────────────────────────────
   useEffect(() => {
     (async () => {
-      const [s, snapshot, outbox, last] = await Promise.all([
+      const [s, snapshot, outbox, last, rej] = await Promise.all([
         localdb.getMeta<StoredSession>('session'),
         localdb.loadAll(),
         localdb.outbox(),
         localdb.getMeta<number>('lastSyncedAt'),
+        localdb.getMeta<Record<string, string>>('rejected'),
       ]);
+      setRejected(rej ?? {});
+      rejectedRef.current = rej ?? {};
       setSession(s ?? null);
       setRecords(snapshot);
       setPending(outbox.length);
@@ -109,6 +120,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const handleAuthFailure = useCallback((e: unknown) => {
     if (e instanceof ApiError && e.status === 401) {
       setError('Your session has expired. Sign in again to back up your work.');
+      setExpired(true);
       return true;
     }
     return false;
@@ -119,7 +131,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
     if (!s || s.mode !== 'account') return;
     const boot = await api.bootstrap(s.token);
     const outbox = await localdb.outbox();
-    const pendingKeys = new Set(outbox.map(({ op }) => `${op.collection}:${op.id}`));
+    // Local copies the server has not accepted (queued or refused) must never be dropped by a pull
+    const pendingKeys = new Set([...outbox.map(({ op }) => `${op.collection}:${op.id}`), ...Object.keys(rejectedRef.current)]);
     const local = await localdb.loadAll();
     const merged = {} as Record<Collection, unknown[]>;
     for (const c of COLLECTIONS) {
@@ -164,8 +177,17 @@ export function DataProvider({ children }: { children: ReactNode }) {
             if (batch.length >= 200) break;
           }
           const res = await api.sync(s.token, batch.map((b) => b.op));
+          const next = { ...rejectedRef.current };
+          for (const r of res.results) {
+            const key = `${r.collection}:${r.id}`;
+            if (r.ok) delete next[key];
+            else next[key] = r.error ?? 'rejected';
+          }
           const failed = res.results.filter((r) => !r.ok);
           if (failed.length) console.warn('[sync] rejected by server', failed);
+          rejectedRef.current = next;
+          setRejected(next);
+          await localdb.setMeta('rejected', next);
           await localdb.dequeue(batch.map((b) => b.key));
           queue = await localdb.outbox();
           setPending(queue.length);
@@ -252,6 +274,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
   // ─── Account ──────────────────────────────────────────────
   const adoptAccount = useCallback(
     async (res: Session) => {
+      setExpired(false);
+      setError(undefined);
       const previous = sessionRef.current;
       const s: StoredSession = { mode: 'account', ...res };
       await saveSession(s);
@@ -269,6 +293,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
         }
       } else if (!previous || previous.mode !== 'account' || previous.teacher.id !== res.teacher.id) {
         await localdb.replaceAll(EMPTY);
+        await localdb.setMeta('rejected', {});
+        rejectedRef.current = {};
+        setRejected({});
         setRecords(EMPTY);
       }
       setPending((await localdb.outbox()).length);
@@ -289,6 +316,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     await localdb.wipe();
+    setRejected({});
+    rejectedRef.current = {};
     setRecords(EMPTY);
     setPending(0);
     setSession(null);
@@ -336,6 +365,18 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   const syncNow = useCallback(async () => {
     setReachable(true);
+    // Re-send changes the server refused before (e.g. after an app update fixed the cause)
+    const keys = Object.keys(rejectedRef.current);
+    if (keys.length && sessionRef.current?.mode === 'account') {
+      const all = await localdb.loadAll();
+      for (const key of keys) {
+        const [collection, ...rest] = key.split(':');
+        const id = rest.join(':');
+        const doc = (all[collection as Collection] as { id: string }[] | undefined)?.find((d) => d.id === id);
+        if (doc) await localdb.enqueue({ op: 'put', collection: collection as Collection, id, data: doc });
+      }
+      setPending((await localdb.outbox()).length);
+    }
     await flush(true);
   }, [flush]);
 
@@ -362,11 +403,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
       setActiveClass,
       glossaryFor,
       phrasesFor,
-      sync: { status, pending, lastSyncedAt, error, localOnly: session?.mode === 'local' },
+      sync: { status, pending, lastSyncedAt, error, localOnly: session?.mode === 'local', expired, rejected: Object.entries(rejected).map(([key, reason]) => ({ key, reason })) },
       syncNow,
       exportBackup,
     }),
-    [ready, session, teacher, records, signup, login, startLocal, logout, updateProfile, put, putMany, remove, activeClass, setActiveClass, glossaryFor, phrasesFor, status, pending, lastSyncedAt, error, syncNow, exportBackup],
+    [ready, session, teacher, records, signup, login, startLocal, logout, updateProfile, put, putMany, remove, activeClass, setActiveClass, glossaryFor, phrasesFor, status, pending, lastSyncedAt, error, rejected, expired, syncNow, exportBackup],
   );
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

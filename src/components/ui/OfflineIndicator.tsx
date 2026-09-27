@@ -11,6 +11,50 @@ const OFFLINE_FEATURES = ['Lessons', 'Translation', 'Voice', 'Worksheets', 'Clas
 
 /** The reassuring connection card — offline is a mode, not an error. */
 export function OfflinePanel({ compact }: { compact?: boolean }) {
+  const { sync } = useData();
+  return (
+    <>
+      <OfflineStatus compact={compact} />
+      {sync.rejected.length > 0 && <RejectedNotice />}
+    </>
+  );
+}
+
+const NAMES: Record<string, string> = { classes: 'class', students: 'student', attendance: 'attendance', assessments: 'result', lessons: 'lesson', materials: 'worksheet or flashcard set', glossary: 'word', phrases: 'phrase' };
+
+/** Changes the server refused are kept on this device; explain and offer a retry. */
+function RejectedNotice() {
+  const { sync, syncNow } = useData();
+  const [open, setOpen] = useState(false);
+  const n = sync.rejected.length;
+  return (
+    <div className="mt-4 rounded-xl border border-sun-200 bg-sun-50 p-3 text-sm">
+      <p className="flex items-start gap-2 font-semibold text-ink-900">
+        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-sun-600" aria-hidden />
+        {n} {n === 1 ? 'change was' : 'changes were'} not accepted by your account. {n === 1 ? 'It is' : 'They are'} safe on this device.
+      </p>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <Button size="sm" variant="outline" onClick={() => void syncNow()} icon={<RefreshCw className="h-4 w-4" />}>
+          Try again
+        </Button>
+        <button type="button" className="text-sm font-semibold text-ocean-700 hover:underline" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+          {open ? 'Hide details' : 'Details'}
+        </button>
+      </div>
+      {open && (
+        <ul className="mt-2 space-y-1 text-xs text-ink-600">
+          {sync.rejected.slice(0, 20).map((r) => (
+            <li key={r.key}>
+              {NAMES[r.key.split(':')[0]] ?? r.key.split(':')[0]}: {r.reason}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function OfflineStatus({ compact }: { compact?: boolean }) {
   const { sync, syncNow } = useData();
   const { status, pending, lastSyncedAt, error, localOnly } = sync;
 
@@ -134,7 +178,7 @@ export function OfflineIndicator() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.16 }}
-            className="absolute right-0 top-12 z-40 w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-ink-200 bg-surface p-5 shadow-lift"
+            className="fixed inset-x-4 top-[calc(env(safe-area-inset-top)+4.25rem)] z-40 sm:absolute sm:inset-x-auto sm:right-0 sm:top-12 sm:w-[22rem] rounded-2xl border border-ink-200 bg-surface p-5 shadow-lift"
           >
             <OfflinePanel compact />
           </motion.div>

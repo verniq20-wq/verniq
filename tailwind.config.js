@@ -17,8 +17,8 @@ export default {
         surface: 'rgb(var(--c-surface) / <alpha-value>)',
       },
       fontFamily: {
-        sans: ['"Inter Variable"', 'Inter', 'system-ui', '"Noto Sans Devanagari Variable"', 'sans-serif'],
-        display: ['"Plus Jakarta Sans Variable"', '"Inter Variable"', 'system-ui', '"Noto Sans Devanagari Variable"', 'sans-serif'],
+        sans: ['"Inter Variable"', 'Inter', 'system-ui', '"Noto Sans Devanagari Variable"', '"Noto Sans Ol Chiki"', 'sans-serif'],
+        display: ['"Plus Jakarta Sans Variable"', '"Inter Variable"', 'system-ui', '"Noto Sans Devanagari Variable"', '"Noto Sans Ol Chiki"', 'sans-serif'],
       },
       borderRadius: {
         '2xl': '1.25rem',

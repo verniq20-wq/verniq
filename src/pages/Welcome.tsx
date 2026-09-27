@@ -102,7 +102,7 @@ export default function Welcome() {
           />
 
           <form onSubmit={submit} className="mt-5 space-y-4" noValidate>
-            {mode !== 'login' && <TextField label="Your name" value={name} onChange={setName} autoComplete="name" required minLength={2} placeholder="e.g. Sunita Kumari" />}
+            {mode !== 'login' && <TextField label="Your name" maxLength={80} value={name} onChange={setName} autoComplete="name" required minLength={2} placeholder="e.g. Sunita Kumari" />}
             {mode !== 'local' && (
               <TextField label="Email" type="email" inputMode="email" value={email} onChange={setEmail} autoComplete="email" required placeholder="you@example.com" />
             )}
@@ -118,7 +118,7 @@ export default function Welcome() {
                 hint={mode === 'signup' ? 'At least 8 characters' : undefined}
               />
             )}
-            {mode !== 'login' && <TextField label="School (optional)" value={school} onChange={setSchool} placeholder="e.g. Govt. Primary School, Chaibasa" />}
+            {mode !== 'login' && <TextField label="School (optional)" maxLength={160} value={school} onChange={setSchool} placeholder="e.g. Govt. Primary School, Chaibasa" />}
 
             {error && (
               <p role="alert" className="flex items-start gap-2 rounded-xl bg-rose-50 p-3 text-sm text-rose-700">

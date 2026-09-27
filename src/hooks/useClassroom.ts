@@ -34,7 +34,7 @@ export function useClassroom() {
       null;
     const glossary = glossaryFor(pair.target);
     const phrases = phrasesFor(pair.target);
-    const materials = records.materials.sort((a, b) => b.createdAt - a.createdAt);
+    const materials = [...records.materials].sort((a, b) => b.createdAt - a.createdAt);
     return { ...data, pair, students, activeStudents, lessons, attendance, assessments, todayAttendance, insights, todaysLesson, glossary, phrases, materials, today };
   }, [data, records, activeClass, classId, glossaryFor, phrasesFor]);
 }

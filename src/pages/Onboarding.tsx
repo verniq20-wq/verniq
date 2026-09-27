@@ -88,8 +88,8 @@ export default function Onboarding() {
               <h2 className="flex items-center gap-2 text-lg font-bold">
                 <School className="h-5 w-5 text-ocean-600" aria-hidden /> Where do you teach?
               </h2>
-              <TextField label="School" value={school} onChange={setSchool} placeholder="e.g. Govt. Primary School, Chaibasa" />
-              <TextField label="District (optional)" value={district} onChange={setDistrict} placeholder="e.g. West Singhbhum" />
+              <TextField label="School" maxLength={160} value={school} onChange={setSchool} placeholder="e.g. Govt. Primary School, Chaibasa" />
+              <TextField label="District (optional)" maxLength={120} value={district} onChange={setDistrict} placeholder="e.g. West Singhbhum" />
             </div>
           )}
 
@@ -106,7 +106,7 @@ export default function Onboarding() {
                   }}
                   options={[1, 2, 3, 4, 5].map((g) => ({ value: String(g), label: `Class ${g}` }))}
                 />
-                <TextField label="Name" value={className} onChange={setClassName} placeholder="e.g. Class 1 A" />
+                <TextField label="Name" maxLength={80} value={className} onChange={setClassName} placeholder="e.g. Class 1 A" />
               </div>
               <Select
                 label="I teach in"

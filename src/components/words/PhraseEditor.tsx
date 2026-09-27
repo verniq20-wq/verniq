@@ -93,9 +93,9 @@ export function PhraseEditor({ open, onClose, language, initial, title, onSaved 
             { value: 'student', label: 'Student says' },
           ]}
         />
-        <TextField label="Hindi" lang="hi" value={d.hindi} onChange={(hindi) => setD({ ...d, hindi })} />
-        <TextField label={lang} value={d.target} onChange={(target) => setD({ ...d, target })} hint="Devanagari or Roman script — whatever your community uses." />
-        <TextField label="English (optional)" value={d.english ?? ''} onChange={(english) => setD({ ...d, english })} />
+        <TextField label="Hindi" lang="hi" maxLength={600} value={d.hindi} onChange={(hindi) => setD({ ...d, hindi })} />
+        <TextField label={lang} maxLength={600} value={d.target} onChange={(target) => setD({ ...d, target })} hint="Devanagari or Roman script — whatever your community uses." />
+        <TextField label="English (optional)" maxLength={600} value={d.english ?? ''} onChange={(english) => setD({ ...d, english })} />
         <div>
           <p className="field-label">Pronunciation in {lang}</p>
           <RecordButton value={d.audio} onChange={(audio) => setD({ ...d, audio })} />

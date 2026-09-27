@@ -244,7 +244,7 @@ function AttendanceTab() {
   }
 
   const save = (presentMap: Record<string, boolean>) =>
-    put('attendance', { id: doc?.id ?? newId(), classId: activeClass.id, date, present: presentMap });
+    put('attendance', { id: doc?.id ?? `att-${activeClass.id}-${date}`, classId: activeClass.id, date, present: presentMap });
 
   const toggle = (id: string, value: boolean) => void save({ ...(doc?.present ?? {}), [id]: value });
   const allPresent = () => void save(Object.fromEntries(activeStudents.map((s) => [s.id, true])));

@@ -13,11 +13,11 @@ import { useApp } from '../store/AppContext';
 import type { LessonDoc, LessonSection } from '../types';
 import { NipunBadge } from '../components/lesson/NipunBadge';
 
-function TextArea({ label, value, onChange, rows = 4, lang, hint }: { label: string; value: string; onChange: (v: string) => void; rows?: number; lang?: string; hint?: string }) {
+function TextArea({ label, value, onChange, rows = 4, lang, hint, maxLength }: { label: string; value: string; onChange: (v: string) => void; rows?: number; lang?: string; hint?: string; maxLength?: number }) {
   return (
     <label className="block">
       <span className="field-label">{label}</span>
-      <textarea lang={lang} rows={rows} value={value} onChange={(e) => onChange(e.target.value)} className="field min-h-[96px] resize-y py-3 leading-relaxed" />
+      <textarea lang={lang} rows={rows} maxLength={maxLength} value={value} onChange={(e) => onChange(e.target.value)} className="field min-h-[96px] resize-y py-3 leading-relaxed" />
       {hint && <span className="mt-1.5 block text-xs text-ink-500">{hint}</span>}
     </label>
   );
@@ -98,7 +98,7 @@ export default function LessonEditor() {
       <div className="space-y-4 sm:space-y-5">
         <Card>
           <div className="grid gap-4 sm:grid-cols-2">
-            <TextField label="Topic" value={draft.topic} onChange={(topic) => setDraft({ ...draft, topic })} />
+            <TextField label="Topic" maxLength={160} value={draft.topic} onChange={(topic) => setDraft({ ...draft, topic })} />
             <Select
               label="Curriculum outcome"
               value={draft.outcomeCode}
@@ -112,7 +112,7 @@ export default function LessonEditor() {
               }}
             />
             <div className="sm:col-span-2">
-              <TextArea label="Learning outcome" rows={2} value={draft.learningOutcome} onChange={(learningOutcome) => setDraft({ ...draft, learningOutcome })} />
+              <TextArea label="Learning outcome" rows={2} maxLength={400} value={draft.learningOutcome} onChange={(learningOutcome) => setDraft({ ...draft, learningOutcome })} />
               <NipunBadge code={draft.outcomeCode} className="mt-2" />
             </div>
           </div>
@@ -129,7 +129,7 @@ export default function LessonEditor() {
               </Button>
             </div>
             <div className="grid gap-4 sm:grid-cols-[1fr_140px]">
-              <TextField label="Section title" value={s.title} onChange={(title) => setSection(s.key, { title })} />
+              <TextField label="Section title" maxLength={80} value={s.title} onChange={(title) => setSection(s.key, { title })} />
               <TextField
                 label="Minutes"
                 type="number"
@@ -140,7 +140,7 @@ export default function LessonEditor() {
                 onChange={(v) => setSection(s.key, { durationMin: Math.max(1, Math.min(60, Number(v) || 1)) })}
               />
               <div className="sm:col-span-2">
-                <TextArea label="What you say" lang="hi" value={s.script} onChange={(script) => setSection(s.key, { script })} />
+                <TextArea label="What you say" lang="hi" maxLength={600} value={s.script} onChange={(script) => setSection(s.key, { script })} />
               </div>
               <div className="sm:col-span-2">
                 <TextArea

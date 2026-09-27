@@ -124,6 +124,7 @@ export default function AIStudio() {
             <div>
               <TextField
                 label="Topic"
+                maxLength={160}
                 value={topic}
                 onChange={(v) => {
                   setTopic(v);
@@ -151,7 +152,7 @@ export default function AIStudio() {
                 ))}
               </div>
             </div>
-            <TextField label="Learning outcome (optional)" value={outcomeText} onChange={setOutcomeText} placeholder="Leave empty to use the curriculum outcome" />
+            <TextField label="Learning outcome (optional)" maxLength={400} value={outcomeText} onChange={setOutcomeText} placeholder="Leave empty to use the curriculum outcome" />
 
             {matches.length > 0 && (
               <fieldset>

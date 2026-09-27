@@ -178,7 +178,7 @@ export const SCHEMAS: Record<Collection, z.ZodType> = {
     learningOutcome: text(400),
     outcomeCode: text(20),
     language: lang,
-    durationMin: z.number().int().min(1).max(240),
+    durationMin: z.number().int().min(1).max(600),
     content: z.object({ sections: z.array(z.any()).max(12), vocabulary: z.array(z.any()).max(60), seed: z.number() }).passthrough(),
     status: z.enum(['not-started', 'in-progress', 'completed']),
     progress: z.number().min(0).max(1),

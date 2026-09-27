@@ -197,7 +197,7 @@ export const WorksheetPreview = forwardRef<HTMLElement, Props>(function Workshee
         </div>
         {editable ? (
           <div className="mt-3 space-y-1.5">
-            <input aria-label="Title" className={cn(inputCls, 'font-display text-xl font-extrabold')} value={meta.title} onChange={(e) => onChange?.(worksheet, e.target.value)} />
+            <input aria-label="Title" maxLength={160} className={cn(inputCls, 'font-display text-xl font-extrabold')} value={meta.title} onChange={(e) => onChange?.(worksheet, e.target.value)} />
             <input
               aria-label={`Title in ${lang}`}
               className={cn(inputCls, 'font-semibold')}

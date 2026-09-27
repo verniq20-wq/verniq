@@ -1,6 +1,7 @@
 import { CloudUpload, Download, LogOut, Monitor, Moon, Save, ShieldCheck, Sun } from 'lucide-react';
 import { Tabs } from '../components/ui/Tabs';
 import { useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { InstallCard } from '../components/layout/InstallCard';
 import { Button } from '../components/ui/Button';
 import { Card, CardHeader } from '../components/ui/Card';
@@ -38,7 +39,9 @@ function Toggle({ checked, onChange, label, description }: { checked: boolean; o
 
 export default function Settings() {
   const { largeText, setLargeText, theme, setTheme, toast } = useApp();
-  const { teacher, session, updateProfile, logout, exportBackup, signup, sync } = useData();
+  const { teacher, session, updateProfile, logout, exportBackup, signup, login, sync } = useData();
+  const navigate = useNavigate();
+  const [relogin, setRelogin] = useState('');
   const { openLanguagePicker } = useShell();
   const [name, setName] = useState(teacher?.name ?? '');
   const [school, setSchool] = useState(teacher?.school ?? '');
@@ -90,10 +93,10 @@ export default function Settings() {
         <Card>
           <CardHeader title="Profile" subtitle={local ? 'Stored on this device' : teacher?.email} />
           <form onSubmit={saveProfile} className="space-y-4">
-            <TextField label="Your name" value={name} onChange={setName} required autoComplete="name" />
+            <TextField label="Your name" maxLength={80} value={name} onChange={setName} required autoComplete="name" />
             <div className="grid gap-4 sm:grid-cols-2">
-              <TextField label="School" value={school} onChange={setSchool} />
-              <TextField label="District" value={district} onChange={setDistrict} />
+              <TextField label="School" maxLength={160} value={school} onChange={setSchool} />
+              <TextField label="District" maxLength={120} value={district} onChange={setDistrict} />
             </div>
             <Button type="submit" disabled={!profileDirty || !name.trim()} icon={<Save className="h-4 w-4" />}>
               Save profile
@@ -124,6 +127,35 @@ export default function Settings() {
               )}
               <Button type="submit" loading={accountBusy} icon={<CloudUpload className="h-4 w-4" />}>
                 Create account & upload
+              </Button>
+            </form>
+          ) : sync.expired ? (
+            <form
+              className="space-y-3"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setAccountError(null);
+                setAccountBusy(true);
+                try {
+                  await login(teacher?.email ?? '', relogin);
+                  setRelogin('');
+                  toast({ tone: 'success', title: 'Signed in again', detail: 'Your changes are uploading now.' });
+                } catch (err) {
+                  setAccountError(err instanceof NetworkError ? 'No internet connection. Try again when you are online.' : err instanceof ApiError ? err.message : 'Something went wrong.');
+                } finally {
+                  setAccountBusy(false);
+                }
+              }}
+            >
+              <p className="text-sm text-ink-600">Your sign-in has expired. Enter your password to keep backing up — nothing on this device is lost.</p>
+              <TextField label="Password" type="password" autoComplete="current-password" value={relogin} onChange={setRelogin} required />
+              {accountError && (
+                <p role="alert" className="rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                  {accountError}
+                </p>
+              )}
+              <Button type="submit" loading={accountBusy}>
+                Sign in again
               </Button>
             </form>
           ) : (
@@ -205,7 +237,7 @@ export default function Settings() {
             <Button variant="ghost" onClick={() => setConfirmOut(false)}>
               Cancel
             </Button>
-            <Button variant="danger" onClick={() => void logout()}>
+            <Button variant="danger" onClick={() => void logout().then(() => navigate('/', { replace: true }))}>
               {local ? 'Delete & reset' : 'Sign out'}
             </Button>
           </>

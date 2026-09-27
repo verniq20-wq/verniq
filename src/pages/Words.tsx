@@ -275,11 +275,11 @@ function WordEditor({ entry, own, onClose }: { entry: GlossaryEntry; own: boolea
     >
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <TextField label="Hindi" lang="hi" value={e.hindi} onChange={(hindi) => setE({ ...e, hindi })} readOnly={!isNew && !own} hint={!isNew && !own ? 'Starter word' : undefined} />
-          <TextField label="English" value={e.english} onChange={(english) => setE({ ...e, english })} />
+          <TextField label="Hindi" lang="hi" maxLength={120} value={e.hindi} onChange={(hindi) => setE({ ...e, hindi })} readOnly={!isNew && !own} hint={!isNew && !own ? 'Starter word' : undefined} />
+          <TextField label="English" maxLength={120} value={e.english} onChange={(english) => setE({ ...e, english })} />
         </div>
         <div className="flex items-end gap-2">
-          <TextField className="flex-1" label={lang} value={e.target} onChange={(target) => setE({ ...e, target })} placeholder="How children say it at home" />
+          <TextField className="flex-1" label={lang} maxLength={120} value={e.target} onChange={(target) => setE({ ...e, target })} placeholder="How children say it at home" />
           {e.target && (
             <Button variant="soft" aria-label="Listen" className="min-h-[48px]" onClick={() => void audio.play('w', e.target, e.language, e.audio)}>
               <Play className="h-4 w-4 fill-current" aria-hidden />

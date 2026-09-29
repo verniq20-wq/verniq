@@ -8,7 +8,23 @@
  * app; their entries (status `teacher`) always take priority.
  *
  * Coverage today:
- *  - Ho: ~90 words gathered from general Munda-language references.
+ *  - Ho: ~105 words. The original ~90 came from general Munda-language
+ *    references; ~15 more were added from a real source, Lionel Burrows'
+ *    "Ho Grammar, with Vocabulary" (Catholic Orphan Press, Calcutta, 1915),
+ *    via its archive.org scan (archive.org/details/hogrammarwithvoc00burruoft).
+ *    That book has two vocabularies: an English→Ho table whose two-column
+ *    layout the OCR badly scrambled (English and Ho words end up
+ *    interleaved out of order — unusable), and a Ho→English list that OCR'd
+ *    cleanly as ordinary headword-then-meaning lines. Only the clean
+ *    Ho→English list was used, by searching it for our English words. A
+ *    couple of entries needed a small, source-corroborated OCR fix — e.g.
+ *    "long" was printed "filing" next to alphabetically-neighbouring
+ *    j-words (jiki, jil, jilu), so it's almost certainly "jiling", which is
+ *    also exactly Mundari's own word for "long" found independently in its
+ *    own dictionary. One entry ("grandmother") had a stray leading OCR
+ *    character removed by eye; flagged here for a reviewer to double-check.
+ *    Words where the OCR was too garbled to trust (e.g. "cow", "plant",
+ *    "bread") were left out rather than guessed.
  *  - Mundari: ~97 words. The original ~40 came from general Munda-language
  *    references (close enough to Ho — both Kherwarian/North Munda — that a
  *    shared starting list was defensible); ~57 more were added afterwards
@@ -27,11 +43,23 @@
  *    already-listed word for the same concept (तिसिंग/today, गापा/tomorrow,
  *    दुब/sit, ओल/write, चिकन/what, बानो/no, and others) — independent
  *    confirmation that both lists are on the right track.
- *  - Santali: numbers 1-10 and the greeting "Johar" only, in Ol Chiki, each
+ *  - Santali: ~29 words. Numbers 1-10 and "Johar" (hello) are in Ol Chiki,
  *    cross-checked against Omniglot/Wikipedia/Glosbe rather than typed from
- *    memory. Santali has plenty of everyday-vocabulary references too, but
- *    this pass only had time to verify the numerals and one greeting against
- *    a real source — better a short, checked list than a longer guessed one.
+ *    memory. ~18 more words were added from a real dictionary, A. Campbell's
+ *    "A Santali-English Dictionary" (Santal Mission Press, 1899), via its
+ *    archive.org scan (archive.org/details/asantalienglish00campgoog) — a
+ *    scan of Parts I and III only (roughly A-Kadge and Pani-Yore); Part II
+ *    (the middle of the alphabet) isn't in this scan, so several otherwise
+ *    findable words (e.g. "eye", "hand") couldn't be searched for. Every
+ *    added word was a standalone headword found in the available text.
+ *    IMPORTANT — script: Campbell's 1899 dictionary predates Ol Chiki and
+ *    romanises Santali in Latin letters. Unlike the numerals/greeting (which
+ *    have verified Ol Chiki spellings from other sources), these ~18 new
+ *    words don't have a checked Ol Chiki rendering, so — same reasoning as
+ *    Kurukh below — they're stored in the source's Roman transliteration
+ *    rather than a guessed Ol Chiki spelling. This means Santali's row is
+ *    mixed-script today: numbers/hello in Ol Chiki, everything else in
+ *    Roman, until someone verifies Ol Chiki spellings for the rest.
  *  - Kurukh: ~50 words (numbers, family, body parts, animals, nature,
  *    colours, a few actions, "what"/"where", "small") drawn from Rev. Ferd.
  *    Hahn's "Kurukh-English Dictionary" (Bengal Secretariat Press, Calcutta,
@@ -58,10 +86,32 @@
  *    guessed Devanagari rendering — teachers can supply the Devanagari form
  *    from the Words screen when they review these.
  *
- * Gondi and Bhili have none yet. Gondi is Dravidian and Bhili is Indo-Aryan,
- * and a search for reliable open vocabulary lists for either came back with
- * only a handful of isolated words (not even enough to seed the number
- * category), so nothing was added rather than guess. Teachers (or a
+ *  - Gondi: 10 words only — numbers 1-9 and "father". Source: Rev. H. D.
+ *    Williamson's "Gondi Grammar and Vocabulary" (SPCK, London, 1889), via
+ *    its archive.org scan (archive.org/details/gondigrammarvoca00willrich).
+ *    This book's main vocabulary is a three-column English/Gondi/Hindi
+ *    table (with Gondi and Hindi in Devanagari) that the OCR scrambled
+ *    badly — rows and columns end up interleaved, so an English word and
+ *    the Gondi word sitting next to it in the OCR text often aren't
+ *    actually a translation pair. That table wasn't used at all, since
+ *    there was no reliable way to tell a correct pairing from a scrambled
+ *    one. The only trustworthy content found was a plain-prose "Numerals"
+ *    section (one-per-line, not tabular, so immune to the column-scrambling
+ *    problem) and one worked example in the grammar's text ("uy, father,
+ *    plural ..., fathers" — used for "father"). The source states Gondi
+ *    numerals don't go past ten and that even 8-9 were already falling out
+ *    of use by 1889; "ten" itself couldn't be read from the OCR clean
+ *    enough to trust, so it was left out rather than guessed. A search for
+ *    a second, better-formatted Gondi source came back empty.
+ *  - Bhili: none. The one candidate found, Chas. S. Thompson's "Rudiments
+ *    of the Bhili Language" (1895, archive.org/details/rudimentsbhilil00thomgoog),
+ *    prints every Bhili headword in Gujarati script, which its OCR could
+ *    not read at all — both vocabulary directions come out as unreadable
+ *    garbled characters, not real words. Nothing could be responsibly
+ *    extracted from it. A search for an alternative Bhili source with
+ *    readable (Roman or Devanagari) headwords came back empty.
+ *
+ * Teachers (or a
  * community word-collection drive, see docs/HO-WORD-COLLECTION.md) build
  * those out from the Words screen instead — `seedGlossary` already supports
  * any language the moment it has an entry in the word maps below.
@@ -69,7 +119,7 @@
 import type { GlossaryCategory, GlossaryEntry, LanguageCode, PictureKey } from './types';
 
 /** Tribal languages with a starter word list today. Add a key here + fill in BASE to cover another one. */
-type SeededTribalLanguage = 'ho' | 'mun' | 'sat' | 'kru';
+type SeededTribalLanguage = 'ho' | 'mun' | 'sat' | 'kru' | 'gon';
 
 interface BaseWord {
   hi: string;
@@ -77,21 +127,21 @@ interface BaseWord {
   cat: GlossaryCategory;
   pic?: PictureKey;
   value?: number;
-  /** Starter word per tribal language (Devanagari for Ho/Mundari, Ol Chiki for Santali, Roman transliteration for Kurukh — see file header), when collected. */
+  /** Starter word per tribal language (Devanagari for Ho/Mundari/Gondi, Ol Chiki for verified Santali numbers/greeting, Roman transliteration for Kurukh and the rest of Santali — see file header), when collected. */
   words?: Partial<Record<SeededTribalLanguage, string>>;
 }
 
 const BASE: BaseWord[] = [
   // Numbers
-  { hi: 'एक', en: 'one', cat: 'number', value: 1, words: { ho: 'मियद', mun: 'मिया', sat: 'ᱢᱤᱫ', kru: 'On' } },
-  { hi: 'दो', en: 'two', cat: 'number', value: 2, words: { ho: 'बरिया', mun: 'बारिया', sat: 'ᱵᱟᱨ', kru: 'Jind' } },
-  { hi: 'तीन', en: 'three', cat: 'number', value: 3, words: { ho: 'आपिया', mun: 'अपिया', sat: 'ᱯᱮ', kru: 'Mand' } },
-  { hi: 'चार', en: 'four', cat: 'number', value: 4, words: { ho: 'उपुनिया', mun: 'उपुनिया', sat: 'ᱯᱩᱱ', kru: 'Nakh' } },
-  { hi: 'पाँच', en: 'five', cat: 'number', value: 5, words: { ho: 'मोंड़ेया', mun: 'मोनेया', sat: 'ᱢᱚᱬᱮ', kru: 'Pancé' } },
-  { hi: 'छह', en: 'six', cat: 'number', value: 6, words: { ho: 'तुरुइया', mun: 'तुरुइया', sat: 'ᱛᱩᱨᱩᱭ', kru: 'Soyé' } },
-  { hi: 'सात', en: 'seven', cat: 'number', value: 7, words: { ho: 'एया', mun: 'एया', sat: 'ᱮᱭᱟᱭ', kru: 'Sayyé' } },
-  { hi: 'आठ', en: 'eight', cat: 'number', value: 8, words: { ho: 'इरिलिया', mun: 'इरालिया', sat: 'ᱤᱨᱟᱹᱞ', kru: 'Akhé' } },
-  { hi: 'नौ', en: 'nine', cat: 'number', value: 9, words: { ho: 'आरेया', mun: 'अरेया', sat: 'ᱟᱨᱮ', kru: 'Nayé' } },
+  { hi: 'एक', en: 'one', cat: 'number', value: 1, words: { ho: 'मियद', mun: 'मिया', sat: 'ᱢᱤᱫ', kru: 'On', gon: 'Undi' } },
+  { hi: 'दो', en: 'two', cat: 'number', value: 2, words: { ho: 'बरिया', mun: 'बारिया', sat: 'ᱵᱟᱨ', kru: 'Jind', gon: 'Rand' } },
+  { hi: 'तीन', en: 'three', cat: 'number', value: 3, words: { ho: 'आपिया', mun: 'अपिया', sat: 'ᱯᱮ', kru: 'Mand', gon: 'Mund' } },
+  { hi: 'चार', en: 'four', cat: 'number', value: 4, words: { ho: 'उपुनिया', mun: 'उपुनिया', sat: 'ᱯᱩᱱ', kru: 'Nakh', gon: 'Nalung' } },
+  { hi: 'पाँच', en: 'five', cat: 'number', value: 5, words: { ho: 'मोंड़ेया', mun: 'मोनेया', sat: 'ᱢᱚᱬᱮ', kru: 'Pancé', gon: 'Saiyung' } },
+  { hi: 'छह', en: 'six', cat: 'number', value: 6, words: { ho: 'तुरुइया', mun: 'तुरुइया', sat: 'ᱛᱩᱨᱩᱭ', kru: 'Soyé', gon: 'Sarung' } },
+  { hi: 'सात', en: 'seven', cat: 'number', value: 7, words: { ho: 'एया', mun: 'एया', sat: 'ᱮᱭᱟᱭ', kru: 'Sayyé', gon: 'Yerung' } },
+  { hi: 'आठ', en: 'eight', cat: 'number', value: 8, words: { ho: 'इरिलिया', mun: 'इरालिया', sat: 'ᱤᱨᱟᱹᱞ', kru: 'Akhé', gon: 'Armur' } },
+  { hi: 'नौ', en: 'nine', cat: 'number', value: 9, words: { ho: 'आरेया', mun: 'अरेया', sat: 'ᱟᱨᱮ', kru: 'Nayé', gon: 'Unmak' } },
   { hi: 'दस', en: 'ten', cat: 'number', value: 10, words: { ho: 'गेलेया', mun: 'गेलेया', sat: 'ᱜᱮᱞ', kru: 'Doy' } },
   { hi: 'संख्या', en: 'number', cat: 'number' },
   { hi: 'गिनती', en: 'counting', cat: 'number' },
@@ -106,8 +156,8 @@ const BASE: BaseWord[] = [
   { hi: 'चिड़िया', en: 'bird', cat: 'animal', pic: 'bird', words: { ho: 'चेरेक', mun: 'चेरेक', kru: 'Ora' } },
   { hi: 'मछली', en: 'fish', cat: 'animal', pic: 'fish', words: { ho: 'हाकू', mun: 'हाकू' } },
   { hi: 'खरगोश', en: 'rabbit', cat: 'animal', pic: 'rabbit', words: { ho: 'कुलै', mun: 'कुलै', kru: 'Miia' } },
-  { hi: 'तितली', en: 'butterfly', cat: 'animal', pic: 'butterfly' },
-  { hi: 'कीड़ा', en: 'insect', cat: 'animal', pic: 'beetle' },
+  { hi: 'तितली', en: 'butterfly', cat: 'animal', pic: 'butterfly', words: { ho: 'पम्पल' } },
+  { hi: 'कीड़ा', en: 'insect', cat: 'animal', pic: 'beetle', words: { ho: 'चिदु' } },
   { hi: 'हाथी', en: 'elephant', cat: 'animal', words: { ho: 'हाती', mun: 'हाती', kru: 'Foto' } },
   { hi: 'बाघ', en: 'tiger', cat: 'animal', words: { ho: 'कुला', mun: 'कुला', kru: 'Lakra' } },
   { hi: 'जानवर', en: 'animal', cat: 'animal', words: { ho: 'जानोर' } },
@@ -122,37 +172,37 @@ const BASE: BaseWord[] = [
   { hi: 'पत्ता', en: 'leaf', cat: 'nature', pic: 'leaf', words: { ho: 'सकम', mun: 'सकम', kru: 'Atkha' } },
   { hi: 'पौधा', en: 'plant', cat: 'nature', pic: 'plant' },
   { hi: 'पत्थर', en: 'stone', cat: 'nature', words: { ho: 'दिरि', mun: 'दिरि', kru: 'Pakhna' } },
-  { hi: 'बादल', en: 'cloud', cat: 'nature', pic: 'cloud', words: { kru: 'Badali' } },
+  { hi: 'बादल', en: 'cloud', cat: 'nature', pic: 'cloud', words: { ho: 'रिंतिल', kru: 'Badali' } },
   { hi: 'बारिश', en: 'rain', cat: 'nature', pic: 'rain', words: { ho: 'दाःसेनेम', mun: 'एसेल', kru: 'Thari' } },
   { hi: 'पहाड़', en: 'hill', cat: 'nature', pic: 'mountain', words: { ho: 'बुरु', mun: 'बुरु' } },
   { hi: 'नदी', en: 'river', cat: 'nature', words: { ho: 'गारा' } },
-  { hi: 'मिट्टी', en: 'soil', cat: 'nature', words: { ho: 'हासा', mun: 'हासा' } },
+  { hi: 'मिट्टी', en: 'soil', cat: 'nature', words: { ho: 'हासा', mun: 'हासा', sat: 'Hasa' } },
 
   // Body
   { hi: 'हाथ', en: 'hand', cat: 'body', pic: 'hand', words: { ho: 'ती', mun: 'ती', kru: 'Khekkha' } },
   { hi: 'आँख', en: 'eye', cat: 'body', pic: 'eye', words: { ho: 'मेद', mun: 'मेद', kru: 'Khan' } },
-  { hi: 'कान', en: 'ear', cat: 'body', pic: 'ear', words: { ho: 'लुतुर', mun: 'लुतुर', kru: 'Khebda' } },
-  { hi: 'पैर', en: 'foot', cat: 'body', pic: 'foot', words: { ho: 'काटा', mun: 'जांग', kru: 'Khedd' } },
+  { hi: 'कान', en: 'ear', cat: 'body', pic: 'ear', words: { ho: 'लुतुर', mun: 'लुतुर', sat: 'Lutur', kru: 'Khebda' } },
+  { hi: 'पैर', en: 'foot', cat: 'body', pic: 'foot', words: { ho: 'काटा', mun: 'जांग', sat: 'Janga', kru: 'Khedd' } },
   { hi: 'दाँत', en: 'tooth', cat: 'body', pic: 'tooth', words: { ho: 'दाता', mun: 'दाता', kru: 'Pall' } },
   { hi: 'दिल', en: 'heart', cat: 'body', pic: 'heart', words: { ho: 'मोन', mun: 'बुका' } },
-  { hi: 'सिर', en: 'head', cat: 'body', words: { ho: 'बोः', mun: 'बो', kru: 'Kukk' } },
+  { hi: 'सिर', en: 'head', cat: 'body', words: { ho: 'बोः', mun: 'बो', sat: 'Bohok', kru: 'Kukk' } },
   { hi: 'नाक', en: 'nose', cat: 'body', words: { ho: 'मूः', mun: 'मू', kru: 'Mui' } },
   { hi: 'मुँह', en: 'mouth', cat: 'body', words: { ho: 'मोचा', mun: 'थोतना' } },
   { hi: 'उँगली', en: 'finger', cat: 'body', words: { ho: 'तिकेद', mun: 'डाको' } },
 
   // Family & people
-  { hi: 'माँ', en: 'mother', cat: 'family', words: { ho: 'एंगा', mun: 'एंगा', kru: 'Ayo' } },
-  { hi: 'पिता', en: 'father', cat: 'family', words: { ho: 'आपु', mun: 'आपू', kru: 'Abbi' } },
-  { hi: 'भाई', en: 'brother', cat: 'family', words: { ho: 'दादा', mun: 'हागा' } },
+  { hi: 'माँ', en: 'mother', cat: 'family', words: { ho: 'एंगा', mun: 'एंगा', sat: 'Ayo', kru: 'Ayo' } },
+  { hi: 'पिता', en: 'father', cat: 'family', words: { ho: 'आपु', mun: 'आपू', sat: 'Apa', kru: 'Abbi', gon: 'Uy' } },
+  { hi: 'भाई', en: 'brother', cat: 'family', words: { ho: 'दादा', mun: 'हागा', sat: 'Boeha' } },
   { hi: 'बहन', en: 'sister', cat: 'family', words: { ho: 'मिसि', mun: 'मिसि' } },
-  { hi: 'दादी', en: 'grandmother', cat: 'family', words: { mun: 'जिंग', kru: 'Aji' } },
-  { hi: 'दादा', en: 'grandfather', cat: 'family', words: { kru: 'Aja' } },
-  { hi: 'बच्चा', en: 'child', cat: 'family', pic: 'baby', words: { ho: 'होन', mun: 'होन' } },
+  { hi: 'दादी', en: 'grandmother', cat: 'family', words: { ho: 'आजिद', mun: 'जिंग', kru: 'Aji' } },
+  { hi: 'दादा', en: 'grandfather', cat: 'family', words: { ho: 'तता', kru: 'Aja' } },
+  { hi: 'बच्चा', en: 'child', cat: 'family', pic: 'baby', words: { ho: 'होन', mun: 'होन', sat: 'Hopon' } },
   { hi: 'परिवार', en: 'family', cat: 'family', pic: 'family' },
   { hi: 'दोस्त', en: 'friend', cat: 'family', pic: 'person', words: { ho: 'गाती', mun: 'गाती', kru: 'Jiiri' } },
-  { hi: 'घर', en: 'house', cat: 'place', pic: 'house', words: { ho: 'ओड़ाः', mun: 'ओड़ा' } },
+  { hi: 'घर', en: 'house', cat: 'place', pic: 'house', words: { ho: 'ओड़ाः', mun: 'ओड़ा', sat: 'Orak' } },
   { hi: 'गाँव', en: 'village', cat: 'place', words: { ho: 'आतु', mun: 'हातु', kru: 'Padda' } },
-  { hi: 'विद्यालय', en: 'school', cat: 'place', words: { mun: 'इस्कुल' } },
+  { hi: 'विद्यालय', en: 'school', cat: 'place', words: { ho: 'इस्कुल', mun: 'इस्कुल' } },
   { hi: 'खेत', en: 'field', cat: 'place', words: { ho: 'ओते', mun: 'ओते', kru: 'Khal' } },
 
   // Food
@@ -161,19 +211,19 @@ const BASE: BaseWord[] = [
   { hi: 'अंडा', en: 'egg', cat: 'food', pic: 'egg', words: { ho: 'बिलि' } },
   { hi: 'संतरा', en: 'orange', cat: 'food', pic: 'orange' },
   { hi: 'गाजर', en: 'carrot', cat: 'food', pic: 'carrot' },
-  { hi: 'दूध', en: 'milk', cat: 'food', words: { ho: 'तित', mun: 'टोआ' } },
+  { hi: 'दूध', en: 'milk', cat: 'food', words: { ho: 'तित', mun: 'टोआ', sat: 'Toa' } },
   { hi: 'फल', en: 'fruit', cat: 'food', words: { ho: 'जोम', mun: 'जो' } },
-  { hi: 'सब्ज़ी', en: 'vegetable', cat: 'food', words: { mun: 'उतु' } },
+  { hi: 'सब्ज़ी', en: 'vegetable', cat: 'food', words: { ho: 'डाजंग', mun: 'उतु' } },
   { hi: 'खाना', en: 'food', cat: 'food', words: { ho: 'जोमाक', mun: 'चारा' } },
 
   // Classroom
-  { hi: 'किताब', en: 'book', cat: 'classroom', pic: 'book', words: { mun: 'पुथी' } },
+  { hi: 'किताब', en: 'book', cat: 'classroom', pic: 'book', words: { ho: 'बोइ', mun: 'पुथी' } },
   { hi: 'पेंसिल', en: 'pencil', cat: 'classroom', pic: 'pencil' },
   { hi: 'गेंद', en: 'ball', cat: 'classroom', pic: 'ball', words: { mun: 'गुली' } },
   { hi: 'स्लेट', en: 'slate', cat: 'classroom', words: { mun: 'सिलोट' } },
   { hi: 'कक्षा', en: 'class', cat: 'classroom' },
   { hi: 'शिक्षक', en: 'teacher', cat: 'classroom', pic: 'person', words: { mun: 'गुरु' } },
-  { hi: 'चित्र', en: 'picture', cat: 'classroom' },
+  { hi: 'चित्र', en: 'picture', cat: 'classroom', words: { ho: 'नक्सा' } },
   { hi: 'शब्द', en: 'word', cat: 'classroom', words: { ho: 'जगर' } },
   { hi: 'अक्षर', en: 'letter', cat: 'classroom', words: { mun: 'हरोप' } },
   { hi: 'कहानी', en: 'story', cat: 'classroom', words: { ho: 'कथा', mun: 'काआनी' } },
@@ -190,16 +240,16 @@ const BASE: BaseWord[] = [
   { hi: 'छोटा', en: 'small', cat: 'describing', words: { ho: 'हुडिंग', mun: 'हुरिंग', kru: 'Sanni' } },
   { hi: 'ज़्यादा', en: 'more', cat: 'describing' },
   { hi: 'कम', en: 'less', cat: 'describing' },
-  { hi: 'लंबा', en: 'long', cat: 'describing', words: { mun: 'जिलिंग' } },
-  { hi: 'भारी', en: 'heavy', cat: 'describing', words: { mun: 'हंबल' } },
+  { hi: 'लंबा', en: 'long', cat: 'describing', words: { ho: 'जिलिंग', mun: 'जिलिंग' } },
+  { hi: 'भारी', en: 'heavy', cat: 'describing', words: { ho: 'हंबल', mun: 'हंबल' } },
 
   // Colours
-  { hi: 'लाल', en: 'red', cat: 'colour', words: { ho: 'आराह', mun: 'आरा', kru: 'Kharua' } },
-  { hi: 'हरा', en: 'green', cat: 'colour', words: { mun: 'बेरेल', kru: 'Tariyaz' } },
-  { hi: 'पीला', en: 'yellow', cat: 'colour', words: { mun: 'ससांगरांग', kru: 'Balko' } },
-  { hi: 'नीला', en: 'blue', cat: 'colour', words: { mun: 'लील' } },
-  { hi: 'सफ़ेद', en: 'white', cat: 'colour', words: { ho: 'पुंडि', mun: 'पुंडी', kru: 'Pandrii' } },
-  { hi: 'काला', en: 'black', cat: 'colour', words: { ho: 'हेंदे', mun: 'हेंदे' } },
+  { hi: 'लाल', en: 'red', cat: 'colour', words: { ho: 'आराह', mun: 'आरा', sat: 'Arak', kru: 'Kharua' } },
+  { hi: 'हरा', en: 'green', cat: 'colour', words: { ho: 'तसादलेका', mun: 'बेरेल', kru: 'Tariyaz' } },
+  { hi: 'पीला', en: 'yellow', cat: 'colour', words: { ho: 'ससांगलेका', mun: 'ससांगरांग', kru: 'Balko' } },
+  { hi: 'नीला', en: 'blue', cat: 'colour', words: { ho: 'गडेद', mun: 'लील' } },
+  { hi: 'सफ़ेद', en: 'white', cat: 'colour', words: { ho: 'पुंडि', mun: 'पुंडी', sat: 'Sada', kru: 'Pandrii' } },
+  { hi: 'काला', en: 'black', cat: 'colour', words: { ho: 'हेंदे', mun: 'हेंदे', sat: 'Hende' } },
 
   // Time
   { hi: 'आज', en: 'today', cat: 'time', words: { ho: 'तिसिंग', mun: 'तिसिंग' } },
@@ -210,7 +260,7 @@ const BASE: BaseWord[] = [
 
   // Actions
   { hi: 'आओ', en: 'come', cat: 'action', words: { ho: 'हिजू', kru: 'Barna' } },
-  { hi: 'जाओ', en: 'go', cat: 'action', words: { ho: 'सेन', mun: 'सेन' } },
+  { hi: 'जाओ', en: 'go', cat: 'action', words: { ho: 'सेन', mun: 'सेन', sat: 'Sen' } },
   { hi: 'देखो', en: 'look', cat: 'action', words: { ho: 'नेल', mun: 'नेल' } },
   { hi: 'सुनो', en: 'listen', cat: 'action', words: { ho: 'आयूम', mun: 'आयूम', kru: "Sarka'and" } },
   { hi: 'बोलो', en: 'speak', cat: 'action', words: { ho: 'काजी', mun: 'काजी' } },
@@ -223,18 +273,18 @@ const BASE: BaseWord[] = [
   { hi: 'खेलो', en: 'play', cat: 'action', words: { ho: 'एने', mun: 'इनुंग' } },
   { hi: 'मिलाओ', en: 'match', cat: 'action' },
   { hi: 'बनाओ', en: 'make', cat: 'action', words: { ho: 'बना' } },
-  { hi: 'ताली बजाओ', en: 'clap', cat: 'action' },
+  { hi: 'ताली बजाओ', en: 'clap', cat: 'action', words: { ho: 'तपिंग दुत्प्रा' } },
 
   // Greetings & questions
   { hi: 'नमस्ते', en: 'hello', cat: 'greeting', words: { ho: 'जोहार', mun: 'जोहार', sat: 'ᱡᱚᱦᱟᱨ', kru: 'Johar' } },
   { hi: 'धन्यवाद', en: 'thank you', cat: 'greeting' },
   { hi: 'बहुत अच्छा', en: 'very good', cat: 'greeting', words: { ho: 'बुगिन' } },
-  { hi: 'हाँ', en: 'yes', cat: 'greeting', words: { ho: 'हे', mun: 'हे' } },
+  { hi: 'हाँ', en: 'yes', cat: 'greeting', words: { ho: 'हे', mun: 'हे', sat: 'Hoi' } },
   { hi: 'नहीं', en: 'no', cat: 'greeting', words: { ho: 'बानो', mun: 'बानो' } },
-  { hi: 'क्या', en: 'what', cat: 'question', words: { ho: 'चिकन', mun: 'चिकन', kru: 'Endra' } },
+  { hi: 'क्या', en: 'what', cat: 'question', words: { ho: 'चिकन', mun: 'चिकन', sat: 'Oka', kru: 'Endra' } },
   { hi: 'कितने', en: 'how many', cat: 'question', words: { ho: 'चिमिन', mun: 'चिमिन' } },
-  { hi: 'कहाँ', en: 'where', cat: 'question', words: { ho: 'कोड़ो', kru: 'Eksan' } },
-  { hi: 'कौन', en: 'who', cat: 'question', words: { ho: 'ओकोए', mun: 'ओकोए' } },
+  { hi: 'कहाँ', en: 'where', cat: 'question', words: { ho: 'कोड़ो', sat: 'Okare', kru: 'Eksan' } },
+  { hi: 'कौन', en: 'who', cat: 'question', words: { ho: 'ओकोए', mun: 'ओकोए', sat: 'Okoeko' } },
 ];
 
 function slug(s: string) {

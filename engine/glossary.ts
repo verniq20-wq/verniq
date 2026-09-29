@@ -7,21 +7,29 @@
  * checked by native speakers. Teachers correct and extend the glossary in the
  * app; their entries (status `teacher`) always take priority.
  *
- * Coverage today: Ho and Mundari (both Kherwarian/North Munda languages,
- * close enough in basic vocabulary — numerals, kinship terms, body parts,
- * common nouns — that a shared starting list is defensible). Santali uses
- * its own Ol Chiki script and the remaining languages (Kurukh, Gondi, Bhili)
- * are from different language families entirely, so none of those are
- * pre-filled: putting unverified guesses in a different script/family in
- * front of real classrooms is riskier than an honest empty list. Teachers
- * (or a community word-collection drive, see docs/HO-WORD-COLLECTION.md)
- * build those out from the Words screen instead — `seedGlossary` already
- * supports any language the moment `TRIBAL_WORDS` has an entry for it.
+ * Coverage today:
+ *  - Ho and Mundari (both Kherwarian/North Munda languages, close enough in
+ *    basic vocabulary — numerals, kinship terms, body parts, common nouns —
+ *    that a shared starting list is defensible).
+ *  - Santali: numbers 1-10 and the greeting "Johar" only, in Ol Chiki, each
+ *    cross-checked against Omniglot/Wikipedia/Glosbe rather than typed from
+ *    memory. Santali has plenty of everyday-vocabulary references too, but
+ *    this pass only had time to verify the numerals and one greeting against
+ *    a real source — better a short, checked list than a longer guessed one.
+ *
+ * Kurukh, Gondi and Bhili have none yet. Kurukh and Gondi are Dravidian and
+ * Bhili is Indo-Aryan — different families from Ho/Mundari/Santali entirely
+ * — and a search for reliable open vocabulary lists for them came back with
+ * only a handful of isolated words (not even enough to seed the number
+ * category), so nothing was added rather than guess. Teachers (or a
+ * community word-collection drive, see docs/HO-WORD-COLLECTION.md) build
+ * those out from the Words screen instead — `seedGlossary` already supports
+ * any language the moment it has an entry in the word maps below.
  */
 import type { GlossaryCategory, GlossaryEntry, LanguageCode, PictureKey } from './types';
 
-/** Tribal languages with a starter word list today. Add a key here + fill in TRIBAL_WORDS to cover another one. */
-type SeededTribalLanguage = 'ho' | 'mun';
+/** Tribal languages with a starter word list today. Add a key here + fill in BASE to cover another one. */
+type SeededTribalLanguage = 'ho' | 'mun' | 'sat';
 
 interface BaseWord {
   hi: string;
@@ -29,22 +37,22 @@ interface BaseWord {
   cat: GlossaryCategory;
   pic?: PictureKey;
   value?: number;
-  /** Starter word per tribal language (Devanagari), when collected. */
+  /** Starter word per tribal language (Devanagari for Ho/Mundari, Ol Chiki for Santali), when collected. */
   words?: Partial<Record<SeededTribalLanguage, string>>;
 }
 
 const BASE: BaseWord[] = [
   // Numbers
-  { hi: 'एक', en: 'one', cat: 'number', value: 1, words: { ho: 'मियद', mun: 'मिया' } },
-  { hi: 'दो', en: 'two', cat: 'number', value: 2, words: { ho: 'बरिया', mun: 'बारिया' } },
-  { hi: 'तीन', en: 'three', cat: 'number', value: 3, words: { ho: 'आपिया', mun: 'अपिया' } },
-  { hi: 'चार', en: 'four', cat: 'number', value: 4, words: { ho: 'उपुनिया', mun: 'उपुनिया' } },
-  { hi: 'पाँच', en: 'five', cat: 'number', value: 5, words: { ho: 'मोंड़ेया', mun: 'मोनेया' } },
-  { hi: 'छह', en: 'six', cat: 'number', value: 6, words: { ho: 'तुरुइया', mun: 'तुरुइया' } },
-  { hi: 'सात', en: 'seven', cat: 'number', value: 7, words: { ho: 'एया', mun: 'एया' } },
-  { hi: 'आठ', en: 'eight', cat: 'number', value: 8, words: { ho: 'इरिलिया', mun: 'इरालिया' } },
-  { hi: 'नौ', en: 'nine', cat: 'number', value: 9, words: { ho: 'आरेया', mun: 'अरेया' } },
-  { hi: 'दस', en: 'ten', cat: 'number', value: 10, words: { ho: 'गेलेया', mun: 'गेलेया' } },
+  { hi: 'एक', en: 'one', cat: 'number', value: 1, words: { ho: 'मियद', mun: 'मिया', sat: 'ᱢᱤᱫ' } },
+  { hi: 'दो', en: 'two', cat: 'number', value: 2, words: { ho: 'बरिया', mun: 'बारिया', sat: 'ᱵᱟᱨ' } },
+  { hi: 'तीन', en: 'three', cat: 'number', value: 3, words: { ho: 'आपिया', mun: 'अपिया', sat: 'ᱯᱮ' } },
+  { hi: 'चार', en: 'four', cat: 'number', value: 4, words: { ho: 'उपुनिया', mun: 'उपुनिया', sat: 'ᱯᱩᱱ' } },
+  { hi: 'पाँच', en: 'five', cat: 'number', value: 5, words: { ho: 'मोंड़ेया', mun: 'मोनेया', sat: 'ᱢᱚᱬᱮ' } },
+  { hi: 'छह', en: 'six', cat: 'number', value: 6, words: { ho: 'तुरुइया', mun: 'तुरुइया', sat: 'ᱛᱩᱨᱩᱭ' } },
+  { hi: 'सात', en: 'seven', cat: 'number', value: 7, words: { ho: 'एया', mun: 'एया', sat: 'ᱮᱭᱟᱭ' } },
+  { hi: 'आठ', en: 'eight', cat: 'number', value: 8, words: { ho: 'इरिलिया', mun: 'इरालिया', sat: 'ᱤᱨᱟᱹᱞ' } },
+  { hi: 'नौ', en: 'nine', cat: 'number', value: 9, words: { ho: 'आरेया', mun: 'अरेया', sat: 'ᱟᱨᱮ' } },
+  { hi: 'दस', en: 'ten', cat: 'number', value: 10, words: { ho: 'गेलेया', mun: 'गेलेया', sat: 'ᱜᱮᱞ' } },
   { hi: 'संख्या', en: 'number', cat: 'number' },
   { hi: 'गिनती', en: 'counting', cat: 'number' },
 
@@ -178,7 +186,7 @@ const BASE: BaseWord[] = [
   { hi: 'ताली बजाओ', en: 'clap', cat: 'action' },
 
   // Greetings & questions
-  { hi: 'नमस्ते', en: 'hello', cat: 'greeting', words: { ho: 'जोहार', mun: 'जोहार' } },
+  { hi: 'नमस्ते', en: 'hello', cat: 'greeting', words: { ho: 'जोहार', mun: 'जोहार', sat: 'ᱡᱚᱦᱟᱨ' } },
   { hi: 'धन्यवाद', en: 'thank you', cat: 'greeting' },
   { hi: 'बहुत अच्छा', en: 'very good', cat: 'greeting', words: { ho: 'बुगिन' } },
   { hi: 'हाँ', en: 'yes', cat: 'greeting', words: { ho: 'हे' } },
